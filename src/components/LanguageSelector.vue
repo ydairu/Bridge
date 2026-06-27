@@ -38,41 +38,50 @@ watchEffect(() => {
 
 <style scoped>
 .language-selector {
-  min-height: 40px;
+  min-height: 36px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
   margin: 0;
   padding: 0 8px 0 10px;
-  color: var(--text-muted);
-  background: var(--surface-soft);
-  border: 1px solid var(--border-muted);
-  border-radius: var(--radius-md);
-  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+  color: rgba(180, 210, 255, 0.6);
+  background: rgba(13, 27, 53, 0.7);
+  border: 1px solid rgba(74, 158, 245, 0.2);
+  border-radius: 8px;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+  cursor: pointer;
 }
 
 .language-selector:hover,
 .language-selector:focus-within {
-  color: var(--primary);
-  background: var(--primary-soft);
-  border-color: var(--primary);
+  color: #4A9EF5;
+  background: rgba(74, 158, 245, 0.1);
+  border-color: rgba(74, 158, 245, 0.4);
 }
 
 .language-selector select {
   width: auto;
   min-width: 96px;
-  min-height: 38px;
+  min-height: 34px;
   padding: 0 22px 0 2px;
   border: 0;
   box-shadow: none;
   background-color: transparent;
-  color: var(--text);
+  color: inherit;
   font-size: 0.82rem;
-  font-weight: 650;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
   cursor: pointer;
+  appearance: auto;
+}
+
+.language-selector select option {
+  background: #0F1F3D;
+  color: #F0F6FF;
 }
 
 .language-selector select:focus {
+  outline: none;
   box-shadow: none;
 }
 
@@ -88,11 +97,12 @@ watchEffect(() => {
   border: 0;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 768px) {
   .language-selector {
     width: 100%;
     min-height: 46px;
     margin: 8px 0;
+    border-radius: 10px;
   }
 
   .language-selector select {

@@ -4,39 +4,6 @@
     <template v-if="!isAuthenticated">
       <!-- Full-screen carousel hero -->
       <section class="hero-section">
-        <div class="hero-content">
-          <div class="hero-text">
-            <h1 class="hero-title">
-              <GradientText
-                :colors="['var(--primary)', '#ffffff', 'oklch(0.7 0.1 245)', '#ffffff', 'var(--primary)']"
-                :animationSpeed="3"
-              >
-                BRIDGE
-              </GradientText>
-            </h1>
-            <p class="hero-subtitle">
-              <TextType 
-                :text="['Matching Job-Seekers with Singaporean Employers', 'Connecting Talent with Opportunities', 'Building Careers in Singapore']"
-                :typingSpeed="75"
-                :pauseDuration="2000"
-                :showCursor="true"
-                cursorCharacter="|"
-              />
-            </p>
-            <p class="hero-description">
-              Your pathway to success in Singapore. Connect with top employers and build your career today.
-            </p>
-            <div class="hero-actions">
-              <router-link to="/login" class="btn btn-primary btn-hero">
-                Sign In
-              </router-link>
-              <router-link to="/register" class="btn btn-secondary btn-hero">
-                Register
-              </router-link>
-            </div>
-          </div>
-        </div>
-        
         <!-- Carousel Background -->
         <div class="hero-bg">
           <div class="carousel-wrapper">

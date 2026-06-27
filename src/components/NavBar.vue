@@ -26,20 +26,20 @@
         <!-- Nav links -->
         <div class="nav-links-section">
           <template v-if="isAuthenticated">
-            <router-link :to="getHomeRoute" class="nav-link" @click="closeMenu">Home</router-link>
+            <router-link :to="getHomeRoute" class="nav-link" @click="closeMenu">{{ $t('nav.home') }}</router-link>
             <template v-if="isJobSeeker">
-              <router-link to="/browse-jobs"  class="nav-link" @click="closeMenu">Browse Jobs</router-link>
-              <router-link to="/reviews"      class="nav-link" @click="closeMenu">Reviews</router-link>
-              <router-link to="/quizzes"      class="nav-link" @click="closeMenu">AI Quiz</router-link>
+              <router-link to="/browse-jobs"  class="nav-link" @click="closeMenu">{{ $t('nav.browseJobs') }}</router-link>
+              <router-link to="/reviews"      class="nav-link" @click="closeMenu">{{ $t('nav.reviews') }}</router-link>
+              <router-link to="/quizzes"      class="nav-link" @click="closeMenu">{{ $t('nav.quiz') }}</router-link>
             </template>
             <template v-if="isEmployer">
-              <router-link to="/employer/post-job" class="nav-link" @click="closeMenu">Post Job</router-link>
-              <router-link to="/candidates"        class="nav-link" @click="closeMenu">Candidates</router-link>
+              <router-link to="/employer/post-job" class="nav-link" @click="closeMenu">{{ $t('nav.postJob') }}</router-link>
+              <router-link to="/candidates"        class="nav-link" @click="closeMenu">{{ $t('nav.candidates') }}</router-link>
             </template>
           </template>
           <template v-else>
-            <router-link to="/"           class="nav-link" @click="closeMenu">Home</router-link>
-            <router-link to="/browse-jobs" class="nav-link" @click="closeMenu">Browse Jobs</router-link>
+            <router-link to="/"           class="nav-link" @click="closeMenu">{{ $t('nav.home') }}</router-link>
+            <router-link to="/browse-jobs" class="nav-link" @click="closeMenu">{{ $t('nav.browseJobs') }}</router-link>
           </template>
         </div>
 
@@ -75,12 +75,12 @@
                 </div>
               </div>
               <div class="mobile-user-links">
-                <router-link to="/profile"             class="dropdown-item" @click="closeMenu"><User :size="16" /> Profile</router-link>
-                <router-link v-if="isJobSeeker" to="/achievements"  class="dropdown-item" @click="closeMenu"><Trophy :size="16" /> Achievements</router-link>
-                <router-link v-if="isJobSeeker" to="/applications"  class="dropdown-item" @click="closeMenu"><Briefcase :size="16" /> Applications</router-link>
-                <router-link v-if="isEmployer"  to="/employer/applications" class="dropdown-item" @click="closeMenu"><CheckSquare :size="16" /> Applications</router-link>
+                <router-link to="/profile"             class="dropdown-item" @click="closeMenu"><User :size="16" /> {{ $t('nav.profile') }}</router-link>
+                <router-link v-if="isJobSeeker" to="/achievements"  class="dropdown-item" @click="closeMenu"><Trophy :size="16" /> {{ $t('nav.achievements') }}</router-link>
+                <router-link v-if="isJobSeeker" to="/applications"  class="dropdown-item" @click="closeMenu"><Briefcase :size="16" /> {{ $t('nav.applications') }}</router-link>
+                <router-link v-if="isEmployer"  to="/employer/applications" class="dropdown-item" @click="closeMenu"><CheckSquare :size="16" /> {{ $t('nav.applications') }}</router-link>
                 <div class="dropdown-divider"></div>
-                <button @click="handleLogout" class="dropdown-item danger"><LogOut :size="16" /> Logout</button>
+                <button @click="handleLogout" class="dropdown-item danger"><LogOut :size="16" /> {{ $t('nav.logout') }}</button>
               </div>
             </div>
 
@@ -107,19 +107,19 @@
                   </div>
                 </div>
                 <div class="dropdown-divider"></div>
-                <router-link to="/profile"             class="dropdown-item" @click="closeMenus"><User :size="16" /> Profile</router-link>
-                <router-link v-if="isJobSeeker" to="/achievements"  class="dropdown-item" @click="closeMenus"><Trophy :size="16" /> Achievements</router-link>
-                <router-link v-if="isJobSeeker" to="/applications"  class="dropdown-item" @click="closeMenus"><Briefcase :size="16" /> Applications</router-link>
-                <router-link v-if="isEmployer"  to="/employer/applications" class="dropdown-item" @click="closeMenus"><CheckSquare :size="16" /> Applications</router-link>
+                <router-link to="/profile"             class="dropdown-item" @click="closeMenus"><User :size="16" /> {{ $t('nav.profile') }}</router-link>
+                <router-link v-if="isJobSeeker" to="/achievements"  class="dropdown-item" @click="closeMenus"><Trophy :size="16" /> {{ $t('nav.achievements') }}</router-link>
+                <router-link v-if="isJobSeeker" to="/applications"  class="dropdown-item" @click="closeMenus"><Briefcase :size="16" /> {{ $t('nav.applications') }}</router-link>
+                <router-link v-if="isEmployer"  to="/employer/applications" class="dropdown-item" @click="closeMenus"><CheckSquare :size="16" /> {{ $t('nav.applications') }}</router-link>
                 <div class="dropdown-divider"></div>
-                <button @click="handleLogout" class="dropdown-item danger"><LogOut :size="16" /> Logout</button>
+                <button @click="handleLogout" class="dropdown-item danger"><LogOut :size="16" /> {{ $t('nav.logout') }}</button>
               </div>
             </div>
           </template>
 
           <template v-else>
-            <router-link to="/login"    class="nav-link"        @click="closeMenu">Login</router-link>
-            <router-link to="/register" class="nav-link-signup" @click="closeMenu">Sign Up</router-link>
+            <router-link to="/login"    class="nav-link"        @click="closeMenu">{{ $t('nav.login') }}</router-link>
+            <router-link to="/register" class="nav-link-signup" @click="closeMenu">{{ $t('nav.signUp') }}</router-link>
           </template>
         </div>
       </div>
@@ -132,10 +132,11 @@ import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { User, Trophy, Briefcase, LogOut, CheckSquare } from 'lucide-vue-next'
+import LanguageSelector from './LanguageSelector.vue'
 
 export default {
   name: 'NavBar',
-  components: { User, Trophy, Briefcase, LogOut, CheckSquare },
+  components: { User, Trophy, Briefcase, LogOut, CheckSquare, LanguageSelector },
   setup() {
     const store = useStore()
     const router = useRouter()
