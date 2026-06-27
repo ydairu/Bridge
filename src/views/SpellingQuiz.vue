@@ -594,13 +594,13 @@ export default {
 }
 
 .quiz-header {
-  background: var(--bg);
+  background: rgba(13, 27, 53, 0.7);
   padding: 30px;
   border-radius: 12px 12px 0 0;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(74, 158, 245, 0.15);
   border-bottom: none;
   margin-bottom: 0;
+  backdrop-filter: blur(12px);
 }
 
 .quiz-header h1 {
@@ -638,30 +638,20 @@ export default {
 }
 
 .loading-content {
-  background: #ffffff;
+  background: rgba(13, 27, 53, 0.85);
   padding: 40px;
   border-radius: 16px;
   text-align: center;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   max-width: 400px;
   width: 90%;
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid rgba(74, 158, 245, 0.2);
+  backdrop-filter: blur(20px);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.dark-mode .loading-content {
-  background: #000000;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .loading-content:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
-}
-
-.dark-mode .loading-content:hover {
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
 }
 
 .loading-image {
@@ -705,9 +695,8 @@ export default {
   animation: bounce 1.4s cubic-bezier(0.45, 0, 0.55, 1) infinite both;
 }
 
-.dark-mode .loading-dots span {
-  opacity: 1;
-  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+.loading-dots span {
+  box-shadow: 0 0 10px rgba(74, 158, 245, 0.5);
 }
 
 @keyframes bounce {
@@ -720,11 +709,11 @@ export default {
 }
 
 .spelling-game {
-  background: var(--bg);
+  background: rgba(13, 27, 53, 0.7);
   padding: 40px;
   border-radius: 0 0 12px 12px;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(74, 158, 245, 0.15);
+  backdrop-filter: blur(12px);
 }
 
 .word-display {
@@ -820,13 +809,10 @@ export default {
   max-width: 400px;
   margin: 20px auto;
   padding: 20px;
-  background: #f8f9fa;
+  background: rgba(10, 22, 40, 0.5);
+  border: 1px solid rgba(74, 158, 245, 0.1);
   border-radius: 10px;
   position: relative;
-}
-
-.dark-mode .letter-pool {
-  background: rgba(255, 255, 255, 0.05);
 }
 
 .draggable-letter {
@@ -859,10 +845,10 @@ export default {
 }
 
 .draggable-letter.used {
-  opacity: 0.5;
-  background: #e9ecef;
-  color: #6c757d;
-  border: 2px solid #dee2e6;
+  opacity: 0.4;
+  background: rgba(74, 158, 245, 0.1);
+  color: rgba(200, 220, 255, 0.4);
+  border: 2px solid rgba(74, 158, 245, 0.15);
   transform: none !important; /* prevent offset transforms */
   z-index: 0;
 }
@@ -880,11 +866,11 @@ export default {
 }
 
 .quiz-results {
-  background: var(--bg);
+  background: rgba(13, 27, 53, 0.7);
   padding: 40px;
   border-radius: 12px;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(74, 158, 245, 0.15);
+  backdrop-filter: blur(12px);
 }
 
 .results-card {

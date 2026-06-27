@@ -475,14 +475,14 @@ export default {
   width: 64px;
   height: 64px;
   border-radius: 8px;
-  background: var(--bg-light);
+  background: rgba(26, 111, 212, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--primary);
+  color: #4A9EF5;
   font-weight: 600;
   font-size: 1.25rem;
-  border: 2px solid var(--border);
+  border: 1px solid rgba(74, 158, 245, 0.25);
 }
 
 .company-logo-img {
@@ -490,12 +490,7 @@ export default {
   height: 64px;
   border-radius: 8px;
   object-fit: cover;
-  border: 2px solid var(--border);
-}
-
-.dark-mode .avatar-fallback {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(74, 158, 245, 0.25);
 }
 
 .job-title-section {
@@ -526,11 +521,11 @@ export default {
 .badge {
   display: inline-block;
   padding: 4px 12px;
-  background: var(--bg-light);
-  color: var(--text);
+  background: rgba(74, 158, 245, 0.1);
+  color: #4A9EF5;
   border-radius: 4px;
   font-size: 0.875rem;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(74, 158, 245, 0.2);
 }
 
 /* Details Grid */
@@ -547,39 +542,27 @@ export default {
   gap: 12px;
   padding: 12px;
   border-radius: 8px;
-  background: var(--bg-light);
+  background: rgba(13, 27, 53, 0.6);
+  border: 1px solid rgba(74, 158, 245, 0.12);
   transition: all 0.2s;
-}
-
-.dark-mode .detail-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .detail-icon {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: var(--bg);
+  background: rgba(26, 111, 212, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
 
-.dark-mode .detail-icon {
-  background: rgba(255, 255, 255, 0.1);
-}
-
 .detail-icon img {
   width: 20px;
   height: 20px;
-  opacity: 0.6;
-}
-
-.dark-mode .detail-icon img {
-  filter: brightness(0) invert(1);
   opacity: 0.8;
+  filter: brightness(0) invert(1);
 }
 
 .detail-content {
@@ -602,7 +585,7 @@ export default {
 /* Separator */
 .separator {
   height: 1px;
-  background: var(--border);
+  background: rgba(74, 158, 245, 0.1);
   margin: 24px 0;
 }
 
@@ -816,13 +799,14 @@ export default {
 }
 
 .btn-secondary {
-  background: var(--bg-light);
-  color: var(--text);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(200, 220, 255, 0.8);
+  border: 1px solid rgba(74, 158, 245, 0.2);
 }
 
 .btn-secondary:hover {
-  background: var(--bg);
+  background: rgba(255, 255, 255, 0.12);
+  color: #F0F6FF;
 }
 
 /* Modal Styles */
@@ -842,25 +826,23 @@ export default {
 }
 
 .modal-content {
-  background: #ffffff;
+  background: rgba(10, 22, 40, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   padding: 32px;
   border-radius: 12px;
   max-width: 600px;
   width: 90%;
   max-height: 90vh;
   overflow-y: auto;
-  border: 1px solid var(--border);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(74, 158, 245, 0.2);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
   animation: slideUp 0.3s ease-out;
-}
-
-.dark-mode .modal-content {
-  background: #1a1a1a;
 }
 
 .modal-content h2 {
   margin-bottom: 20px;
-  color: var(--text);
+  color: #F0F6FF;
   font-size: 1.5rem;
   font-weight: 600;
 }
@@ -900,46 +882,27 @@ export default {
 .form-group textarea {
   width: 100%;
   padding: 12px 15px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid rgba(74, 158, 245, 0.2);
   border-radius: 8px;
   font-size: 1rem;
   font-family: inherit;
-  background: #ffffff;
-  color: #333333;
+  background: rgba(13, 27, 53, 0.6);
+  color: #F0F6FF;
   transition: all 0.2s;
+  box-sizing: border-box;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+  border-color: #1A6FD4;
+  box-shadow: 0 0 0 3px rgba(26, 111, 212, 0.15);
 }
 
 .form-group textarea {
   resize: vertical;
   min-height: 120px;
   font-family: inherit;
-}
-
-.dark-mode .modal-content {
-  background: #1a1a1a !important;
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.dark-mode .form-group input,
-.dark-mode .form-group textarea {
-  background: #2a2a2a !important;
-  border-color: rgba(255, 255, 255, 0.2);
-  color: #ffffff !important;
-}
-
-.dark-mode .form-group label {
-  color: #ffffff !important;
-}
-
-.dark-mode .modal-content h2 {
-  color: #ffffff !important;
 }
 
 .modal-actions {

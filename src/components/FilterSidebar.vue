@@ -340,54 +340,46 @@ export default {
 </script>
 
 <style scoped>
-.filter-sidebar {
-  width: 100%;
-}
+.filter-sidebar { width: 100%; }
 
 .sidebar-desktop {
   position: sticky;
-  top: 80px;
+  top: 90px;
 }
 
 .filter-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .filter-title {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 600;
-  color: var(--text);
+  color: #F0F6FF;
 }
 
-.icon {
-  width: 20px;
-  height: 20px;
-}
+.icon { width: 18px; height: 18px; color: #4A9EF5; }
 
 .filter-badge {
-  background: var(--primary);
-  color: white;
-  border-radius: 12px;
-  padding: 4px 12px;
-  font-size: 0.75rem;
+  background: rgba(26, 111, 212, 0.25);
+  color: #4A9EF5;
+  border: 1px solid rgba(74, 158, 245, 0.3);
+  border-radius: 10px;
+  padding: 2px 10px;
+  font-size: 0.72rem;
   font-weight: 600;
 }
 
-.filter-content {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
+.filter-content { display: flex; flex-direction: column; gap: 10px; }
 
 .active-filters {
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(74, 158, 245, 0.12);
 }
 
 .active-filters-header {
@@ -398,75 +390,71 @@ export default {
 }
 
 .active-filters-header h4 {
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  color: var(--text);
+  color: rgba(200, 220, 255, 0.7);
 }
 
 .clear-all-btn {
   font-size: 0.75rem;
-  color: var(--primary);
+  color: #4A9EF5;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px;
+  padding: 2px;
+  font-family: 'Inter', sans-serif;
 }
 
-.active-filter-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
+.active-filter-tags { display: flex; flex-wrap: wrap; gap: 6px; }
 
 .filter-tag {
   display: flex;
   align-items: center;
-  gap: 6px;
-  background: var(--bg-light);
-  color: var(--text);
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 0.75rem;
+  gap: 5px;
+  background: rgba(74, 158, 245, 0.1);
+  color: #4A9EF5;
+  border: 1px solid rgba(74, 158, 245, 0.2);
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 0.72rem;
 }
 
 .remove-btn {
   background: none;
   border: none;
-  color: var(--text-muted);
+  color: rgba(180, 210, 255, 0.5);
   cursor: pointer;
-  font-size: 1.2rem;
+  font-size: 1rem;
   line-height: 1;
   padding: 0;
-  margin-left: 4px;
+  font-family: 'Inter', sans-serif;
 }
 
 .filter-section {
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(74, 158, 245, 0.1);
 }
 
-.filter-section:last-child {
-  border-bottom: none;
-}
+.filter-section:last-child { border-bottom: none; }
 
 .filter-section-title {
-  font-size: 0.875rem;
+  font-size: 0.78rem;
   font-weight: 600;
-  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(180, 210, 255, 0.5);
   margin-bottom: 8px;
 }
 
 .salary-range-display {
   display: flex;
   justify-content: space-between;
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  margin-bottom: 12px;
+  font-size: 0.82rem;
+  color: rgba(200, 220, 255, 0.7);
+  margin-bottom: 10px;
 }
 
-.salary-range-wrapper {
-  margin: 16px 0;
-}
+.salary-range-wrapper { margin: 14px 0; }
 
 .salary-range-container {
   position: relative;
@@ -482,18 +470,18 @@ export default {
   left: 0;
   transform: translateY(-50%);
   width: 100%;
-  height: 6px;
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 3px;
+  height: 4px;
+  background: rgba(74, 158, 245, 0.15);
+  border-radius: 2px;
 }
 
 .salary-range-active {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  height: 6px;
-  background: var(--primary);
-  border-radius: 3px;
+  height: 4px;
+  background: #1A6FD4;
+  border-radius: 2px;
   pointer-events: none;
   z-index: 0;
 }
@@ -511,15 +499,12 @@ export default {
   touch-action: none;
 }
 
-.salary-slider:focus {
-  z-index: 3;
-}
+.salary-slider:focus { z-index: 3; }
 
 .salary-slider::-webkit-slider-runnable-track {
   width: 100%;
   height: 20px;
   background: transparent;
-  border-radius: 10px;
   cursor: pointer;
   pointer-events: none;
 }
@@ -528,83 +513,71 @@ export default {
   width: 100%;
   height: 20px;
   background: transparent;
-  border-radius: 10px;
   cursor: pointer;
   pointer-events: none;
 }
 
-.min-slider {
-  z-index: 1;
-}
-
-.max-slider {
-  z-index: 1;
-}
+.min-slider, .max-slider { z-index: 1; }
 
 .salary-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  background: white;
+  background: #0A1628;
   cursor: pointer;
-  border: 2px solid var(--primary);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  pointer-events: all; 
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 2px solid #1A6FD4;
+  box-shadow: 0 0 0 3px rgba(26, 111, 212, 0.2);
+  pointer-events: all;
+  transition: box-shadow 0.2s;
 }
 
 .salary-slider::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  background: white;
+  background: #0A1628;
   cursor: pointer;
-  border: 2px solid var(--primary);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  pointer-events: all; 
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 2px solid #1A6FD4;
+  box-shadow: 0 0 0 3px rgba(26, 111, 212, 0.2);
+  pointer-events: all;
 }
 
-.filter-options {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
+.filter-options { display: flex; flex-direction: column; gap: 4px; }
 
 .filter-option {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0;
   min-height: 24px;
 }
 
 .checkbox-label {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   cursor: pointer;
-  font-size: 0.813rem;
-  color: var(--text);
+  font-size: 0.82rem;
+  color: rgba(200, 220, 255, 0.7);
 }
 
 .checkbox-label input[type="checkbox"] {
   width: 14px;
   height: 14px;
   cursor: pointer;
+  accent-color: #1A6FD4;
+  width: 13px;
+  height: 13px;
 }
 
 .filter-count {
-  font-size: 0.75rem;
-  color: var(--text-muted);
+  font-size: 0.72rem;
+  color: rgba(180, 210, 255, 0.4);
 }
 
 @media (max-width: 1024px) {
-  .sidebar-desktop {
-    display: none;
-  }
+  .sidebar-desktop { display: none; }
 }
 </style>
 

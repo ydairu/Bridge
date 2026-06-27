@@ -138,22 +138,20 @@ export default {
 <style scoped>
 .stat-card {
   position: relative;
-  background: white;
+  background: rgba(13, 27, 53, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: 16px;
   padding: 32px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
   transition: all 0.3s ease;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(74, 158, 245, 0.15);
   overflow: hidden;
 }
 
 .stat-card:hover {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
-.dark-mode .stat-card {
-  background: var(--bg);
-  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  border-color: rgba(74, 158, 245, 0.3);
 }
 
 .gradient-overlay {

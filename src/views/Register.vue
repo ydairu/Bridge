@@ -244,123 +244,100 @@ export default {
 .user-type-selector {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 25px;
+  gap: 10px;
+  margin-bottom: 22px;
 }
 
 .selection-option {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 16px;
-  background: var(--bg);
-  border: 2px solid var(--border);
-  border-radius: 10px;
+  padding: 14px;
+  background: rgba(15, 31, 61, 0.6);
+  border: 1px solid rgba(74, 158, 245, 0.2);
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   position: relative;
 }
 
 .selection-option:hover {
-  border-color: var(--text-muted);
-  background: var(--bg-light);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: rgba(74, 158, 245, 0.45);
+  background: rgba(15, 31, 61, 0.85);
 }
 
 .selection-option.selected {
-  border-color: var(--primary);
-  background: var(--bg-light);
-  box-shadow: 0 4px 16px rgba(64, 123, 255, 0.15);
-}
-
-.dark-mode .selection-option.selected {
-  background: var(--bg);
-  box-shadow: 0 4px 16px rgba(64, 123, 255, 0.25);
+  border-color: #1A6FD4;
+  background: rgba(26, 111, 212, 0.15);
+  box-shadow: 0 0 0 1px rgba(26, 111, 212, 0.3);
 }
 
 .option-icon {
   flex-shrink: 0;
-  width: 48px;
-  height: 48px;
+  width: 42px;
+  height: 42px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-light);
+  background: rgba(74, 158, 245, 0.1);
   border-radius: 8px;
-  transition: all 0.3s ease;
+  transition: background 0.2s;
 }
 
 .option-icon img {
-  width: 24px;
-  height: 24px;
-  opacity: 0.7;
-  transition: all 0.3s ease;
+  width: 22px;
+  height: 22px;
+  opacity: 0.65;
+  filter: invert(1);
+  transition: opacity 0.2s;
 }
 
 .selection-option.selected .option-icon {
-  background: var(--bg-light);
-  transform: scale(1.05);
+  background: rgba(26, 111, 212, 0.2);
 }
 
 .selection-option.selected .option-icon img {
   opacity: 1;
-  filter: none;
 }
 
-.option-content {
-  flex: 1;
-  text-align: left;
-}
+.option-content { flex: 1; }
 
 .option-content h3 {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  color: var(--text);
+  color: rgba(200, 220, 255, 0.75);
   margin: 0;
 }
 
+.selection-option.selected .option-content h3 {
+  color: #F0F6FF;
+}
+
 .selection-indicator {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  border: 2px solid var(--border);
+  border: 1.5px solid rgba(74, 158, 245, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
   flex-shrink: 0;
+  transition: all 0.2s;
 }
 
 .selection-option.selected .selection-indicator {
-  background: var(--primary);
-  border-color: var(--primary);
+  background: #1A6FD4;
+  border-color: #1A6FD4;
 }
 
 .checkmark {
-  color: white;
-  font-weight: bold;
-  font-size: 0.85rem;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
 }
 
-@media (max-width: 640px) {
-  .user-type-selector {
-    grid-template-columns: 1fr;
-  }
-  
-  .option-icon {
-    width: 44px;
-    height: 44px;
-  }
-  
-  .option-icon img {
-    width: 22px;
-    height: 22px;
-  }
-  
-  .selection-option {
-    padding: 14px;
-  }
+@media (max-width: 560px) {
+  .user-type-selector { grid-template-columns: 1fr; }
 }
 </style>
 

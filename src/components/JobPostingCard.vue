@@ -131,27 +131,19 @@ export default {
 
 <style scoped>
 .job-posting-card {
-  background: var(--bg);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(13, 27, 53, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(74, 158, 245, 0.15);
   border-radius: 12px;
   padding: 20px;
   transition: all 0.3s ease;
-  box-shadow: var(--shadow-sm);
 }
 
 .job-posting-card:hover {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border-color: rgba(0, 0, 0, 0.12);
+  border-color: rgba(74, 158, 245, 0.3);
   transform: translateY(-2px);
-}
-
-.dark-mode .job-posting-card {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.dark-mode .job-posting-card:hover {
-  border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .job-header {
@@ -174,13 +166,13 @@ export default {
   width: 48px;
   height: 48px;
   border-radius: 8px;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  background: rgba(26, 111, 212, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   flex-shrink: 0;
-  border: 2px solid var(--border);
+  border: 1px solid rgba(74, 158, 245, 0.25);
 }
 
 .company-logo-img-small {
@@ -225,18 +217,18 @@ export default {
 }
 
 .status-active {
-  background: oklch(0.9 0.02 160);
-  color: var(--success);
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
 }
 
 .status-draft {
-  background: oklch(0.9 0.02 50);
-  color: var(--warning);
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
 }
 
 .status-expired {
-  background: oklch(0.9 0.02 30);
-  color: var(--danger);
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
 }
 
 .job-meta {
@@ -281,7 +273,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding-top: 16px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid rgba(74, 158, 245, 0.1);
 }
 
 .job-date {
@@ -307,23 +299,20 @@ export default {
 }
 
 .btn-view {
-  background: var(--bg-light);
-  color: var(--text);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(26, 111, 212, 0.1);
+  color: #4A9EF5;
+  border: 1px solid rgba(74, 158, 245, 0.2);
+  text-decoration: none;
 }
 
 .btn-view:hover {
-  background: var(--primary);
+  background: #1A6FD4;
   color: white;
-  border-color: var(--primary);
-}
-
-.dark-mode .btn-view {
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-color: #1A6FD4;
 }
 
 .btn-edit {
-  background: var(--primary);
+  background: #1A6FD4;
   color: white;
 }
 

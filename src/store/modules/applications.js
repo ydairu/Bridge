@@ -117,6 +117,7 @@ export default {
             company: jobData?.company || 'Company Not Available',
             location: jobData?.location || 'Location Not Available',
             salary: jobData?.salary || 'Salary Not Available',
+            description: jobData?.description || '',
             candidateName: candidateData?.name || 'Unknown Candidate',
             candidateEmail: candidateData?.email || 'Email Not Available'
           })
@@ -175,13 +176,14 @@ export default {
             company: jobData?.company || 'Company Not Available',
             location: jobData?.location || 'Location Not Available',
             salary: jobData?.salary || 'Salary Not Available',
+            description: jobData?.description || '',
             candidateName: candidateData?.name || 'Unknown Candidate',
             candidateEmail: candidateData?.email || 'Email Not Available'
           })
         }
-        
+
         applications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        
+
         commit('SET_APPLICATIONS', applications)
         commit('SET_LOADING', false)
         return applications
@@ -191,7 +193,7 @@ export default {
         throw error
       }
     },
-    
+
     async fetchApplicationById({ commit }, applicationId) {
       commit('SET_LOADING', true)
       try {
@@ -228,6 +230,7 @@ export default {
           company: jobData?.company || 'Company Not Available',
           location: jobData?.location || 'Location Not Available',
           salary: jobData?.salary || 'Salary Not Available',
+          description: jobData?.description || '',
           candidateName: candidateData?.name || 'Unknown Candidate',
           candidateEmail: candidateData?.email || 'Email Not Available'
         }

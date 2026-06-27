@@ -269,8 +269,8 @@ export default {
 
 /* Header Section */
 .achievements-header {
-  background: var(--bg-light);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(13, 27, 53, 0.7);
+  border-bottom: 1px solid rgba(74, 158, 245, 0.1);
   padding: 2rem 1rem;
 }
 
@@ -287,28 +287,19 @@ export default {
   width: 4rem;
   height: 4rem;
   border-radius: 1rem;
-  background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+  background: linear-gradient(135deg, #1A6FD4 0%, #4A9EF5 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   margin-top: 0.25rem;
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
+  box-shadow: 0 4px 12px rgba(26, 111, 212, 0.3);
   transition: all 0.3s ease;
 }
 
 .header-icon:hover {
-  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 6px 20px rgba(26, 111, 212, 0.45);
   transform: translateY(-2px);
-}
-
-.dark-mode .header-icon {
-  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-  box-shadow: 0 4px 12px rgba(167, 139, 250, 0.3);
-}
-
-.dark-mode .header-icon:hover {
-  box-shadow: 0 6px 20px rgba(167, 139, 250, 0.45);
 }
 
 .trophy-icon {
@@ -371,14 +362,14 @@ export default {
 
 .progress-bar {
   height: 12px;
-  background: var(--border);
+  background: rgba(74, 158, 245, 0.12);
   border-radius: 6px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: var(--primary);
+  background: #1A6FD4;
   border-radius: 6px;
   transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -400,17 +391,18 @@ export default {
   grid-template-columns: repeat(5, 1fr);
   gap: 0.5rem;
   margin-bottom: 2rem;
-  background: var(--bg-light);
+  background: rgba(13, 27, 53, 0.7);
+  backdrop-filter: blur(12px);
   padding: 0.5rem;
   border-radius: 1rem;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(74, 158, 245, 0.12);
 }
 
 .tab-trigger {
   padding: 0.75rem 1rem;
   border: none;
   background: transparent;
-  color: var(--text-muted);
+  color: rgba(200, 220, 255, 0.6);
   font-size: 0.875rem;
   font-weight: 500;
   border-radius: 0.5rem;
@@ -419,12 +411,12 @@ export default {
 }
 
 .tab-trigger:hover {
-  color: var(--text);
-  background: var(--bg);
+  color: #F0F6FF;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .tab-trigger.active {
-  background: var(--primary);
+  background: #1A6FD4;
   color: white;
 }
 

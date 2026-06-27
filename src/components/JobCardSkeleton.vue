@@ -49,9 +49,9 @@ export default {
 }
 
 .job-card-wrapper {
-  background: var(--bg);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 8px;
+  background: rgba(13, 27, 53, 0.7);
+  border: 1px solid rgba(74, 158, 245, 0.1);
+  border-radius: 14px;
   padding: 20px;
   width: 100%;
   max-width: 100%;
@@ -141,7 +141,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding-top: 16px;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-top: 1px solid rgba(74, 158, 245, 0.1);
   margin-top: auto;
 }
 
@@ -159,12 +159,13 @@ export default {
 .skeleton {
   background: linear-gradient(
     90deg,
-    var(--bg-light) 0%,
-    rgba(255, 255, 255, 0.1) 50%,
-    var(--bg-light) 100%
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(74, 158, 245, 0.08) 50%,
+    rgba(255, 255, 255, 0.05) 100%
   );
   background-size: 200% 100%;
   animation: skeleton-loading 1.5s ease-in-out infinite;
+  border-radius: 4px;
 }
 
 @keyframes skeleton-loading {

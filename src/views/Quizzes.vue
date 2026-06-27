@@ -239,8 +239,8 @@ export default {
 <style scoped>
 .quizzes-page {
   min-height: calc(100vh - 70px);
-  background: var(--bg-light);
-  color: var(--text);
+  background: #0A1628;
+  color: #F0F6FF;
   padding: 32px 20px;
   overflow: hidden;
   position: relative;
@@ -321,28 +321,22 @@ export default {
   font-weight: 600;
   transition: all 0.3s;
   cursor: pointer;
-  border: none;
+  border: 1px solid rgba(74, 158, 245, 0.15);
   font-size: 16px;
-  color: var(--text-muted);
-  background: var(--bg);
+  color: rgba(200, 220, 255, 0.65);
+  background: rgba(13, 27, 53, 0.6);
 }
 
 .level-btn:hover {
-  background: var(--bg-dark);
-}
-
-.dark-mode .level-btn {
-  background: var(--bg-dark);
-}
-
-.dark-mode .level-btn:hover {
-  background: var(--bg);
+  border-color: rgba(74, 158, 245, 0.35);
+  color: #F0F6FF;
 }
 
 .level-btn.active {
   color: white;
   transform: scale(1.05);
-  background: var(--primary);
+  background: #1A6FD4;
+  border-color: #1A6FD4;
 }
 
 .level-btn.active[data-color*="purple"] {

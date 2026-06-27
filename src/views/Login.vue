@@ -117,16 +117,11 @@ export default {
 </script>
 
 <style scoped>
-/* Login page specific styles - most styles are now in external stylesheet */
 .field-error {
-  color: #e11d48; /* red-600 */
-  font-weight: 500;
-  margin-left: 8px;
-}
-.field-error-below {
-  display: block;
-  margin-left: 0;
+  color: #FCA5A5;
+  font-size: 0.85rem;
   margin-top: 6px;
+  display: block;
 }
 </style>
 

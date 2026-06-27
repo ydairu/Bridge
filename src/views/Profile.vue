@@ -1081,15 +1081,12 @@ export default {
 
 /* Profile Header */
 .profile-header-card {
-  background: var(--bg);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(13, 27, 53, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(74, 158, 245, 0.15);
   border-radius: 16px;
   padding: 32px;
-  box-shadow: var(--shadow-sm);
-}
-
-.dark-mode .profile-header-card {
-  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .header-main {
@@ -1118,13 +1115,13 @@ export default {
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  background: linear-gradient(135deg, #1A6FD4 0%, #4A9EF5 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border: 4px solid var(--bg-light);
-  box-shadow: var(--shadow-md);
+  border: 3px solid rgba(74, 158, 245, 0.3);
+  box-shadow: 0 4px 20px rgba(26, 111, 212, 0.3);
 }
 
 .avatar-image {
@@ -1172,7 +1169,7 @@ export default {
 }
 
 .btn-add-photo:hover:not(:disabled) {
-  background: oklch(0.35 0.1 245);
+  background: #155dc0;
   transform: translateY(-1px);
 }
 
@@ -1232,13 +1229,15 @@ export default {
 }
 
 .role-badge.jobseeker {
-  background: rgba(52, 152, 219, 0.1);
-  color: var(--primary);
+  background: rgba(74, 158, 245, 0.15);
+  color: #4A9EF5;
+  border: 1px solid rgba(74, 158, 245, 0.25);
 }
 
 .role-badge.employer {
-  background: rgba(155, 89, 182, 0.1);
-  color: var(--secondary);
+  background: rgba(26, 111, 212, 0.15);
+  color: #4A9EF5;
+  border: 1px solid rgba(26, 111, 212, 0.25);
 }
 
 .subtitle {
@@ -1295,18 +1294,15 @@ export default {
 
 .btn-cancel {
   background: transparent;
-  color: var(--text, #333);
-  border: 2px solid rgba(0, 0, 0, 0.12);
+  color: rgba(200, 220, 255, 0.8);
+  border: 1px solid rgba(74, 158, 245, 0.2);
   min-width: 100px;
 }
 
-.dark-mode .btn-cancel {
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
 .btn-cancel:hover {
-  background: var(--bg-light, #f5f5f5);
-  border-color: var(--text-muted, #999);
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(74, 158, 245, 0.4);
+  color: #F0F6FF;
 }
 
 .inline-error {
@@ -1318,42 +1314,30 @@ export default {
 
 /* Stats Card */
 .stats-card {
-  background: var(--bg);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(13, 27, 53, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(74, 158, 245, 0.15);
   border-radius: 16px;
   padding: 24px;
-  box-shadow: var(--shadow-sm);
 }
-
-.dark-mode .stats-card {
-  border-color: rgba(255, 255, 255, 0.08);
-}
-
-/* Stats Card - uses StatsOverview component */
 
 /* Tabs */
 .tabs-container {
-  background: var(--bg);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(13, 27, 53, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(74, 158, 245, 0.15);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
-}
-
-.dark-mode .tabs-container {
-  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .tabs-nav {
   display: flex;
   gap: 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  background: var(--bg-light);
+  border-bottom: 1px solid rgba(74, 158, 245, 0.1);
+  background: rgba(10, 22, 40, 0.5);
   overflow-x: auto;
-}
-
-.dark-mode .tabs-nav {
-  border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
 .tab-button {
@@ -1362,24 +1346,24 @@ export default {
   background: transparent;
   border: none;
   border-bottom: 3px solid transparent;
-  color: var(--text-muted);
+  color: rgba(200, 220, 255, 0.6);
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.2s;
   white-space: nowrap;
   min-width: 120px;
 }
 
 .tab-button:hover {
-  color: var(--text);
-  background: var(--bg);
+  color: #F0F6FF;
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .tab-button.active {
-  color: var(--primary);
-  border-bottom-color: var(--primary);
-  background: var(--bg);
+  color: #4A9EF5;
+  border-bottom-color: #4A9EF5;
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .tabs-content {
@@ -1397,15 +1381,11 @@ export default {
 
 /* Section Cards */
 .section-card {
-  background: var(--bg-light);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(10, 22, 40, 0.4);
+  border: 1px solid rgba(74, 158, 245, 0.1);
   border-radius: 12px;
   padding: 24px;
   margin-bottom: 20px;
-}
-
-.dark-mode .section-card {
-  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .section-title {
@@ -1488,17 +1468,13 @@ export default {
 .edit-textarea {
   width: 100%;
   padding: 10px 12px;
-  border: 2px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(74, 158, 245, 0.2);
   border-radius: 8px;
   font-size: 1rem;
-  color: var(--text);
-  background: var(--bg);
-  transition: border-color 0.3s;
-}
-
-.dark-mode .edit-input,
-.dark-mode .edit-textarea {
-  border-color: rgba(255, 255, 255, 0.1);
+  color: #F0F6FF;
+  background: rgba(13, 27, 53, 0.6);
+  transition: border-color 0.2s;
+  box-sizing: border-box;
 }
 
 .edit-input:focus,
@@ -1527,16 +1503,12 @@ export default {
 }
 
 .skill-tag {
-  background: var(--bg);
-  color: var(--primary);
+  background: rgba(26, 111, 212, 0.1);
+  color: #4A9EF5;
   padding: 8px 16px;
   border-radius: 20px;
   font-size: 0.95rem;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.dark-mode .skill-tag {
-  border-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(74, 158, 245, 0.2);
 }
 
 .empty-text {
@@ -1560,18 +1532,14 @@ export default {
 
 .application-preview-item {
   padding: 16px;
-  background: var(--bg);
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(10, 22, 40, 0.4);
+  border: 1px solid rgba(74, 158, 245, 0.1);
   border-radius: 8px;
-  transition: all 0.3s;
-}
-
-.dark-mode .application-preview-item {
-  border-color: rgba(255, 255, 255, 0.08);
+  transition: all 0.2s;
 }
 
 .application-preview-item:hover {
-  border-color: var(--primary);
+  border-color: rgba(74, 158, 245, 0.3);
   transform: translateY(-2px);
 }
 
@@ -1619,21 +1587,16 @@ export default {
 }
 
 .application-item {
-  background: var(--bg);
+  background: rgba(10, 22, 40, 0.4);
   padding: 20px;
   border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  transition: all 0.3s;
-}
-
-.dark-mode .application-item {
-  border-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(74, 158, 245, 0.1);
+  transition: all 0.2s;
 }
 
 .application-item:hover {
-  border-color: var(--primary);
+  border-color: rgba(74, 158, 245, 0.3);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
 }
 
 .application-main {
