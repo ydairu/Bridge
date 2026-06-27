@@ -1,9 +1,9 @@
-// Firebase Seed Data Script
-// Run this script to populate your Firebase database with realistic test data
-// Usage: node seed-data.js
+// Firebase Seed Data Script with Authentication
+// Run this script to populate your Firebase database AND create auth accounts
+// Usage: node scripts/seed-data-with-auth.cjs
 
 const admin = require('firebase-admin');
-const serviceAccount = require('./firebase_private_key.json');
+const serviceAccount = require('../firebase_private_key.json');
 
 // Initialize Firebase Admin
 admin.initializeApp({
@@ -11,13 +11,14 @@ admin.initializeApp({
 });
 
 const db = admin.firestore();
+const auth = admin.auth();
 
 // Helper function to create random date in the last N days
 function randomDate(daysAgo) {
   const now = new Date();
   const past = new Date(now.getTime() - (daysAgo * 24 * 60 * 60 * 1000));
   const random = new Date(past.getTime() + Math.random() * (now.getTime() - past.getTime()));
-  return admin.firestore.Timestamp.fromDate(random);
+  return random.toISOString();
 }
 
 // Helper function to shuffle array
@@ -28,6 +29,45 @@ function shuffle(array) {
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
+}
+
+function mapIndustryToCategory(industry) {
+  const s = (industry || '').toLowerCase()
+  if (s.includes('manufactur')) return 'manufacturing'
+  if (s.includes('hospitality') || s.includes('hotel') || s.includes('f&b')) return 'hospitality'
+  if (s.includes('logistic') || s.includes('transport')) return 'logistics'
+  if (s.includes('clean')) return 'cleaning'
+  if (s.includes('mainten')) return 'maintenance'
+  if (s.includes('secur')) return 'security'
+  if (s.includes('facilit')) return 'facilities'
+  // default bucket
+  return 'construction'
+}
+
+// Allowed filters (must match FilterSidebar.vue ids)
+const ALLOWED_LOCATIONS = ['central','north','south','east','west']
+const ALLOWED_JOB_TYPES = ['full-time','part-time','contract']
+
+function normalizeLocation(value) {
+  const s = (value || '').toString().toLowerCase()
+  if (ALLOWED_LOCATIONS.includes(s)) return s
+  // simple mapping heuristics
+  if (s.includes('central') || s.includes('cbd') || s.includes('marina') || s.includes('orchard')) return 'central'
+  if (s.includes('north') || s.includes('woodlands') || s.includes('yishun')) return 'north'
+  if (s.includes('south')) return 'south'
+  if (s.includes('east') || s.includes('punggol') || s.includes('bishan') || s.includes('serangoon') || s.includes('marine')) return 'east'
+  if (s.includes('west') || s.includes('jurong') || s.includes('tuas')) return 'west'
+  // default distribute
+  return ALLOWED_LOCATIONS[Math.floor(Math.random()*ALLOWED_LOCATIONS.length)]
+}
+
+function normalizeJobType(value) {
+  const s = (value || '').toString().toLowerCase()
+  if (ALLOWED_JOB_TYPES.includes(s)) return s
+  if (s.includes('full')) return 'full-time'
+  if (s.includes('part')) return 'part-time'
+  if (s.includes('contract')) return 'contract'
+  return ALLOWED_JOB_TYPES[Math.floor(Math.random()*ALLOWED_JOB_TYPES.length)]
 }
 
 // Jobseekers Data
@@ -237,7 +277,7 @@ const jobseekers = [
 // Employers Data
 const employers = [
   {
-    name: "BuildTech Construction",
+    name: "Sarah Chen",
     email: "hr@buildtech.sg",
     password: "Password123!",
     companyName: "BuildTech Construction Pte Ltd",
@@ -249,7 +289,7 @@ const employers = [
     description: "Leading construction company specializing in commercial high-rise buildings with over 20 years of experience."
   },
   {
-    name: "Metro Infrastructure",
+    name: "David Lim",
     email: "careers@metroinfra.sg",
     password: "Password123!",
     companyName: "Metro Infrastructure Solutions",
@@ -261,7 +301,7 @@ const employers = [
     description: "Major infrastructure contractor for MRT and highway projects across Singapore."
   },
   {
-    name: "SkyHigh Builders",
+    name: "Michelle Tan",
     email: "jobs@skyhigh.sg",
     password: "Password123!",
     companyName: "SkyHigh Builders Pte Ltd",
@@ -273,7 +313,7 @@ const employers = [
     description: "Specialist in HDB and condominium construction projects with a focus on quality."
   },
   {
-    name: "Premier Renovations",
+    name: "James Wong",
     email: "recruit@premierreno.sg",
     password: "Password123!",
     companyName: "Premier Renovations Group",
@@ -285,7 +325,7 @@ const employers = [
     description: "Expert in residential and commercial renovation works with creative solutions."
   },
   {
-    name: "Industrial Works SG",
+    name: "Robert Ng",
     email: "hr@industrialworks.sg",
     password: "Password123!",
     companyName: "Industrial Works Singapore",
@@ -297,7 +337,7 @@ const employers = [
     description: "Specialized in factory and warehouse construction for industrial clients."
   },
   {
-    name: "Green Earth Landscaping",
+    name: "Emily Koh",
     email: "jobs@greenearth.sg",
     password: "Password123!",
     companyName: "Green Earth Landscaping Pte Ltd",
@@ -309,7 +349,7 @@ const employers = [
     description: "Professional landscaping and outdoor construction services for sustainable environments."
   },
   {
-    name: "Elite Engineering",
+    name: "Andrew Teo",
     email: "careers@eliteeng.sg",
     password: "Password123!",
     companyName: "Elite Engineering Contractors",
@@ -321,7 +361,7 @@ const employers = [
     description: "Mechanical, Electrical & Plumbing specialist contractors for premium buildings."
   },
   {
-    name: "Rapid Build",
+    name: "Kevin Ong",
     email: "hr@rapidbuild.sg",
     password: "Password123!",
     companyName: "Rapid Build Solutions",
@@ -333,7 +373,7 @@ const employers = [
     description: "Fast-track construction solutions for commercial projects with guaranteed timelines."
   },
   {
-    name: "Foundation Specialists",
+    name: "Patricia Lee",
     email: "jobs@foundationspec.sg",
     password: "Password123!",
     companyName: "Foundation Specialists Pte Ltd",
@@ -345,7 +385,7 @@ const employers = [
     description: "Expert in foundation work and structural reinforcement for complex projects."
   },
   {
-    name: "Urban Development",
+    name: "Michael Goh",
     email: "recruit@urbandevelopment.sg",
     password: "Password123!",
     companyName: "Urban Development Corp",
@@ -358,7 +398,7 @@ const employers = [
   }
 ];
 
-// Jobs Data
+// Jobs Data (abbreviated - same as before)
 const jobs = [
   // BuildTech Construction
   {
@@ -400,7 +440,6 @@ const jobs = [
     benefits: ["Meals provided", "Transport provided", "Medical insurance", "Bonus"],
     openings: 8
   },
-
   // Metro Infrastructure Solutions
   {
     employerEmail: "careers@metroinfra.sg",
@@ -454,7 +493,6 @@ const jobs = [
     benefits: ["Overtime opportunities", "Medical insurance", "Transport provided", "Meal allowance"],
     openings: 4
   },
-
   // SkyHigh Builders
   {
     employerEmail: "jobs@skyhigh.sg",
@@ -495,7 +533,6 @@ const jobs = [
     benefits: ["Steady work", "Medical coverage", "Meal provided", "Bonus"],
     openings: 5
   },
-
   // Premier Renovations Group
   {
     employerEmail: "recruit@premierreno.sg",
@@ -523,7 +560,6 @@ const jobs = [
     benefits: ["Indoor work", "Medical coverage", "Regular projects", "Transport allowance"],
     openings: 2
   },
-
   // Industrial Works Singapore
   {
     employerEmail: "hr@industrialworks.sg",
@@ -564,7 +600,6 @@ const jobs = [
     benefits: ["Training provided", "Medical coverage", "Overtime opportunities", "Growth potential"],
     openings: 6
   },
-
   // Green Earth Landscaping
   {
     employerEmail: "jobs@greenearth.sg",
@@ -592,7 +627,6 @@ const jobs = [
     benefits: ["Training provided", "Medical coverage", "Regular work", "Career growth"],
     openings: 3
   },
-
   // Elite Engineering Contractors
   {
     employerEmail: "careers@eliteeng.sg",
@@ -633,7 +667,6 @@ const jobs = [
     benefits: ["Advanced systems", "Medical insurance", "Training opportunities", "Career growth"],
     openings: 2
   },
-
   // Rapid Build Solutions
   {
     employerEmail: "hr@rapidbuild.sg",
@@ -661,7 +694,6 @@ const jobs = [
     benefits: ["Specialized skill pay", "Medical insurance", "Safety equipment", "Premium projects"],
     openings: 3
   },
-
   // Foundation Specialists
   {
     employerEmail: "jobs@foundationspec.sg",
@@ -689,7 +721,6 @@ const jobs = [
     benefits: ["Specialist pay", "Medical insurance", "Career growth", "Long-term projects"],
     openings: 3
   },
-
   // Urban Development Corp
   {
     employerEmail: "recruit@urbandevelopment.sg",
@@ -732,7 +763,7 @@ const jobs = [
   }
 ];
 
-// Quiz templates for different trades
+// Quiz templates
 const quizTemplates = [
   { title: "Scaffolding Safety Quiz", category: "Safety", difficulty: "Intermediate" },
   { title: "Welding Basics Quiz", category: "Technical Skills", difficulty: "Beginner" },
@@ -745,16 +776,40 @@ const quizTemplates = [
 ];
 
 // Seed Functions
+async function createAuthAccount(email, password, displayName) {
+  try {
+    const userRecord = await auth.createUser({
+      email: email,
+      password: password,
+      displayName: displayName,
+      emailVerified: true
+    });
+    return userRecord.uid;
+  } catch (error) {
+    if (error.code === 'auth/email-already-exists') {
+      console.log(`    ⚠ Auth account already exists for ${email}, fetching UID...`);
+      const userRecord = await auth.getUserByEmail(email);
+      return userRecord.uid;
+    }
+    throw error;
+  }
+}
+
 async function seedJobseekers() {
-  console.log('\n🔷 Creating Jobseekers...');
+  console.log('\n🔷 Creating Jobseekers (Auth + Firestore)...');
   const createdJobseekers = [];
   
   for (const jobseeker of jobseekers) {
     try {
+      // Create Firebase Auth account
+      const uid = await createAuthAccount(jobseeker.email, jobseeker.password, jobseeker.name);
+      
+      // Create Firestore document with the Auth UID
       const userData = {
         name: jobseeker.name,
         email: jobseeker.email,
         type: 'jobseeker',
+        role: 'jobseeker',
         skills: jobseeker.skills,
         experience: jobseeker.experience,
         location: jobseeker.location,
@@ -767,9 +822,9 @@ async function seedJobseekers() {
         totalPoints: Math.floor(Math.random() * 500) + 100
       };
       
-      const docRef = await db.collection('users').add(userData);
-      createdJobseekers.push({ id: docRef.id, ...userData });
-      console.log(`  ✓ Created jobseeker: ${jobseeker.name}`);
+      await db.collection('users').doc(uid).set(userData);
+      createdJobseekers.push({ id: uid, ...userData });
+      console.log(`  ✓ Created: ${jobseeker.name} (Auth + Firestore)`);
     } catch (error) {
       console.error(`  ✗ Error creating ${jobseeker.name}:`, error.message);
     }
@@ -779,17 +834,31 @@ async function seedJobseekers() {
 }
 
 async function seedEmployers() {
-  console.log('\n🏢 Creating Employers...');
+  console.log('\n🏢 Creating Employers (Auth + Firestore)...');
   const createdEmployers = [];
+  const categoriesCycle = ['construction','manufacturing','hospitality','maintenance','logistics','cleaning','security','facilities']
+  let cycleIndex = 0
   
   for (const employer of employers) {
     try {
+      // Create Firebase Auth account
+      const uid = await createAuthAccount(employer.email, employer.password, employer.name);
+      
+      // Assign a site category: map industry; if generic, distribute by cycle
+      let normalized = mapIndustryToCategory(employer.industry)
+      if (normalized === 'construction') {
+        normalized = categoriesCycle[cycleIndex % categoriesCycle.length]
+        cycleIndex++
+      }
+      
+      // Create Firestore document with the Auth UID
       const userData = {
         name: employer.name,
         email: employer.email,
         type: 'employer',
+        role: 'employer',
         companyName: employer.companyName,
-        industry: employer.industry,
+        industry: normalized,
         companySize: employer.companySize,
         location: employer.location,
         phone: employer.phone,
@@ -801,9 +870,9 @@ async function seedEmployers() {
         verified: true
       };
       
-      const docRef = await db.collection('users').add(userData);
-      createdEmployers.push({ id: docRef.id, ...userData });
-      console.log(`  ✓ Created employer: ${employer.companyName}`);
+      await db.collection('users').doc(uid).set(userData);
+      createdEmployers.push({ id: uid, email: employer.email, assignedCategory: normalized, ...userData });
+      console.log(`  ✓ Created: ${employer.companyName} (Auth + Firestore)`);
     } catch (error) {
       console.error(`  ✗ Error creating ${employer.companyName}:`, error.message);
     }
@@ -816,6 +885,10 @@ async function seedJobs(createdEmployers) {
   console.log('\n💼 Creating Jobs...');
   const createdJobs = [];
   
+  // Ensure even distribution across filters
+  let locIndex = 0
+  let typeIndex = 0
+  
   for (const job of jobs) {
     try {
       const employer = createdEmployers.find(e => e.email === job.employerEmail);
@@ -824,21 +897,47 @@ async function seedJobs(createdEmployers) {
         continue;
       }
       
+      const category = employer.assignedCategory || mapIndustryToCategory(employer.industry)
+      
+      // Normalize filters and distribute evenly
+      let normalizedLocation = normalizeLocation(job.location)
+      let normalizedType = normalizeJobType(job.type)
+      // Override with round‑robin to guarantee variety
+      normalizedLocation = ALLOWED_LOCATIONS[locIndex % ALLOWED_LOCATIONS.length]
+      locIndex++
+      normalizedType = ALLOWED_JOB_TYPES[typeIndex % ALLOWED_JOB_TYPES.length]
+      typeIndex++
+      
+      // Derive numeric salary min/max from any string like "$2,300 - $2,900"
+      const extractNumbers = (s) => (s || '').toString().match(/[\d,]+/g)?.map(n => parseInt(n.replace(/,/g, ''))) || []
+      const nums = extractNumbers(job.salary)
+      let salaryMin = nums.length ? nums[0] : Math.floor(Math.random()*1500)+2200
+      let salaryMax = nums.length>1 ? nums[1] : salaryMin + Math.floor(Math.random()*700)+200
+      // clamp to slider max 5000
+      salaryMin = Math.min(salaryMin, 5000)
+      salaryMax = Math.min(Math.max(salaryMax, salaryMin), 5000)
+      const salaryDisplay = job.salary || `$${salaryMin.toLocaleString()} - $${salaryMax.toLocaleString()}`
+
       const jobData = {
         employerId: employer.id,
         employerName: employer.companyName,
+        company: employer.companyName,
         title: job.title,
-        location: job.location,
-        salary: job.salary,
-        type: job.type,
+        location: normalizedLocation,
+        salary: salaryMin,
+        salaryMax: salaryMax,
+        salaryDisplay: salaryDisplay,
+        type: normalizedType,
         experience: job.experience,
         skills: job.skills,
         description: job.description,
         requirements: job.requirements,
         benefits: job.benefits,
         openings: job.openings,
+        category,
         status: 'active',
         postedAt: randomDate(20),
+        createdAt: randomDate(20),
         expiresAt: admin.firestore.Timestamp.fromDate(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)),
         views: Math.floor(Math.random() * 200) + 50,
         applicants: 0
@@ -857,12 +956,12 @@ async function seedJobs(createdEmployers) {
 
 async function seedApplications(createdJobseekers, createdJobs) {
   console.log('\n📝 Creating Applications...');
-  const statuses = ['pending', 'pending', 'pending', 'reviewed', 'reviewed', 'accepted', 'rejected'];
+  // Only allow these three statuses
+  const statuses = ['pending', 'pending', 'pending', 'accepted', 'rejected'];
   let applicationCount = 0;
   
-  // Each jobseeker applies to 2-5 random jobs
   for (const jobseeker of createdJobseekers) {
-    const numApplications = Math.floor(Math.random() * 4) + 2; // 2-5 applications
+    const numApplications = Math.floor(Math.random() * 4) + 2;
     const shuffledJobs = shuffle(createdJobs).slice(0, numApplications);
     
     for (const job of shuffledJobs) {
@@ -871,6 +970,7 @@ async function seedApplications(createdJobseekers, createdJobs) {
         const applicationData = {
           jobId: job.id,
           jobTitle: job.title,
+          userId: jobseeker.id,
           jobseekerId: jobseeker.id,
           jobseekerName: jobseeker.name,
           jobseekerEmail: jobseeker.email,
@@ -878,18 +978,14 @@ async function seedApplications(createdJobseekers, createdJobs) {
           employerName: job.employerName,
           status: status,
           appliedAt: randomDate(15),
+          createdAt: randomDate(15),
           coverLetter: `I am very interested in the ${job.title} position. With my ${jobseeker.experience} of experience in ${jobseeker.skills.join(', ')}, I believe I would be a great fit for this role.`,
           resume: 'resume.pdf',
           skills: jobseeker.skills
         };
         
-        if (status === 'reviewed' || status === 'accepted') {
-          applicationData.reviewedAt = randomDate(7);
-        }
-        
         await db.collection('applications').add(applicationData);
         
-        // Update job applicant count
         await db.collection('jobs').doc(job.id).update({
           applicants: admin.firestore.FieldValue.increment(1)
         });
@@ -909,16 +1005,15 @@ async function seedQuizzes(createdJobseekers) {
   console.log('\n📚 Creating Quiz Completions...');
   let quizCount = 0;
   
-  // Select 15 random jobseekers to have completed quizzes
   const jobseekersWithQuizzes = shuffle(createdJobseekers).slice(0, 15);
   
   for (const jobseeker of jobseekersWithQuizzes) {
-    const numQuizzes = Math.floor(Math.random() * 3) + 1; // 1-3 quizzes per person
+    const numQuizzes = Math.floor(Math.random() * 3) + 1;
     const selectedQuizzes = shuffle(quizTemplates).slice(0, numQuizzes);
     
     for (const quiz of selectedQuizzes) {
       try {
-        const score = Math.floor(Math.random() * 3) + 2; // Score between 2-5 (out of 5)
+        const score = Math.floor(Math.random() * 3) + 2;
         const quizData = {
           userId: jobseeker.id,
           userName: jobseeker.name,
@@ -929,7 +1024,7 @@ async function seedQuizzes(createdJobseekers) {
           totalQuestions: 5,
           passed: score >= 3,
           completedAt: randomDate(25),
-          timeSpent: Math.floor(Math.random() * 300) + 180, // 3-8 minutes
+          timeSpent: Math.floor(Math.random() * 300) + 180,
           answers: Array(5).fill(null).map((_, i) => ({
             question: `Question ${i + 1}`,
             correct: i < score
@@ -952,7 +1047,6 @@ async function seedChatRooms(createdJobseekers, createdEmployers) {
   console.log('\n💬 Creating Chat Rooms...');
   let chatCount = 0;
   
-  // Create 8 random chat conversations
   const shuffledJobseekers = shuffle(createdJobseekers);
   const shuffledEmployers = shuffle(createdEmployers);
   
@@ -987,31 +1081,230 @@ async function seedChatRooms(createdJobseekers, createdEmployers) {
   console.log(`  ✓ Total chat rooms created: ${chatCount}`);
 }
 
+async function seedCompanyReviews(createdJobseekers, createdEmployers) {
+  console.log('\n⭐ Creating Company Reviews...');
+  let reviewCount = 0;
+  
+  // Review templates for different ratings
+  const reviewTemplates = {
+    5: [
+      "Excellent company to work for! The management is supportive and the work environment is professional. Highly recommend.",
+      "Outstanding experience working here. Great pay, punctual payments, and respectful treatment. Would definitely work with them again.",
+      "Best employer I've worked with in Singapore. They really care about worker safety and welfare. Five stars!",
+      "Professional and organized company. Clear communication, good working conditions, and fair compensation.",
+      "Fantastic company! The project managers are experienced and the team is supportive. Very satisfied with my experience."
+    ],
+    4: [
+      "Good company overall. Decent pay and working conditions. Management could be more communicative but generally positive experience.",
+      "Solid employer. Work is consistent and payment is on time. Accommodation could be better but overall good.",
+      "Professional company with good projects. Sometimes working hours are long but the pay compensates for it.",
+      "Nice workplace. The supervisors are experienced and helpful. Minor issues with equipment sometimes but good overall.",
+      "Good experience working here. Clear expectations and fair treatment. Would work with them again."
+    ],
+    3: [
+      "Average experience. Work is steady but nothing exceptional. Pay is okay, could be better.",
+      "Decent company. Some projects are good, others not so much. Communication could improve.",
+      "Okay workplace. Management is fair but not very organized. Pay is on time which is important.",
+      "Standard experience. Nothing particularly good or bad. Just a regular construction job.",
+      "Mixed experience. Some good aspects like timely payment, but working conditions could be better."
+    ],
+    2: [
+      "Below expectations. Communication issues and sometimes payments are delayed. Not the best experience.",
+      "Disappointing experience. Working conditions need improvement and management is not very responsive.",
+      "Not great. Several issues with equipment maintenance and safety protocols. Could be better.",
+      "Challenging workplace. Long hours with minimal breaks. Not my preferred employer.",
+      "Had some problems here. Organization could be much better. Would hesitate to work here again."
+    ]
+  };
+  
+  // Select 12-15 random jobseekers who will leave reviews
+  const reviewers = shuffle(createdJobseekers).slice(0, Math.floor(Math.random() * 4) + 12);
+  
+  for (const reviewer of reviewers) {
+    // Each reviewer reviews 1-2 random companies they might have worked for
+    const numReviews = Math.floor(Math.random() * 2) + 1;
+    const selectedEmployers = shuffle(createdEmployers).slice(0, numReviews);
+    
+    for (const employer of selectedEmployers) {
+      try {
+        // Weight ratings towards positive (realistic for active companies)
+        const ratingWeights = [5, 5, 5, 4, 4, 4, 3, 3, 2];
+        const rating = ratingWeights[Math.floor(Math.random() * ratingWeights.length)];
+        
+        // Select random review text for this rating
+        const reviewTexts = reviewTemplates[rating];
+        const reviewText = reviewTexts[Math.floor(Math.random() * reviewTexts.length)];
+        
+        const reviewData = {
+          reviewerId: reviewer.id,
+          reviewerName: reviewer.name,
+          reviewerType: 'jobseeker',
+          employerId: employer.id,
+          employerName: employer.name,
+          companyName: employer.companyName,
+          company: employer.companyName,
+          industry: employer.assignedCategory || mapIndustryToCategory(employer.industry),
+          rating: rating,
+          review: reviewText,
+          workDuration: ['1-3 months', '3-6 months', '6-12 months', '1-2 years'][Math.floor(Math.random() * 4)],
+          position: reviewer.skills[0] || 'Construction Worker',
+          verified: true,
+          helpful: Math.floor(Math.random() * 20),
+          createdAt: randomDate(90),
+          date: randomDate(90),
+          status: 'approved'
+        };
+        
+        await db.collection('reviews').add(reviewData);
+        reviewCount++;
+      } catch (error) {
+        console.error(`  ✗ Error creating review:`, error.message);
+      }
+    }
+    console.log(`  ✓ Created reviews by: ${reviewer.name}`);
+  }
+  
+  console.log(`  ✓ Total reviews created: ${reviewCount}`);
+}
+
+async function seedUserStats(createdJobseekers) {
+  console.log('\n📊 Creating User Statistics...');
+  
+  for (const jobseeker of createdJobseekers) {
+    try {
+      const totalPlays = Math.floor(Math.random() * 30) // 0-29
+      const totalWins = Math.min(totalPlays, Math.floor(Math.random() * 20)) // wins <= plays
+      const maxDayStreak = Math.floor(Math.random() * 10) // 0-9
+      const maxWinStreak = Math.floor(Math.random() * 6) // 0-5
+      const perfectScores = Math.random() < 0.3 ? 1 : 0
+
+      const statsData = {
+        userId: jobseeker.id,
+        userName: jobseeker.name,
+        // legacy fields used elsewhere
+        totalApplications: Math.floor(Math.random() * 8) + 2,
+        totalQuizzesTaken: totalPlays,
+        totalQuizzesPassed: totalWins,
+        perfectQuizzes: perfectScores,
+        profileViews: Math.floor(Math.random() * 50) + 10,
+        totalPoints: jobseeker.totalPoints || Math.floor(Math.random() * 500) + 100,
+        level: Math.floor((jobseeker.totalPoints || 200) / 100),
+        streakDays: maxDayStreak,
+        lastActive: randomDate(3),
+        joinedAt: jobseeker.createdAt,
+        achievements: [],
+        // fields expected by badges.js
+        totalPlays,
+        totalWins,
+        maxDayStreak,
+        maxWinStreak,
+        perfectScores
+      };
+      
+      await db.collection('userStats').doc(jobseeker.id).set(statsData);
+      console.log(`  ✓ Created stats for: ${jobseeker.name}`);
+    } catch (error) {
+      console.error(`  ✗ Error creating stats:`, error.message);
+    }
+  }
+  
+  console.log(`  ✓ Total user stats created: ${createdJobseekers.length}`);
+}
+
+async function seedAchievements(createdJobseekers) {
+  console.log('\n🏆 Creating Achievements...');
+
+  let badgeCount = 0;
+
+  for (const jobseeker of createdJobseekers) {
+    try {
+      const statsSnap = await db.collection('userStats').doc(jobseeker.id).get()
+      const s = statsSnap.exists ? statsSnap.data() : {}
+      const earned = new Set()
+
+      // Performance (wins)
+      const wins = s.totalWins || 0
+      if (wins >= 1) earned.add('bronze_performer')
+      if (wins >= 5) earned.add('silver_performer')
+      if (wins >= 10) earned.add('gold_performer')
+      if (wins >= 25) earned.add('platinum_performer')
+
+      // Participation (plays)
+      const plays = s.totalPlays || 0
+      if (plays >= 10) earned.add('beginner')
+      if (plays >= 20) earned.add('learner')
+      if (plays >= 30) earned.add('scholar')
+      if (plays >= 40) earned.add('master')
+
+      // Day streak
+      const dayStreak = s.maxDayStreak || 0
+      if (dayStreak >= 3) earned.add('streak_3')
+      if (dayStreak >= 5) earned.add('streak_5')
+      if (dayStreak >= 7) earned.add('streak_7')
+
+      // Win streak
+      const winStreak = s.maxWinStreak || 0
+      if (winStreak >= 3) earned.add('win_streak_3')
+      if (winStreak >= 5) earned.add('win_streak_5')
+
+      // Perfect scores
+      const perfect = s.perfectScores || 0
+      if (perfect >= 1) earned.add('perfect_1')
+
+      for (const badgeId of earned) {
+        await db.collection('earnedBadges').add({
+          userId: jobseeker.id,
+          userName: jobseeker.name,
+          badgeId,
+          earnedAt: randomDate(25)
+        })
+        badgeCount++
+      }
+
+      console.log(`  ✓ Created ${earned.size} achievements for: ${jobseeker.name}`);
+    } catch (error) {
+      console.error(`  ✗ Error creating achievements for ${jobseeker.name}:`, error.message);
+    }
+  }
+
+  console.log(`  ✓ Total achievements unlocked: ${badgeCount}`);
+}
+
 // Main seeding function
 async function seedDatabase() {
-  console.log('🌱 Starting database seeding...\n');
+  console.log('\n🌱 Starting database seeding with Firebase Authentication...\n');
   console.log('═══════════════════════════════════════════════════════');
   
   try {
-    // Seed in order (maintaining relationships)
     const createdJobseekers = await seedJobseekers();
     const createdEmployers = await seedEmployers();
     const createdJobs = await seedJobs(createdEmployers);
     await seedApplications(createdJobseekers, createdJobs);
     await seedQuizzes(createdJobseekers);
     await seedChatRooms(createdJobseekers, createdEmployers);
+    await seedCompanyReviews(createdJobseekers, createdEmployers);
+    await seedUserStats(createdJobseekers);
+    await seedAchievements(createdJobseekers);
     
     console.log('\n═══════════════════════════════════════════════════════');
     console.log('\n✅ Database seeding completed successfully!');
     console.log('\n📊 Summary:');
-    console.log(`   • Jobseekers: ${createdJobseekers.length}`);
-    console.log(`   • Employers: ${createdEmployers.length}`);
+    console.log(`   • Jobseekers: ${createdJobseekers.length} (Auth + Firestore)`);
+    console.log(`   • Employers: ${createdEmployers.length} (Auth + Firestore)`);
     console.log(`   • Jobs: ${createdJobs.length}`);
     console.log(`   • Applications: Generated based on jobseekers`);
     console.log(`   • Quiz Completions: Generated for 15 jobseekers`);
     console.log(`   • Chat Rooms: 8 conversations`);
-    console.log('\n🎉 Your Bridge platform is now ready for deployment!');
-    console.log('\n📝 Note: All users have password: Password123!\n');
+    console.log(`   • Company Reviews: 12-20 reviews across companies`);
+    console.log(`   • User Statistics: ${createdJobseekers.length} profiles`);
+    console.log(`   • Achievements: 40-120 badges unlocked (2-6 per jobseeker)`);
+    console.log('\n🎉 Your Bridge platform is now ready with working logins!');
+    console.log('\n🔐 Test Login Credentials:');
+    console.log('   Email: ahmad.rahman@email.com');
+    console.log('   Password: Password123!');
+    console.log('\n   Email: hr@buildtech.sg');
+    console.log('   Password: Password123!');
+    console.log('\n📝 See TEST_CREDENTIALS.md for all 30 accounts!\n');
     
   } catch (error) {
     console.error('\n❌ Error during seeding:', error);

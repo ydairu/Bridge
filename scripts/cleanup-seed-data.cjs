@@ -1,9 +1,9 @@
 // Firebase Cleanup Script
 // Run this script to remove all seeded test data
-// Usage: node cleanup-seed-data.js
+// Usage: node scripts/cleanup-seed-data.cjs
 
 const admin = require('firebase-admin');
-const serviceAccount = require('./firebase_private_key.json');
+const serviceAccount = require('../firebase_private_key.json');
 
 // Initialize Firebase Admin
 admin.initializeApp({
@@ -11,6 +11,7 @@ admin.initializeApp({
 });
 
 const db = admin.firestore();
+const auth = admin.auth();
 
 // Helper function to delete collection in batches
 async function deleteCollection(collectionName, batchSize = 100) {
@@ -48,6 +49,32 @@ async function deleteQueryBatch(query, resolve, reject) {
   }
 }
 
+async function deleteAllAuthUsers() {
+  let deletedCount = 0;
+  const listAllUsers = async (nextPageToken) => {
+    const listUsersResult = await auth.listUsers(1000, nextPageToken);
+    const deletePromises = listUsersResult.users.map(userRecord =>
+      auth.deleteUser(userRecord.uid).then(() => {
+        deletedCount++;
+        if (deletedCount % 10 === 0) {
+          console.log(`  ✓ Deleted ${deletedCount} auth accounts...`);
+        }
+      })
+    );
+    await Promise.all(deletePromises);
+    if (listUsersResult.pageToken) {
+      await listAllUsers(listUsersResult.pageToken);
+    }
+  };
+
+  try {
+    await listAllUsers();
+    console.log(`  ✓ Total auth accounts deleted: ${deletedCount}`);
+  } catch (error) {
+    console.error('  ✗ Error deleting auth users:', error.message);
+  }
+}
+
 // Cleanup function
 async function cleanupDatabase() {
   console.log('\n🧹 Starting database cleanup...\n');
@@ -58,29 +85,44 @@ async function cleanupDatabase() {
   console.log('   • applications');
   console.log('   • quizzes');
   console.log('   • chatRooms');
-  console.log('\n⏳ Starting cleanup in 3 seconds... (Press Ctrl+C to cancel)');
+  console.log('   • spellingQuizzes');
+  console.log('   • chats');
+  console.log('   • reviews');
+  console.log('   • earnedBadges');
+  console.log('   • candidateReviews');
+  console.log('   • quizResults');
+  console.log('   • userStats');
+  console.log('\n⏳ Starting cleanup in 5 seconds... (Press Ctrl+C to cancel)');
   
-  await new Promise(resolve => setTimeout(resolve, 3000));
+  await new Promise(resolve => setTimeout(resolve, 5000));
   
   try {
-    console.log('\n🗑️  Deleting users...');
-    await deleteCollection('users');
-    
-    console.log('\n🗑️  Deleting jobs...');
-    await deleteCollection('jobs');
-    
-    console.log('\n🗑️  Deleting applications...');
-    await deleteCollection('applications');
-    
-    console.log('\n🗑️  Deleting quizzes...');
-    await deleteCollection('quizzes');
-    
-    console.log('\n🗑️  Deleting chat rooms...');
-    await deleteCollection('chatRooms');
+    const collections = [
+      'users',
+      'jobs',
+      'applications',
+      'quizzes',
+      'chatRooms',
+      'spellingQuizzes',
+      'chats',
+      'reviews',
+      'earnedBadges',
+      'candidateReviews',
+      'quizResults',
+      'userStats'
+    ];
+
+    for (const name of collections) {
+      console.log(`\n🗑️  Deleting ${name}...`);
+      await deleteCollection(name).catch(() => console.log('  (collection may be empty)'));
+    }
+
+    console.log('\n🗑️  Deleting Firebase Auth accounts...');
+    await deleteAllAuthUsers();
     
     console.log('\n═══════════════════════════════════════════════════════');
     console.log('\n✅ Database cleanup completed successfully!');
-    console.log('   All seeded test data has been removed.\n');
+    console.log('   All seeded test data and auth accounts have been removed.\n');
     
   } catch (error) {
     console.error('\n❌ Error during cleanup:', error);

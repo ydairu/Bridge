@@ -10,6 +10,7 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+.vite
 *.local
 
 # Editor directories and files
@@ -38,3 +39,11 @@ firebase_private_key.json
 # Backend
 backend/node_modules
 backend/.env
+
+# Claude Code (keep shared config, ignore local/secret overrides)
+.claude/settings.local.json
+
+# OS / misc
+Thumbs.db
+*.tmp
+.cache/
