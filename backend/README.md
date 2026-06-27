@@ -114,6 +114,67 @@ curl -X POST http://localhost:3000/api/quizzes/generate \
   -d '{"skill": "Construction", "difficulty": "beginner", "numberOfQuestions": 5}'
 ```
 
+## WhatsApp AI Assistant (Bridge orchestrator)
+
+The backend also hosts the WhatsApp job assistant for migrant workers. It layers
+OpenAI (worker-facing reasoning/orchestration) and Exa (employer/offer trust
+verification) on top of the existing Firestore job platform — see
+`bridge-whatsapp-implementation-plan.md` at the repo root.
+
+### Module layout (`backend/src/`)
+- `whatsapp/` — `webhook.js` (routes), `client.js` (send + parse + interactive
+  messages), `signature.js` (HMAC `X-Hub-Signature-256` check), `templates.js`.
+- `bridge-agent/` — `orchestrator.js`, `schemas.js` (tool definitions),
+  `systemPrompt.js`, `tools.js` (tool executor).
+- `services/` — `firestoreBridge.js` (data layer), `openai.js`, `exa.js`,
+  `verification.js`, `assessments.js`.
+- `config/` — `env.js` (feature env validation), `scamRubric.js`.
+
+### Agent capabilities (tools)
+The orchestrator exposes the platform's jobseeker features as OpenAI tools:
+- **Profile** — `get_profile`, `create_or_update_profile`
+- **Jobs** — `search_jobs` (location/category/type/skill filters, verified-first
+  ranking), `get_job`
+- **Applications** — `start_application`, `submit_application`,
+  `list_applications`, `get_application_status`
+- **Skills assessments** — `start_assessment`, `submit_assessment` (scores, writes
+  `quizResults`, awards a `badges` entry on ≥80%, denormalizes the score onto the
+  profile so applications can cite it)
+- **Achievements** — `get_achievements` (earned + skill badges + quiz stats)
+- **Trust** — `get_employer_reviews`, `verify_employer` (Exa + rubric, updates a
+  listed job's `verificationStatus`), `scam_check` (pasted external offers)
+- **Support** — `request_support`
+
+Real-time employer↔worker chat (Ably) is intentionally out of scope for the
+WhatsApp bridge MVP — the worker already converses through WhatsApp.
+
+### Endpoints
+```
+GET  /webhooks/whatsapp   # Meta verification challenge (uses WHATSAPP_VERIFY_TOKEN)
+POST /webhooks/whatsapp   # Inbound messages (signature-verified, deduped, async)
+GET  /health              # now also reports feature config status
+```
+
+### Environment
+See `.env.example` at the repo root. WhatsApp needs `WHATSAPP_TOKEN`,
+`WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_VERIFY_TOKEN`, `WHATSAPP_APP_SECRET`;
+the orchestrator needs `OPENAI_API_KEY` (+ optional `OPENAI_MODEL`); trust
+verification needs `EXA_API_KEY`. Missing groups are logged at boot and the
+webhook rejects requests rather than crashing the existing OpenAI quiz endpoints.
+
+### Tests
+```bash
+npm test               # full hermetic suite (node:test) — 49 cases, no network
+npm run smoke:whatsapp # quick dep-free signature/parse/payload checks
+node scripts/live-agent-check.js   # optional: scripted convo vs the real OpenAI
+                                   # model (in-memory Firestore; needs OPENAI_API_KEY)
+```
+The hermetic suite (`backend/test/`) runs the real modules against an in-memory
+Firestore (`test/helpers/fakeFirestore.js`) and a `fetch` mock for OpenAI/Exa/
+WhatsApp (`test/helpers/fetchMock.js`). It covers the data layer, orchestrator
+(duplicate/empty/tool-call/error/interactive paths), tool routing, signature
+verification, message parsing, and trust verification — including edge cases.
+
 ## Integration with Frontend
 
 The frontend is already configured to call these endpoints through `src/services/api.js`.
