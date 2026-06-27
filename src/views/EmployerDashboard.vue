@@ -504,13 +504,9 @@ export default {
   text-align: center;
   color: var(--text-muted);
   padding: 48px 20px;
-  background: var(--bg);
+  background: rgba(13, 27, 53, 0.5);
   border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.dark-mode .empty-tab {
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(74, 158, 245, 0.1);
 }
 
 .empty-tab p {
@@ -554,25 +550,23 @@ export default {
 
 .btn-outline {
   background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text);
+  border: 1px solid rgba(74, 158, 245, 0.25);
+  color: rgba(200, 220, 255, 0.8);
 }
 
 .btn-outline:hover {
-  background: var(--bg-light);
+  background: rgba(26, 111, 212, 0.1);
+  border-color: rgba(74, 158, 245, 0.45);
+  color: #F0F6FF;
 }
 
 /* Loading and Empty States */
 .loading-state {
-  background: var(--bg);
+  background: rgba(13, 27, 53, 0.5);
   padding: 60px 20px;
   border-radius: 12px;
   text-align: center;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.dark-mode .loading-state {
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(74, 158, 245, 0.1);
 }
 
 .loading-state p {
@@ -592,15 +586,11 @@ export default {
 }
 
 .empty-state {
-  background: var(--bg);
+  background: rgba(13, 27, 53, 0.5);
   padding: 60px 20px;
   border-radius: 12px;
   text-align: center;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.dark-mode .empty-state {
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(74, 158, 245, 0.1);
 }
 
 .empty-state p {

@@ -96,33 +96,27 @@ export default {
 }
 
 .modal-content {
-  background: white;
+  background: rgba(10, 22, 40, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(74, 158, 245, 0.2);
   border-radius: 12px;
   max-width: 500px;
   width: 100%;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
   animation: slideUp 0.3s ease-out;
-}
-
-.dark-mode .modal-content {
-  background: #1a1a1a;
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .modal-header {
   padding: 24px 24px 16px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(74, 158, 245, 0.12);
 }
 
 .modal-header h3 {
   margin: 0;
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--text);
-}
-
-.dark-mode .modal-header {
-  border-bottom-color: rgba(255, 255, 255, 0.1);
+  color: #F0F6FF;
 }
 
 .modal-body {
@@ -133,11 +127,7 @@ export default {
   margin: 0;
   font-size: 1rem;
   line-height: 1.6;
-  color: var(--text-muted);
-}
-
-.dark-mode .modal-body p {
-  color: #aaa;
+  color: rgba(200, 220, 255, 0.7);
 }
 
 .modal-footer {
@@ -145,11 +135,7 @@ export default {
   display: flex;
   gap: 12px;
   justify-content: flex-end;
-  border-top: 1px solid var(--border);
-}
-
-.dark-mode .modal-footer {
-  border-top-color: rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(74, 158, 245, 0.12);
 }
 
 .btn {
@@ -163,19 +149,14 @@ export default {
 }
 
 .btn-secondary {
-  background: var(--bg-light);
-  color: var(--text);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(200, 220, 255, 0.8);
+  border: 1px solid rgba(74, 158, 245, 0.2);
 }
 
 .btn-secondary:hover {
-  background: var(--bg);
-  border-color: var(--primary);
-}
-
-.dark-mode .btn-secondary {
-  background: #3a3a3a;
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.12);
+  color: #F0F6FF;
 }
 
 .btn-danger {
@@ -186,7 +167,7 @@ export default {
 .btn-danger:hover {
   background: #dc2626;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
 }
 
 @keyframes slideUp {

@@ -640,17 +640,15 @@ export default {
 
 /* Filter Sidebar */
 .filter-sidebar {
-  background: var(--bg);
+  background: rgba(13, 27, 53, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   padding: 24px;
   border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(74, 158, 245, 0.15);
   height: fit-content;
   position: sticky;
   top: 100px;
-}
-
-.dark-mode .filter-sidebar {
-  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .filter-section h4 {
@@ -662,7 +660,7 @@ export default {
 
 .separator {
   height: 1px;
-  background: var(--border);
+  background: rgba(74, 158, 245, 0.1);
   margin: 24px 0;
 }
 
@@ -684,21 +682,19 @@ export default {
 .search-input {
   width: 100%;
   padding: 10px 12px 10px 40px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(74, 158, 245, 0.2);
   border-radius: 8px;
   font-size: 0.875rem;
-  background: var(--bg);
-  color: var(--text);
+  background: rgba(10, 22, 40, 0.5);
+  color: #F0F6FF;
+  box-sizing: border-box;
 }
 
-.dark-mode .search-input {
-  border-color: rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.05);
-}
+.search-input::placeholder { color: rgba(180, 210, 255, 0.4); }
 
 .search-input:focus {
   outline: none;
-  border-color: var(--primary);
+  border-color: #1A6FD4;
 }
 
 .filter-options {
@@ -769,20 +765,18 @@ export default {
 
 /* Review Card */
 .review-card {
-  background: var(--bg);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(13, 27, 53, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(74, 158, 245, 0.15);
   border-radius: 12px;
   padding: 24px;
   transition: all 0.2s;
 }
 
-.dark-mode .review-card {
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
 .review-card:hover {
-  border-color: var(--primary);
-  box-shadow: var(--shadow-sm);
+  border-color: rgba(74, 158, 245, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .review-header {
@@ -808,12 +802,12 @@ export default {
   width: 48px;
   height: 48px;
   border-radius: 8px;
-  background: linear-gradient(135deg, var(--primary) 0%, #4a90e2 100%);
+  background: rgba(26, 111, 212, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border: 2px solid var(--border);
+  border: 1px solid rgba(74, 158, 245, 0.25);
 }
 
 .company-logo-img-small {
@@ -843,8 +837,9 @@ export default {
 .industry-tag {
   display: inline-block;
   padding: 4px 12px;
-  background: var(--bg-light);
-  color: var(--text);
+  background: rgba(74, 158, 245, 0.1);
+  color: #4A9EF5;
+  border: 1px solid rgba(74, 158, 245, 0.2);
   border-radius: 4px;
   font-size: 0.75rem;
   font-weight: 500;
@@ -895,11 +890,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding-top: 16px;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.dark-mode .review-footer {
-  border-top-color: rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(74, 158, 245, 0.1);
 }
 
 .review-meta {
@@ -924,9 +915,9 @@ export default {
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
-  background: var(--bg-light);
-  color: var(--text);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(200, 220, 255, 0.7);
+  border: 1px solid rgba(74, 158, 245, 0.15);
   border-radius: 6px;
   font-size: 0.813rem;
   font-weight: 500;
@@ -935,20 +926,15 @@ export default {
 }
 
 .helpful-btn:hover:not(.is-liked) {
-  background: var(--bg);
-  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(74, 158, 245, 0.35);
+  color: #F0F6FF;
 }
-
 
 .helpful-btn.is-liked {
-  background: var(--primary);
-  border-color: var(--primary);
+  background: #1A6FD4;
+  border-color: #1A6FD4;
   color: white;
-}
-
-.helpful-btn.is-liked:hover {
-  background: var(--primary);
-  border-color: var(--primary);
 }
 
 .helpful-btn.is-liked .thumbs-icon {
@@ -963,29 +949,29 @@ export default {
 
 /* Skeleton Loading */
 .review-card-skeleton {
-  background: var(--bg);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(13, 27, 53, 0.5);
+  border: 1px solid rgba(74, 158, 245, 0.1);
   border-radius: 12px;
   padding: 24px;
 }
 
 .skeleton-header {
   height: 80px;
-  background: var(--bg-light);
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   margin-bottom: 16px;
 }
 
 .skeleton-body {
   height: 120px;
-  background: var(--bg-light);
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   margin-bottom: 16px;
 }
 
 .skeleton-footer {
   height: 40px;
-  background: var(--bg-light);
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
 }
 

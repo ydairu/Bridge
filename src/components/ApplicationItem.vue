@@ -89,15 +89,11 @@ export default {
 <style scoped>
 .application-item {
   padding: 16px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(74, 158, 245, 0.08);
 }
 
 .application-item:last-child {
   border-bottom: none;
-}
-
-.dark-mode .application-item {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .application-header {
@@ -143,18 +139,18 @@ export default {
 }
 
 .status-pending {
-  background: oklch(0.9 0.02 100);
-  color: var(--warning);
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
 }
 
 .status-accepted {
-  background: oklch(0.9 0.02 160);
-  color: var(--success);
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
 }
 
 .status-rejected {
-  background: oklch(0.9 0.02 30);
-  color: var(--danger);
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
 }
 
 .application-meta {
@@ -187,22 +183,18 @@ export default {
   border-radius: 8px;
   font-size: 0.875rem;
   font-weight: 500;
-  background: var(--bg-light);
-  color: var(--text);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(26, 111, 212, 0.12);
+  color: #4A9EF5;
+  border: 1px solid rgba(74, 158, 245, 0.2);
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .btn-view:hover {
-  background: var(--primary);
+  background: #1A6FD4;
   color: white;
-  border-color: var(--primary);
-}
-
-.dark-mode .btn-view {
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-color: #1A6FD4;
 }
 </style>

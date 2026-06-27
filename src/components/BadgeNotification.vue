@@ -105,20 +105,18 @@ export default {
 }
 
 .badge-notification-card {
-  background: white;
+  background: rgba(10, 22, 40, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(74, 158, 245, 0.2);
   border-radius: 20px;
   padding: 40px;
   max-width: 600px;
   width: 100%;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
   position: relative;
   overflow: hidden;
   animation: scaleIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-.dark-mode .badge-notification-card {
-  background: #1a1a1a;
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 @keyframes scaleIn {
@@ -183,22 +181,14 @@ export default {
 
 .badge-header h2 {
   font-size: 2rem;
-  color: #1a1a1a;
+  color: #F0F6FF;
   margin-bottom: 10px;
   font-weight: 700;
 }
 
 .badge-header p {
-  color: #666;
+  color: rgba(200, 220, 255, 0.7);
   font-size: 1.1rem;
-}
-
-.dark-mode .badge-header h2 {
-  color: #ffffff;
-}
-
-.dark-mode .badge-header p {
-  color: #aaa;
 }
 
 .badges-list {
@@ -212,17 +202,12 @@ export default {
   align-items: center;
   gap: 20px;
   padding: 20px;
-  background: #f8f9fa;
+  background: rgba(13, 27, 53, 0.7);
   border-radius: 12px;
   margin-bottom: 15px;
-  border: 2px solid #e9ecef;
+  border: 1px solid rgba(74, 158, 245, 0.15);
   animation: slideInRight 0.5s ease-out forwards;
   opacity: 0;
-}
-
-.dark-mode .badge-item {
-  background: #2a2a2a;
-  border-color: #3a3a3a;
 }
 
 @keyframes slideInRight {
@@ -283,23 +268,15 @@ export default {
 
 .badge-info h3 {
   font-size: 1.5rem;
-  color: #1a1a1a;
+  color: #F0F6FF;
   margin-bottom: 5px;
   font-weight: 600;
 }
 
 .badge-info p {
-  color: #666;
+  color: rgba(200, 220, 255, 0.7);
   margin-bottom: 8px;
   font-size: 0.95rem;
-}
-
-.dark-mode .badge-info h3 {
-  color: #ffffff;
-}
-
-.dark-mode .badge-info p {
-  color: #aaa;
 }
 
 .badge-tier {
@@ -341,22 +318,14 @@ export default {
 }
 
 .btn-secondary {
-  background: #e9ecef;
-  color: #1a1a1a;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(200, 220, 255, 0.8);
+  border: 1px solid rgba(74, 158, 245, 0.2);
 }
 
 .btn-secondary:hover {
-  background: #dee2e6;
-  color: #000;
-}
-
-.dark-mode .btn-secondary {
-  background: #3a3a3a;
-  color: #ffffff;
-}
-
-.dark-mode .btn-secondary:hover {
-  background: #4a4a4a;
+  background: rgba(255, 255, 255, 0.14);
+  color: #F0F6FF;
 }
 
 .badge-slide-enter-active {

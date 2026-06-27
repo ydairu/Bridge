@@ -406,14 +406,14 @@ export default {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: var(--bg-light);
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: rgba(13, 27, 53, 0.7);
+  border: 1px solid rgba(74, 158, 245, 0.2);
   border-radius: 8px;
   padding: 10px 16px;
   width: 100%;
   max-width: 500px;
   transition: all 0.3s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(12px);
 }
 
 .search-bar-wrapper:focus-within {
@@ -455,8 +455,8 @@ export default {
 
 .filter-tab {
   padding: 10px 20px;
-  border: 1px solid var(--border);
-  background: var(--bg-light);
+  border: 1px solid rgba(74, 158, 245, 0.2);
+  background: rgba(13, 27, 53, 0.7);
   color: var(--text-muted);
   font-size: 0.875rem;
   font-weight: 500;
@@ -479,8 +479,8 @@ export default {
 .btn-refresh {
   margin-left: auto;
   padding: 10px 20px;
-  border: 1px solid var(--border);
-  background: var(--bg-light);
+  border: 1px solid rgba(74, 158, 245, 0.2);
+  background: rgba(13, 27, 53, 0.7);
   color: var(--text);
   font-size: 0.875rem;
   font-weight: 500;
@@ -520,8 +520,8 @@ export default {
 }
 
 .application-card-wrapper {
-  background: var(--bg-light);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(13, 27, 53, 0.7);
+  border: 1px solid rgba(74, 158, 245, 0.15);
   border-radius: 8px;
   padding: 20px;
   width: 100%;
@@ -579,18 +579,21 @@ export default {
 }
 
 .status-badge.pending {
-  background: oklch(0.9 0.02 100);
-  color: var(--warning);
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
 .status-badge.accepted {
-  background: oklch(0.9 0.02 160);
-  color: var(--success);
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .status-badge.rejected {
-  background: oklch(0.9 0.02 30);
-  color: var(--danger);
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 /* Application Details */
@@ -653,9 +656,9 @@ export default {
 }
 
 .view-details-btn {
-  background: var(--bg-light);
-  color: var(--text);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(26, 111, 212, 0.08);
+  color: #4A9EF5;
+  border: 1px solid rgba(74, 158, 245, 0.2);
   padding: 8px 16px;
   border-radius: 8px;
   font-size: 0.875rem;
@@ -672,9 +675,6 @@ export default {
   border-color: var(--primary);
 }
 
-.dark-mode .view-details-btn {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
 
 .status-actions {
   display: flex;

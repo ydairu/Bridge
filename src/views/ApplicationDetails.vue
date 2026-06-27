@@ -87,6 +87,12 @@
         <!-- Job Information -->
         <div class="job-section">
           <h2>Job Information</h2>
+          <div v-if="application.description" class="info-section">
+            <h3>Job Description</h3>
+            <div class="content-box">
+              <p>{{ application.description }}</p>
+            </div>
+          </div>
           <div class="job-actions">
             <router-link :to="`/jobs/${application.jobId}`" class="btn btn-secondary">
               View Job Posting
@@ -212,7 +218,7 @@ export default {
 <style scoped>
 .application-details-page {
   min-height: calc(100vh - 70px);
-  background: var(--bg-light);
+  background: #0A1628;
   padding: 40px 20px;
 }
 
@@ -251,19 +257,15 @@ export default {
 }
 
 .application-header {
-  background: white;
+  background: rgba(13, 27, 53, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(74, 158, 245, 0.15);
   padding: 30px;
   border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: start;
-}
-
-.dark-mode .application-header {
-  background: var(--bg);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .header-info h1 {
@@ -318,22 +320,21 @@ export default {
 }
 
 .status-badge.pending {
-  background: var(--warning);
-  color: var(--text);
-}
-
-.dark-mode .status-badge.pending {
-  color: #000;
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
 .status-badge.accepted {
-  background: var(--success);
-  color: white;
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .status-badge.rejected {
-  background: var(--danger);
-  color: white;
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 .action-buttons {
@@ -344,18 +345,12 @@ export default {
 .candidate-section,
 .application-section,
 .job-section {
-  background: white;
+  background: rgba(13, 27, 53, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(74, 158, 245, 0.15);
   padding: 30px;
   border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.dark-mode .candidate-section,
-.dark-mode .application-section,
-.dark-mode .job-section {
-  background: var(--bg);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .candidate-section h2,
@@ -392,15 +387,10 @@ export default {
 }
 
 .content-box {
-  background: var(--bg-light);
+  background: rgba(10, 22, 40, 0.5);
   padding: 20px;
   border-radius: 8px;
-  border: 1px solid var(--border);
-}
-
-.dark-mode .content-box {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(74, 158, 245, 0.1);
 }
 
 .content-box p {
@@ -438,48 +428,39 @@ export default {
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: oklch(0.3 0.1 245);
+  background: #155dc0;
   transform: translateY(-2px);
 }
 
 .btn-secondary {
-  background: var(--bg-light);
-  color: var(--text);
-  border: 2px solid var(--border);
-}
-
-.dark-mode .btn-secondary {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(200, 220, 255, 0.8);
+  border: 1px solid rgba(74, 158, 245, 0.2);
 }
 
 .btn-secondary:hover {
-  background: var(--bg);
-  border-color: var(--primary);
-}
-
-.dark-mode .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.12);
+  color: #F0F6FF;
+  border-color: rgba(74, 158, 245, 0.4);
 }
 
 .btn-success {
-  background: var(--success);
+  background: #10b981;
   color: white;
 }
 
 .btn-success:hover:not(:disabled) {
-  background: oklch(0.4 0.1 145);
+  background: #059669;
   transform: translateY(-2px);
 }
 
 .btn-danger {
-  background: var(--danger);
+  background: #ef4444;
   color: white;
 }
 
 .btn-danger:hover:not(:disabled) {
-  background: oklch(0.4 0.1 15);
+  background: #dc2626;
   transform: translateY(-2px);
 }
 

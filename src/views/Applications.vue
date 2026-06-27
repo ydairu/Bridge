@@ -100,12 +100,12 @@
             </div>
 
             <!-- Application Preview -->
-            <div class="application-preview" v-if="application.coverLetter">
+            <div class="application-preview" v-if="application.coverLetter || application.description">
               <div class="preview-header">
-                <h4>Cover Letter</h4>
+                <h4>{{ application.coverLetter ? 'Cover Letter' : 'Job Description' }}</h4>
               </div>
               <p class="preview-text">
-                {{ truncateText(application.coverLetter, 150) }}
+                {{ truncateText(application.coverLetter || application.description, 150) }}
               </p>
             </div>
 
@@ -270,9 +270,9 @@ export default {
   align-items: flex-end;
   gap: 4px;
   padding: 16px 24px;
-  background: var(--bg-light);
+  background: rgba(13, 27, 53, 0.7);
   border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(74, 158, 245, 0.15);
 }
 
 .count-number {
@@ -302,25 +302,25 @@ export default {
   align-items: center;
   gap: 8px;
   padding: 12px 20px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: var(--bg-light);
-  color: var(--text-muted);
+  border: 1px solid rgba(74, 158, 245, 0.15);
+  background: rgba(13, 27, 53, 0.6);
+  color: rgba(200, 220, 255, 0.65);
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
   border-radius: 8px;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .filter-tab:hover {
-  border-color: var(--primary);
-  color: var(--text);
+  border-color: rgba(74, 158, 245, 0.35);
+  color: #F0F6FF;
 }
 
 .filter-tab.active {
-  background: var(--primary);
+  background: #1A6FD4;
   color: white;
-  border-color: var(--primary);
+  border-color: #1A6FD4;
 }
 
 .tab-count {
@@ -330,7 +330,7 @@ export default {
   min-width: 20px;
   height: 20px;
   padding: 0 6px;
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.12);
   border-radius: 10px;
   font-size: 0.75rem;
   font-weight: 600;
@@ -342,11 +342,12 @@ export default {
 
 /* Empty State */
 .empty-state {
-  background: var(--bg-light);
+  background: rgba(13, 27, 53, 0.6);
+  backdrop-filter: blur(12px);
   padding: 80px 40px;
   border-radius: 16px;
   text-align: center;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(74, 158, 245, 0.12);
 }
 
 .empty-icon {
@@ -414,19 +415,20 @@ export default {
 }
 
 .card-wrapper {
-  background: var(--bg-light);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(13, 27, 53, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(74, 158, 245, 0.15);
   border-radius: 12px;
   padding: 24px;
   width: 100%;
   display: flex;
   flex-direction: column;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .application-card:hover .card-wrapper {
-  box-shadow: var(--shadow-md);
-  border-color: rgba(0, 0, 0, 0.12);
+  border-color: rgba(74, 158, 245, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 /* Card Header */
@@ -472,18 +474,18 @@ export default {
 }
 
 .status-badge.pending {
-  background: oklch(0.9 0.02 100);
-  color: var(--warning);
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
 }
 
 .status-badge.accepted {
-  background: oklch(0.9 0.02 160);
-  color: var(--success);
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
 }
 
 .status-badge.rejected {
-  background: oklch(0.9 0.02 30);
-  color: var(--danger);
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
 }
 
 /* Application Meta */
@@ -493,7 +495,7 @@ export default {
   gap: 20px;
   margin-bottom: 16px;
   padding-bottom: 16px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(74, 158, 245, 0.1);
 }
 
 .meta-item {
@@ -545,7 +547,7 @@ export default {
 /* Application Footer */
 .application-footer {
   padding-top: 16px;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-top: 1px solid rgba(74, 158, 245, 0.1);
   margin-top: auto;
 }
 
@@ -561,20 +563,20 @@ export default {
   align-items: center;
   gap: 6px;
   padding: 10px 16px;
-  background: var(--bg);
-  color: var(--text);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(26, 111, 212, 0.1);
+  color: #4A9EF5;
+  border: 1px solid rgba(74, 158, 245, 0.2);
   border-radius: 8px;
   font-size: 0.875rem;
   font-weight: 500;
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .btn-view-job:hover {
-  background: var(--primary);
+  background: #1A6FD4;
   color: white;
-  border-color: var(--primary);
+  border-color: #1A6FD4;
 }
 
 .btn-icon {
@@ -586,18 +588,19 @@ export default {
   display: inline-block;
   padding: 10px 16px;
   background: transparent;
-  color: var(--primary);
-  border: 1px solid var(--primary);
+  color: #4A9EF5;
+  border: 1px solid rgba(74, 158, 245, 0.35);
   border-radius: 8px;
   font-size: 0.875rem;
   font-weight: 500;
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .btn-view-details:hover {
-  background: var(--primary);
+  background: #1A6FD4;
   color: white;
+  border-color: #1A6FD4;
 }
 
 /* Responsive Design */

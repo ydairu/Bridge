@@ -105,33 +105,27 @@ export default {
 
 <style scoped>
 .achievement-card {
-  background: var(--bg-light);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(13, 27, 53, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(74, 158, 245, 0.15);
   border-radius: 1rem;
   padding: 1.5rem;
   transition: all 0.3s ease;
   animation: fadeIn 0.6s ease-out both;
-  box-shadow: var(--shadow-sm);
 }
 
 .achievement-card.locked {
   opacity: 0.4;
   filter: grayscale(100%) brightness(0.7) contrast(0.8);
-  background: rgba(0, 0, 0, 0.05);
-  border-color: rgba(0, 0, 0, 0.1);
+  border-color: rgba(74, 158, 245, 0.06);
   box-shadow: none;
-}
-
-.dark-mode .achievement-card.locked {
-  background: rgba(0, 0, 0, 0.3);
-  border-color: rgba(255, 255, 255, 0.08);
-  filter: grayscale(100%) brightness(0.5) contrast(0.7);
 }
 
 .achievement-card:hover:not(.locked) {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-  border-color: rgba(0, 0, 0, 0.12);
+  border-color: rgba(74, 158, 245, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .achievement-card.locked:hover {
@@ -346,7 +340,7 @@ export default {
 
 .progress-bar {
   height: 8px;
-  background: var(--border);
+  background: rgba(74, 158, 245, 0.12);
   border-radius: 4px;
   overflow: hidden;
   margin-bottom: 0.5rem;
@@ -354,7 +348,7 @@ export default {
 
 .progress-fill {
   height: 100%;
-  background: var(--primary);
+  background: #1A6FD4;
   border-radius: 4px;
   transition: width 0.3s ease;
 }

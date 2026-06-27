@@ -291,26 +291,27 @@ export default {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: var(--bg);
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  background: rgba(13, 27, 53, 0.7);
+  border: 1px solid rgba(74, 158, 245, 0.2);
   border-radius: 8px;
   padding: 10px 16px;
   width: 100%;
   max-width: 500px;
   transition: all 0.3s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(8px);
 }
 
 .search-bar-wrapper:focus-within {
-  border-color: var(--primary);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-color: #1A6FD4;
+  box-shadow: 0 0 0 3px rgba(26, 111, 212, 0.15);
 }
 
 .search-icon {
   width: 18px;
   height: 18px;
-  opacity: 0.6;
+  opacity: 0.55;
   flex-shrink: 0;
+  filter: invert(1);
 }
 
 .search-input,
@@ -322,12 +323,12 @@ export default {
   border-radius: 0;
   font-size: 1rem;
   background: transparent;
-  color: var(--text);
+  color: #F0F6FF;
   outline: none;
 }
 
 .search-input::placeholder {
-  color: var(--text-muted);
+  color: rgba(180, 210, 255, 0.45);
 }
 
 
@@ -403,18 +404,18 @@ export default {
   width: 100%;
   max-width: 180px;
   padding: 10px 12px;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(74, 158, 245, 0.2);
   border-radius: 8px;
   font-size: 0.875rem;
-  background: var(--bg);
-  color: var(--text);
+  background: rgba(13, 27, 53, 0.7);
+  color: #F0F6FF;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .sort-select:focus {
   outline: none;
-  border-color: var(--primary);
+  border-color: #1A6FD4;
 }
 
 .jobs-container {
