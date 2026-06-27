@@ -1,4 +1,5 @@
 import admin from "firebase-admin";
+import { scoreAssessment } from "./assessments.js";
 
 const SERVER_TIMESTAMP = admin.firestore.FieldValue.serverTimestamp;
 
@@ -226,7 +227,7 @@ export class BridgeFirestoreService {
       .reverse();
   }
 
-  async searchJobs({ userId, query = "", location = "", skills = [] }) {
+  async searchJobs({ userId, query = "", location = "", skills = [], category = "", type = "" }) {
     const profile = userId ? await this.getProfile({ userId }) : null;
     const snapshot = await this.db.collection("jobs").get();
     const requestedSkills = safeArray(skills);
@@ -236,6 +237,8 @@ export class BridgeFirestoreService {
       .filter((job) => (job.status || "active") !== "closed")
       .filter((job) => job.verificationStatus !== "flagged")
       .filter((job) => !location || normalizeText(job.location).includes(normalizeText(location)))
+      .filter((job) => !category || normalizeText(job.category) === normalizeText(category))
+      .filter((job) => !type || normalizeText(job.type) === normalizeText(type))
       .map((job) => ({
         ...jobSummary(job),
         matchScore: scoreJob(job, { ...profile, skills: [...safeArray(profile?.skills), ...requestedSkills] }, query),
@@ -319,6 +322,7 @@ export class BridgeFirestoreService {
       resume: profile?.experienceSummary || profile?.experience || "Submitted via WhatsApp",
       answers,
       skills: safeArray(profile?.skills),
+      assessments: profile?.assessments || {},
       createdAt: nowIso(),
       appliedAt: nowIso(),
     });
@@ -381,6 +385,159 @@ export class BridgeFirestoreService {
       { merge: true }
     );
     return this.getJob({ jobId });
+  }
+
+  // ---- Skills assessments ----
+
+  async startAssessment({ userId, skill, difficulty, questions }) {
+    // Persist the full questions (incl. correct answers) in conversation state so
+    // the next turn can score them. Only the worker-facing fields are returned.
+    await this.updateConversationState({
+      userId,
+      patch: {
+        currentFlow: "assessment",
+        flowStep: "answering",
+        scratch: {
+          assessment: { skill, difficulty, questions, startedAt: nowIso() },
+        },
+      },
+    });
+
+    return {
+      skill,
+      difficulty,
+      total: questions.length,
+      questions: questions.map((q, index) => ({
+        number: index + 1,
+        question: q.question,
+        options: q.options,
+      })),
+    };
+  }
+
+  async submitAssessment({ userId, answers = [] }) {
+    const state = await this.getConversationState({ userId });
+    const active = state?.scratch?.assessment;
+    if (!active || !Array.isArray(active.questions) || active.questions.length === 0) {
+      throw new Error("No active assessment. Start one first with the skill name.");
+    }
+
+    const result = scoreAssessment(active.questions, answers);
+    const profile = await this.getProfile({ userId });
+
+    const resultRef = await this.db.collection("quizResults").add({
+      userId,
+      skill: active.skill,
+      difficulty: active.difficulty,
+      score: result.score,
+      correct: result.correct,
+      total: result.total,
+      passed: result.passed,
+      source: "whatsapp",
+      completedAt: nowIso(),
+    });
+
+    let badgeAwarded = false;
+    if (result.passed) {
+      await this.db.collection("badges").add({
+        userId,
+        skill: active.skill,
+        level: active.difficulty,
+        source: "whatsapp",
+        earnedAt: nowIso(),
+      });
+      badgeAwarded = true;
+
+      // Denormalize the latest passing score onto the profile so application
+      // summaries can reference the worker's verified skill level.
+      const assessments = { ...(profile?.assessments || {}) };
+      assessments[active.skill] = {
+        score: result.score,
+        level: active.difficulty,
+        passedAt: nowIso(),
+      };
+      await this.db.collection("users").doc(userId).set({ assessments, updatedAt: nowIso() }, { merge: true });
+    }
+
+    // Clear the active assessment regardless of outcome.
+    await this.updateConversationState({
+      userId,
+      patch: { currentFlow: "idle", flowStep: "", scratch: {} },
+    });
+
+    return {
+      resultId: resultRef.id,
+      skill: active.skill,
+      difficulty: active.difficulty,
+      score: result.score,
+      correct: result.correct,
+      total: result.total,
+      passed: result.passed,
+      badgeAwarded,
+    };
+  }
+
+  async getAchievements({ userId }) {
+    const [earnedSnap, badgeSnap, statsSnap] = await Promise.all([
+      this.db.collection("earnedBadges").where("userId", "==", userId).get(),
+      this.db.collection("badges").where("userId", "==", userId).get(),
+      this.db.collection("userStats").doc(userId).get(),
+    ]);
+
+    const earnedBadges = earnedSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    const skillBadges = badgeSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    const stats = statsSnap.exists ? statsSnap.data() : null;
+
+    return {
+      skillBadges,
+      earnedBadges,
+      stats: stats
+        ? {
+            totalPlays: stats.totalPlays || 0,
+            totalWins: stats.totalWins || 0,
+            bestScore: stats.bestScore || 0,
+            perfectScores: stats.perfectScores || 0,
+          }
+        : null,
+      totalBadges: earnedBadges.length + skillBadges.length,
+    };
+  }
+
+  async getEmployerReviews({ company = "", employerId = "", limit = 5 }) {
+    const snapshot = await this.db.collection("reviews").get();
+    const wantedCompany = normalizeText(company);
+
+    const reviews = snapshot.docs
+      .map((doc) => ({ id: doc.id, ...doc.data() }))
+      .filter((review) => {
+        if (employerId && review.employerId === employerId) return true;
+        if (wantedCompany) {
+          return (
+            normalizeText(review.company).includes(wantedCompany) ||
+            normalizeText(review.companyName).includes(wantedCompany)
+          );
+        }
+        return !employerId; // no filter => return all
+      });
+
+    const ratings = reviews.map((review) => Number(review.rating) || 0).filter((r) => r > 0);
+    const averageRating = ratings.length
+      ? Math.round((ratings.reduce((sum, r) => sum + r, 0) / ratings.length) * 10) / 10
+      : 0;
+
+    return {
+      company: company || reviews[0]?.company || reviews[0]?.companyName || "",
+      averageRating,
+      reviewCount: reviews.length,
+      reviews: reviews
+        .slice(0, limit)
+        .map((review) => ({
+          rating: Number(review.rating) || 0,
+          review: review.review || review.comment || "",
+          reviewerName: review.reviewerName || "Anonymous",
+          date: review.date || review.createdAt || "",
+        })),
+    };
   }
 
   async requestSupport({ userId, topic = "general", message = "" }) {

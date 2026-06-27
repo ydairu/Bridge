@@ -37,8 +37,10 @@ export const BRIDGE_TOOLS = [
         type: "object",
         properties: {
           query: { type: "string" },
-          location: { type: "string" },
+          location: { type: "string", description: "One of: central, north, south, east, west." },
           skills: { type: "array", items: { type: "string" } },
+          category: { type: "string", description: "e.g. construction, manufacturing, hospitality, logistics, cleaning, maintenance, security, facilities." },
+          type: { type: "string", description: "One of: full-time, part-time, contract." },
         },
         additionalProperties: false,
       },
@@ -103,6 +105,80 @@ export const BRIDGE_TOOLS = [
       parameters: {
         type: "object",
         properties: { applicationId: { type: "string" } },
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "start_assessment",
+      description:
+        "Start a short skill assessment quiz for the worker. Returns questions to present one at a time or together. Use submit_assessment with their answers afterwards.",
+      parameters: {
+        type: "object",
+        properties: {
+          skill: { type: "string", description: "Skill to assess, e.g. Welding, Scaffolding, Electrical." },
+          difficulty: { type: "string", description: "beginner, intermediate, or advanced." },
+        },
+        required: ["skill"],
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "submit_assessment",
+      description:
+        "Submit the worker's answers to the active assessment. Answers are option choices in order (index 0-3, letter A-D, or the option text).",
+      parameters: {
+        type: "object",
+        properties: {
+          answers: {
+            type: "array",
+            items: { type: ["string", "integer"] },
+            description: "One answer per question, in question order.",
+          },
+        },
+        required: ["answers"],
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "get_achievements",
+      description: "Get the worker's earned skill badges, achievement badges, and quiz stats.",
+      parameters: { type: "object", properties: {}, additionalProperties: false },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "get_employer_reviews",
+      description: "Get reviews and average rating for an employer/company to help the worker judge trust.",
+      parameters: {
+        type: "object",
+        properties: {
+          company: { type: "string" },
+          employerId: { type: "string" },
+        },
+        additionalProperties: false,
+      },
+    },
+  },
+  {
+    type: "function",
+    function: {
+      name: "verify_employer",
+      description:
+        "Run trust verification on a listed Bridge job's employer (web evidence + risk rubric) and update its verification status.",
+      parameters: {
+        type: "object",
+        properties: { jobId: { type: "string" } },
+        required: ["jobId"],
         additionalProperties: false,
       },
     },
