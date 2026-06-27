@@ -6,12 +6,13 @@ const realFetch = global.fetch;
 
 export function installFetchMock() {
   const calls = [];
-  const handlers = { openai: [], exa: [], whatsapp: [], other: [] };
+  const handlers = { openai: [], exa: [], whatsapp: [], telegram: [], other: [] };
 
   function classify(url) {
     if (url.includes("api.openai.com")) return "openai";
     if (url.includes("api.exa.ai")) return "exa";
     if (url.includes("graph.facebook.com")) return "whatsapp";
+    if (url.includes("api.telegram.org")) return "telegram";
     return "other";
   }
 
@@ -39,6 +40,7 @@ export function installFetchMock() {
     onOpenAI: (fn) => handlers.openai.push(fn),
     onExa: (fn) => handlers.exa.push(fn),
     onWhatsApp: (fn) => handlers.whatsapp.push(fn),
+    onTelegram: (fn) => handlers.telegram.push(fn),
     restore: () => {
       global.fetch = realFetch;
     },

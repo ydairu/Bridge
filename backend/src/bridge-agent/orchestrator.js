@@ -41,10 +41,18 @@ export async function handleBridgeMessage({
   exaApiKey,
   inboundMessage,
 }) {
-  const user = await bridgeService.loadOrCreateWhatsAppUser({
-    phone: inboundMessage.from,
-    displayName: inboundMessage.displayName,
-  });
+  const channel = inboundMessage.channel || "whatsapp";
+  const user =
+    channel === "whatsapp"
+      ? await bridgeService.loadOrCreateWhatsAppUser({
+          phone: inboundMessage.from,
+          displayName: inboundMessage.displayName,
+        })
+      : await bridgeService.loadOrCreateUser({
+          channel,
+          externalId: inboundMessage.from,
+          displayName: inboundMessage.displayName,
+        });
 
   const duplicate = await bridgeService.logMessage({
     userId: user.id,

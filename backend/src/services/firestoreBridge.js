@@ -125,6 +125,43 @@ export class BridgeFirestoreService {
     return { id, ...user };
   }
 
+  // Channel-agnostic user loader. WhatsApp keeps its existing wa_<phone> ids;
+  // Telegram users are keyed tg_<telegramId>. Other channels can extend this.
+  async loadOrCreateUser({ channel = "whatsapp", externalId, displayName = "" }) {
+    if (channel === "whatsapp") {
+      return this.loadOrCreateWhatsAppUser({ phone: externalId, displayName });
+    }
+
+    const cleanId = String(externalId || "").replace(/[^\w]/g, "");
+    const id = `${channel === "telegram" ? "tg" : channel}_${cleanId}`;
+    const ref = this.db.collection("users").doc(id);
+    const snap = await ref.get();
+
+    if (snap.exists) {
+      const existing = { id, ...snap.data() };
+      if (displayName && !existing.name) {
+        await ref.set({ name: displayName, updatedAt: nowIso() }, { merge: true });
+        existing.name = displayName;
+      }
+      return existing;
+    }
+
+    const user = {
+      name: displayName || "",
+      role: "jobseeker",
+      type: "jobseeker",
+      source: channel,
+      language: "en",
+      skills: [],
+      profileComplete: false,
+      createdAt: nowIso(),
+      updatedAt: nowIso(),
+    };
+    if (channel === "telegram") user.telegramId = cleanId;
+    await ref.set(user);
+    return { id, ...user };
+  }
+
   async getProfile({ userId }) {
     const snap = await this.db.collection("users").doc(userId).get();
     if (!snap.exists) return null;

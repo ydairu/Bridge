@@ -7,6 +7,7 @@ const REQUIRED_BY_FEATURE = {
   ],
   openai: ["OPENAI_API_KEY"],
   exa: ["EXA_API_KEY"],
+  telegram: ["TELEGRAM_BOT_TOKEN"],
 };
 
 export function getEnv(name, fallback = "") {
@@ -31,6 +32,7 @@ export function assertFeatureEnv(feature) {
 export function getPublicFeatureStatus() {
   return {
     whatsapp: hasFeatureEnv("whatsapp"),
+    telegram: hasFeatureEnv("telegram"),
     openai: hasFeatureEnv("openai"),
     exa: hasFeatureEnv("exa"),
     demoMode: getEnv("DEMO_MODE", "false") === "true",

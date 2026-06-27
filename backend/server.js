@@ -12,7 +12,8 @@ import { dirname, join } from "path";
 
 import { BridgeFirestoreService } from "./src/services/firestoreBridge.js";
 import { registerWhatsAppWebhookRoutes } from "./src/whatsapp/webhook.js";
-import { getPublicFeatureStatus, hasFeatureEnv } from "./src/config/env.js";
+import { startTelegramPoller } from "./src/telegram/poller.js";
+import { getPublicFeatureStatus, hasFeatureEnv, getEnv } from "./src/config/env.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -504,6 +505,7 @@ app.get("/api/user/profile", verifyToken, async (req, res) => {
 function reportBridgeFeatureStatus() {
   const features = {
     "WhatsApp webhook": hasFeatureEnv("whatsapp"),
+    "Telegram bot": hasFeatureEnv("telegram"),
     "OpenAI orchestrator": hasFeatureEnv("openai"),
     "Exa verification": hasFeatureEnv("exa"),
   };
@@ -524,4 +526,19 @@ app.listen(PORT, () => {
   console.log(`🤖 OpenAI: Integrated successfully (model: ${AI_MODEL})`);
   console.log("🌉 Bridge WhatsApp assistant:");
   reportBridgeFeatureStatus();
+  maybeStartTelegramBot();
 });
+
+// Start the Telegram bot (long-polling, no public URL needed) when a token is set.
+// Reuses the same orchestrator + Firestore service as the WhatsApp channel.
+function maybeStartTelegramBot() {
+  if (!hasFeatureEnv("telegram")) return;
+  startTelegramPoller({
+    bridgeService,
+    token: getEnv("TELEGRAM_BOT_TOKEN"),
+    openAIConfig: { apiKey: getEnv("OPENAI_API_KEY"), model: AI_MODEL },
+    exaApiKey: getEnv("EXA_API_KEY"),
+  })
+    .then(() => console.log("🤝 Telegram bot: polling for messages"))
+    .catch((error) => console.error("Telegram bot failed to start:", error.message));
+}

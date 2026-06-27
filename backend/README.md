@@ -162,9 +162,23 @@ the orchestrator needs `OPENAI_API_KEY` (+ optional `OPENAI_MODEL`); trust
 verification needs `EXA_API_KEY`. Missing groups are logged at boot and the
 webhook rejects requests rather than crashing the existing OpenAI quiz endpoints.
 
+### Telegram bot (fallback channel)
+The same orchestrator also runs on Telegram via `src/telegram/` — the agent logic
+is channel-agnostic, so Telegram users get the full capability set. **No public
+URL is required**: it uses long-polling, which makes it a robust fallback when the
+WhatsApp Cloud API setup (tunnels, number verification, recipient OTP) is flaky.
+
+Setup:
+1. Message **@BotFather** on Telegram → `/newbot` → copy the bot token.
+2. Put it in `.env` as `TELEGRAM_BOT_TOKEN=...` and restart the backend.
+3. The server logs `🤝 Telegram bot: polling for messages`. DM your bot — done.
+
+Telegram users are keyed `tg_<id>` (WhatsApp stays `wa_<phone>`); job lists render
+as inline keyboards. Channel is selected by `inboundMessage.channel`.
+
 ### Tests
 ```bash
-npm test               # full hermetic suite (node:test) — 49 cases, no network
+npm test               # full hermetic suite (node:test) — 57 cases, no network
 npm run smoke:whatsapp # quick dep-free signature/parse/payload checks
 node scripts/live-agent-check.js   # optional: scripted convo vs the real OpenAI
                                    # model (in-memory Firestore; needs OPENAI_API_KEY)
