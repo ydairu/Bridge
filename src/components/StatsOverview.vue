@@ -151,27 +151,27 @@ export default {
 
 .blue-bg {
   background: rgba(59, 130, 246, 0.1);
-  color: rgb(59, 130, 246);
+  color: #60a5fa;
 }
 
 .green-bg {
   background: rgba(34, 197, 94, 0.1);
-  color: rgb(34, 197, 94);
+  color: #34d399;
 }
 
 .purple-bg {
   background: rgba(147, 51, 234, 0.1);
-  color: rgb(147, 51, 234);
+  color: #a78bfa;
 }
 
 .orange-bg {
   background: rgba(249, 115, 22, 0.1);
-  color: rgb(249, 115, 22);
+  color: #fb923c;
 }
 
 .gold-bg {
   background: rgba(255, 193, 7, 0.1);
-  color: rgb(255, 193, 7);
+  color: #FCD34D;
 }
 
 .stat-content {

@@ -180,14 +180,6 @@ export default {
   border-color: rgba(0, 0, 0, 0.12);
 }
 
-.dark-mode .summary-card {
-  background: var(--bg);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.dark-mode .summary-card:hover {
-  border-color: rgba(255, 255, 255, 0.15);
-}
 
 .summary-content {
   display: flex;

@@ -213,19 +213,14 @@ export default {
 .lock-icon {
   width: 28px;
   height: 28px;
-  opacity: 0.8;
-  filter: brightness(0.3) saturate(0);
+  opacity: 0.5;
+  filter: brightness(1) saturate(0) invert(1);
 }
 
 .locked-icon {
-  background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
-  color: #4b5563;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-.dark-mode .locked-icon {
-  background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
-  color: #6b7280;
+  background: linear-gradient(135deg, rgba(74, 158, 245, 0.15) 0%, rgba(26, 111, 212, 0.1) 100%);
+  color: rgba(180, 210, 255, 0.5);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .tier-bronze {

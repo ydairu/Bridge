@@ -431,9 +431,6 @@ export default {
   padding: 2rem 1rem;
 }
 
-.dark-mode .post-job-page {
-  background: var(--bg-dark);
-}
 
 .post-job-container {
   max-width: 56rem;
@@ -515,9 +512,6 @@ export default {
   height: 1rem;
 }
 
-.dark-mode .icon-small {
-  filter: brightness(0) invert(1);
-}
 
 .alert-content {
   flex: 1;
@@ -563,9 +557,6 @@ export default {
   filter: brightness(0) saturate(100%) invert(42%) sepia(93%) saturate(1421%) hue-rotate(200deg) brightness(99%) contrast(101%);
 }
 
-.dark-mode .card-header-icon {
-  filter: brightness(0) invert(1);
-}
 
 .card-title {
   font-size: 1.125rem;
@@ -619,10 +610,6 @@ export default {
   opacity: 0.6;
 }
 
-.dark-mode .label-icon {
-  filter: brightness(0) invert(1);
-  opacity: 0.8;
-}
 
 .badge {
   padding: 0.25rem 0.75rem;

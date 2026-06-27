@@ -1571,7 +1571,7 @@ export default {
 
 .status-badge-small.accepted {
   background: rgba(34, 197, 94, 0.1);
-  color: #22c55e;
+  color: #34D399;
 }
 
 .status-badge-small.rejected {
