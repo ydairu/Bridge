@@ -67,7 +67,7 @@ export default {
     async generateQuiz({ commit }, { skill, difficulty }) {
       commit('SET_LOADING', true)
       try {
-        // Call your backend API to generate quiz using Gemini AI
+        // Call backend API to generate quiz using OpenAI
         const response = await axios.post('/api/quizzes/generate', {
           skill,
           difficulty

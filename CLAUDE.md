@@ -4,7 +4,7 @@ Guidance for Claude Code when working in this repository.
 
 ## Project
 **Bridge** — a job-matching web app connecting Singapore employers with migrant workers. Features:
-job listings, Firebase auth, AI-generated skill quizzes (Gemini), real-time chat (Ably), reviews,
+job listings, Firebase auth, AI-generated skill quizzes (OpenAI), real-time chat (Ably), reviews,
 and badges. Frontend → Vercel, backend → Render.
 
 ## Commands
@@ -17,12 +17,12 @@ and badges. Frontend → Vercel, backend → Render.
 ## Tech stack
 Vue 3 (Composition + Options), Vite, Vue Router 4, Vuex 4, Axios, Firebase web SDK (Auth/Firestore/
 Storage), Ably (`ably` + `@ably/chat`) for chat, GSAP/ScrollReveal/lucide for UI. Backend: Node +
-Express + firebase-admin + `@google/genai` (Gemini `gemini-2.5-flash`).
+Express + firebase-admin + `openai` (model via `OPENAI_MODEL` env var, default `gpt-4o-mini`).
 
 ## Architecture (important)
 - **Split data access.** The frontend reads/writes **Firestore directly** through the Firebase web
   SDK inside Vuex modules for most data (jobs, users, applications, badges, reviews, chat metadata).
-  The Express backend is used **only** for Gemini AI quiz/spelling-word generation plus one example
+  The Express backend is used **only** for OpenAI quiz/spelling-word generation plus one example
   protected route. Access control is enforced by `firestore.rules`, not a REST layer.
 - **`src/services/api.js`:** only `quizApi` endpoints are backed by real backend routes. `jobApi` and
   `userApi` reference endpoints that do NOT exist in `backend/server.js` — do not assume they work;
@@ -44,7 +44,7 @@ Express + firebase-admin + `@google/genai` (Gemini `gemini-2.5-flash`).
 - `src/services/ably.js` — Ably realtime/chat client lifecycle.
 - `src/views/` — page components (routed). `src/components/` — reusable UI.
 - `backend/server.js` — Express server: `/api/quizzes/*`, `/api/spelling-quiz/*`,
-  `/api/construction-spelling/*`, `/health`. Initializes firebase-admin + Gemini.
+  `/api/construction-spelling/*`, `/health`. Initializes firebase-admin + OpenAI.
 - `firestore.rules` — security rules (source of truth for collection access).
 - `scripts/seed-data-with-auth.cjs`, `scripts/cleanup-seed-data.cjs` — Firestore seeding/cleanup
   scripts (run from project root, e.g. `node scripts/seed-data-with-auth.cjs`; they read
@@ -59,8 +59,8 @@ Express + firebase-admin + `@google/genai` (Gemini `gemini-2.5-flash`).
   derived state. Follow this shape when adding store logic.
 - Quiz badges awarded server-side when score >= 80% (`backend/server.js`).
 - Env vars: client vars are `VITE_*` (Firebase, `VITE_ABLY_API_KEY`, `VITE_API_URL`); server vars are
-  `GEMINI_API_KEY` and `FIREBASE_*` admin credentials. Secrets live in `.env` (gitignored) — never
-  commit keys.
+  `OPENAI_API_KEY`, `OPENAI_MODEL` (optional, default `gpt-4o-mini`), and `FIREBASE_*` admin
+  credentials. Secrets live in `.env` (gitignored) — never commit keys.
 
 ## Gotchas
 - The frontend depends on a running backend only for quiz generation; everything else works against

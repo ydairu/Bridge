@@ -1,11 +1,11 @@
 // Backend Server for Bridge Application
-// Handles Gemini AI requests and Firebase Admin operations
+// Handles OpenAI requests and Firebase Admin operations
 
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import admin from "firebase-admin";
-import { GoogleGenAI } from "@google/genai";
+import OpenAI from "openai";
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
@@ -71,42 +71,51 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-});
+const ai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const AI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
+
+async function generateJsonFromPrompt(prompt) {
+  const completion = await ai.chat.completions.create({
+    model: AI_MODEL,
+    messages: [
+      { role: "system", content: "You output only valid JSON. No markdown, no commentary." },
+      { role: "user", content: prompt },
+    ],
+    temperature: 0.8,
+    response_format: { type: "json_object" },
+  });
+  return completion.choices[0].message.content;
+}
 
 // In-memory history to avoid repeating words across requests while the server runs
 const generatedWordHistory = new Set();
 
 async function generateQuizQuestions(numberOfQuestions, difficulty, skill) {
-  const prompt = `Generate ${numberOfQuestions} multiple choice questions for a ${difficulty} level quiz about ${skill}. 
+  const prompt = `Generate ${numberOfQuestions} multiple choice questions for a ${difficulty} level quiz about ${skill}.
 
-Format the response as a JSON array with this structure:
-[
-  {
-    "question": "Question text here?",
-    "options": ["Option A", "Option B", "Option C", "Option D"],
-    "correctAnswer": 0
-  }
-]
+Format the response as a JSON object with this structure:
+{
+  "questions": [
+    {
+      "question": "Question text here?",
+      "options": ["Option A", "Option B", "Option C", "Option D"],
+      "correctAnswer": 0
+    }
+  ]
+}
 
 Make the questions practical and relevant for migrant workers in Singapore. The correctAnswer should be the index (0-3) of the correct option.`;
 
-  const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: prompt,
-  });
+  const text = await generateJsonFromPrompt(prompt);
 
-
-  const text = response.text;
-
-  const jsonMatch = text.match(/\[[\s\S]*\]/);
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
   if (!jsonMatch) {
-    console.error("Gemini raw response:", text);
+    console.error("OpenAI raw response:", text);
     throw new Error("Failed to parse quiz questions from AI response");
   }
 
-  return JSON.parse(jsonMatch[0]);
+  const parsed = JSON.parse(jsonMatch[0]);
+  return parsed.questions ?? parsed;
 }
 
 async function generateConstructionSpellingWord(difficulty, excludeWords = []) {
@@ -155,17 +164,12 @@ ${excludeText}
 
 Respond with ONLY valid JSON, no additional text.`;
 
-  const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: prompt,
-  });
-
-  const text = response.text;
+  const text = await generateJsonFromPrompt(prompt);
 
   // Try to extract JSON from the response
   let jsonMatch = text.match(/\{[\s\S]*\}/);
   if (!jsonMatch) {
-    console.error("Gemini raw response:", text);
+    console.error("OpenAI raw response:", text);
     throw new Error("Failed to parse construction spelling word from AI response");
   }
 
@@ -235,7 +239,7 @@ app.get("/health", (req, res) => {
   res.json({ status: "ok", message: "Backend server is running" });
 });
 
-// Generate Quiz using Gemini AI
+// Generate Quiz using OpenAI
 app.post("/api/quizzes/generate", async (req, res) => {
   try {
     const { skill, difficulty, numberOfQuestions = 10 } = req.body;
@@ -269,7 +273,7 @@ app.post("/api/quizzes/generate", async (req, res) => {
   }
 });
 
-// Generate Spelling Quiz using Gemini AI (can generate or accept pre-generated words)
+// Generate Spelling Quiz using OpenAI (can generate or accept pre-generated words)
 app.post("/api/spelling-quiz/generate", async (req, res) => {
   try {
     const { skill, difficulty, numberOfWords = 5, words } = req.body;
@@ -476,5 +480,5 @@ app.get("/api/user/profile", verifyToken, async (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Backend running on http://localhost:${PORT}`);
   console.log(`📊 Firebase Project: ${process.env.VITE_FIREBASE_PROJECT_ID}`);
-  console.log(`🤖 Gemini AI: Integrated successfully`);
+  console.log(`🤖 OpenAI: Integrated successfully (model: ${AI_MODEL})`);
 });

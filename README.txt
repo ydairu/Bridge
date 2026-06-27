@@ -10,7 +10,7 @@
 
 * **Job Listings:** Browse and post job opportunities
 * **User Authentication:** Secure Firebase-based authentication
-* **AI-Powered Quizzes:** Gemini AI-generated skill assessments with badges
+* **AI-Powered Quizzes:** OpenAI-generated skill assessments with badges
 * **Real-Time Chat:** Direct communication between employers and job seekers
 * **Review System:** Employer reviews and testimonials
 * **Mobile Responsive:** Works seamlessly on all devices
@@ -40,7 +40,7 @@
 | Layer       | Technologies                                            | Purpose                                   |
 | ----------- | ------------------------------------------------------- | ----------------------------------------- |
 | Frontend    | Vue 3, Vite, Vue Router, Axios                          | UI, routing, state management             |
-| Backend     | Node.js, Express, Firebase Admin SDK, Google Gemini API | Protected REST endpoints, quiz generation |
+| Backend     | Node.js, Express, Firebase Admin SDK, OpenAI API        | Protected REST endpoints, quiz generation |
 | Data & Auth | Firebase Auth, Firestore, Storage                       | Identity, data persistence, file uploads  |
 | Deployment  | Vercel (frontend), Render (backend)                     | CI/CD & hosting                           |
 
@@ -51,7 +51,7 @@
 ```
 Bridge/
 ├── src/          # Vue frontend
-├── backend/      # Express + Gemini API
+├── backend/      # Express + OpenAI API
 ├── public/       # Static assets
 └── README.txt
 ```
@@ -65,7 +65,7 @@ Bridge/
 * Node.js ≥ 18
 * npm ≥ 9
 * Firebase project with Firestore + Auth enabled
-* Gemini API key
+* OpenAI API key
 
 ### Installation
 
@@ -84,7 +84,8 @@ Create a `.env` file at the project root:
 VITE_FIREBASE_API_KEY=
 VITE_FIREBASE_AUTH_DOMAIN=
 VITE_FIREBASE_PROJECT_ID=
-GEMINI_API_KEY=
+OPENAI_API_KEY=
+OPENAI_MODEL=gpt-4o-mini
 ```
 
 *(See Firebase Console → Project Settings for your keys.)*
