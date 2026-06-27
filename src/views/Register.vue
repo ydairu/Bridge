@@ -2,8 +2,8 @@
   <div class="auth-page">
     <div class="auth-container">
       <div class="auth-card">
-        <h1>Create Account</h1>
-        <p class="auth-subtitle">Join Bridge today</p>
+        <h1>{{ $t('auth.create') }}</h1>
+        <p class="auth-subtitle">{{ $t('auth.join') }}</p>
 
         <form @submit.prevent="handleRegister">
           <!-- User Type Selection -->
@@ -13,10 +13,10 @@
               @click="userType = 'jobseeker'"
             >
               <div class="option-icon">
-                <img src="../assets/user.svg" alt="Job Seeker" />
+                <img src="../assets/user.svg" :alt="$t('auth.jobSeeker')" />
               </div>
               <div class="option-content">
-                <h3>Job Seeker</h3>
+                <h3>{{ $t('auth.jobSeeker') }}</h3>
               </div>
               <div class="selection-indicator">
                 <span v-if="userType === 'jobseeker'" class="checkmark">✓</span>
@@ -27,10 +27,10 @@
               @click="userType = 'employer'"
             >
               <div class="option-icon">
-                <img src="../assets/candidates.svg" alt="Employer" />
+                <img src="../assets/candidates.svg" :alt="$t('auth.employer')" />
               </div>
               <div class="option-content">
-                <h3>Employer</h3>
+                <h3>{{ $t('auth.employer') }}</h3>
               </div>
               <div class="selection-indicator">
                 <span v-if="userType === 'employer'" class="checkmark">✓</span>
@@ -39,7 +39,7 @@
           </div>
 
           <div class="form-group">
-            <label for="name">Full Name</label>
+            <label for="name">{{ $t('auth.fullName') }}</label>
             <input
               type="text"
               id="name"
@@ -50,7 +50,7 @@
           </div>
 
           <div class="form-group">
-            <label for="email">Email</label>
+            <label for="email">{{ $t('auth.email') }}</label>
             <input
               type="email"
               id="email"
@@ -61,7 +61,7 @@
           </div>
 
           <div class="form-group">
-            <label for="phone">Phone Number</label>
+            <label for="phone">{{ $t('auth.phone') }}</label>
             <input
               type="tel"
               id="phone"
@@ -72,7 +72,7 @@
           </div>
 
           <div class="form-group">
-            <label for="password">Password</label>
+            <label for="password">{{ $t('auth.password') }}</label>
             <input
               type="password"
               id="password"
@@ -83,7 +83,7 @@
           </div>
 
           <div class="form-group">
-            <label for="confirmPassword">Confirm Password</label>
+            <label for="confirmPassword">{{ $t('auth.confirmPassword') }}</label>
             <input
               type="password"
               id="confirmPassword"
@@ -142,7 +142,7 @@
           </div>
 
           <button type="submit" class="btn btn-primary btn-block" :disabled="loading">
-            {{ loading ? 'Creating Account...' : 'Create Account' }}
+            {{ loading ? '...' : $t('auth.create') }}
           </button>
 
           <div v-if="error" class="error-message">
@@ -151,7 +151,7 @@
         </form>
 
         <p class="login-link">
-          Already have an account? <router-link to="/login">Sign in</router-link>
+          {{ $t('auth.already') }} <router-link to="/login">{{ $t('auth.signIn') }}</router-link>
         </p>
       </div>
     </div>

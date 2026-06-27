@@ -2,9 +2,9 @@
   <div ref="sectionRef" class="stats-section">
     <div class="stats-container">
       <div class="section-header">
-        <h2 class="section-title">Trusted and Effective</h2>
+        <h2 class="section-title">{{ t('home.trustedTitle') }}</h2>
         <p class="section-description">
-          Popular worldwide among job seekers and employers.
+          {{ t('home.trustedDescription') }}
         </p>
       </div>
       
@@ -22,7 +22,8 @@
 </template>
 
 <script>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import StatsCard from './StatsCard.vue'
 import usersIcon from '../assets/user.svg'
 import buildingIcon from '../assets/corporate.svg'
@@ -34,39 +35,40 @@ export default {
     StatsCard
   },
   setup() {
+    const { t } = useI18n()
     const sectionRef = ref(null)
     const isVisible = ref(false)
 
-    const stats = [
+    const stats = computed(() => [
       {
         icon: usersIcon,
         value: 10000,
         suffix: '+',
-        label: 'Active Job Seekers',
+        label: t('home.activeSeekers'),
         color: 'blue'
       },
       {
         icon: buildingIcon,
         value: 5000,
         suffix: '+',
-        label: 'Registered Employers',
+        label: t('home.registeredEmployers'),
         color: 'purple'
       },
       {
         icon: '/icons/file-text.svg',
         value: 15000,
         suffix: '+',
-        label: 'Jobs Posted',
+        label: t('home.jobsPosted'),
         color: 'orange'
       },
       {
         icon: briefcaseIcon,
         value: 8000,
         suffix: '+',
-        label: 'Successful Hires',
+        label: t('home.successfulHires'),
         color: 'green'
       }
-    ]
+    ])
 
     onMounted(() => {
       const observer = new IntersectionObserver(
@@ -92,7 +94,8 @@ export default {
     return {
       sectionRef,
       isVisible,
-      stats
+      stats,
+      t
     }
   }
 }

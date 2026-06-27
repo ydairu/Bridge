@@ -2,28 +2,28 @@
   <div class="auth-page">
     <div class="auth-container">
       <div class="auth-card">
-        <h1>Welcome Back</h1>
-        <p class="auth-subtitle">Sign in to continue to Bridge</p>
+        <h1>{{ $t('auth.welcome') }}</h1>
+        <p class="auth-subtitle">{{ $t('auth.continue') }}</p>
 
         <form @submit.prevent="handleLogin">
           <div class="form-group">
-            <label for="email">Email</label>
+            <label for="email">{{ $t('auth.email') }}</label>
             <input
               type="email"
               id="email"
               v-model="email"
-              placeholder="Enter your email"
+              :placeholder="$t('auth.email')"
               required
             />
           </div>
 
           <div class="form-group">
-            <label for="password">Password</label>
+            <label for="password">{{ $t('auth.password') }}</label>
             <input
               type="password"
               id="password"
               v-model="password"
-              placeholder="Enter your password"
+              :placeholder="$t('auth.password')"
               required
             />
             <div v-if="error" class="field-error field-error-below">{{ error }}</div>
@@ -32,7 +32,7 @@
           
 
           <button type="submit" class="btn btn-primary btn-block" :disabled="loading">
-            {{ loading ? 'Signing in...' : 'Sign In' }}
+            {{ loading ? $t('auth.signingIn') : $t('auth.signIn') }}
           </button>
 
           
@@ -43,7 +43,7 @@
         </div>
 
         <p class="signup-link">
-          Don't have an account? <router-link to="/register">Sign up</router-link>
+          {{ $t('auth.noAccount') }} <router-link to="/register">{{ $t('auth.signUp') }}</router-link>
         </p>
       </div>
     </div>

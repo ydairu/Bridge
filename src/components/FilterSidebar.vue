@@ -6,7 +6,7 @@
           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/>
           </svg>
-          <span>Filters</span>
+          <span>{{ $t('filters.title') }}</span>
         </div>
         <div v-if="activeFilterCount > 0" class="filter-badge">
           {{ activeFilterCount }}
@@ -16,8 +16,8 @@
       <div class="filter-content">
         <div v-if="activeFilterCount > 0" class="active-filters">
           <div class="active-filters-header">
-            <h4>Active Filters</h4>
-            <button @click="clearAllFilters" class="clear-all-btn">Clear All</button>
+            <h4>{{ $t('filters.active') }}</h4>
+            <button @click="clearAllFilters" class="clear-all-btn">{{ $t('filters.clear') }}</button>
           </div>
           <div class="active-filter-tags">
             <span 
@@ -48,7 +48,7 @@
         </div>
 
         <div class="filter-section">
-          <h4 class="filter-section-title">Salary Range</h4>
+          <h4 class="filter-section-title">{{ $t('filters.salary') }}</h4>
           <div class="salary-range-display">
             <span>${{ salaryRange[0] }}</span>
             <span>${{ salaryRange[1] }}</span>
@@ -86,7 +86,7 @@
         </div>
 
         <div class="filter-section">
-          <h4 class="filter-section-title">Categories</h4>
+          <h4 class="filter-section-title">{{ $t('filters.categories') }}</h4>
           <div class="filter-options">
             <div 
               v-for="category in categories" 
@@ -100,7 +100,7 @@
                   :checked="selectedCategories.includes(category.id)"
                   @change="toggleCategory(category.id)"
                 />
-                <span>{{ category.label }}</span>
+                <span>{{ $t(`categories.${category.id}`) }}</span>
               </label>
               <span class="filter-count">{{ category.count }}</span>
             </div>
@@ -108,7 +108,7 @@
         </div>
 
         <div class="filter-section">
-          <h4 class="filter-section-title">Location</h4>
+          <h4 class="filter-section-title">{{ $t('filters.location') }}</h4>
           <div class="filter-options">
             <div 
               v-for="location in locations" 
@@ -129,7 +129,7 @@
         </div>
 
         <div class="filter-section">
-          <h4 class="filter-section-title">Job Type</h4>
+          <h4 class="filter-section-title">{{ $t('filters.type') }}</h4>
           <div class="filter-options">
             <div 
               v-for="type in jobTypes" 

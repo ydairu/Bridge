@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 
 export default {
   name: 'TextType',
@@ -70,6 +70,19 @@ export default {
     onMounted(() => {
       typeText()
     })
+
+    watch(
+      () => props.text,
+      () => {
+        if (timeoutId) clearTimeout(timeoutId)
+        displayText.value = ''
+        currentTextIndex.value = 0
+        currentCharIndex.value = 0
+        isDeleting.value = false
+        typeText()
+      },
+      { deep: true }
+    )
 
     onUnmounted(() => {
       if (timeoutId) {

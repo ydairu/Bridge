@@ -23,37 +23,37 @@
         <div class="nav-links-section">
           <template v-if="isAuthenticated">
             <router-link :to="getHomeRoute" class="nav-link" @click="closeMenu">
-              Home
+              {{ $t('nav.home') }}
             </router-link>
 
             <template v-if="isJobSeeker">
               <router-link to="/browse-jobs" class="nav-link" @click="closeMenu">
-                Browse Jobs
+                {{ $t('nav.browseJobs') }}
               </router-link>
               <router-link to="/reviews" class="nav-link" @click="closeMenu">
-                Company Reviews
+                {{ $t('nav.reviews') }}
               </router-link>
               <router-link to="/quizzes" class="nav-link" @click="closeMenu">
-                AI Quiz
+                {{ $t('nav.quiz') }}
               </router-link>
             </template>
 
             <template v-if="isEmployer">
               <router-link to="/employer/post-job" class="nav-link" @click="closeMenu">
-                Post Job
+                {{ $t('nav.postJob') }}
               </router-link>
               <router-link to="/candidates" class="nav-link" @click="closeMenu">
-                Browse Candidates
+                {{ $t('nav.candidates') }}
               </router-link>
             </template>
           </template>
 
           <template v-else>
             <router-link to="/" class="nav-link" @click="closeMenu">
-              Home
+              {{ $t('nav.home') }}
             </router-link>
             <router-link to="/browse-jobs" class="nav-link" @click="closeMenu">
-              Browse Jobs
+              {{ $t('nav.browseJobs') }}
             </router-link>
           </template>
         </div>
@@ -61,6 +61,7 @@
         <div class="nav-spacer"></div>
 
         <div class="nav-controls-section">
+          <LanguageSelector />
           <template v-if="isAuthenticated">
             <router-link to="/chat" class="nav-link chat-icon mobile-control-item" @click="closeMenu">
               <div class="chat-icon-wrapper">
@@ -68,7 +69,7 @@
                 <img v-else src="../assets/messages-light.svg" alt="Messages" class="envelope-icon" />
                 <span v-if="totalUnreadCount > 0" class="unread-badge-nav">{{ totalUnreadCount > 99 ? '99+' : totalUnreadCount }}</span>
               </div>
-              <span class="control-label">Messages</span>
+              <span class="control-label">{{ $t('nav.messages') }}</span>
             </router-link>
 
             <div class="mobile-user-section">
@@ -91,19 +92,19 @@
               <div class="mobile-user-links">
                 <router-link to="/profile" class="dropdown-item" @click="closeMenu">
                   <User :size="18" :stroke-width="2" class="dropdown-icon-lucide" />
-                  Profile
+                  {{ $t('nav.profile') }}
                 </router-link>
                 <router-link v-if="isJobSeeker" to="/achievements" class="dropdown-item" @click="closeMenu">
                   <Trophy :size="18" :stroke-width="2" class="dropdown-icon-lucide" />
-                  Achievements
+                  {{ $t('nav.achievements') }}
                 </router-link>
                 <router-link v-if="isJobSeeker" to="/applications" class="dropdown-item" @click="closeMenu">
                   <Briefcase :size="18" :stroke-width="2" class="dropdown-icon-lucide" />
-                  Applications
+                  {{ $t('nav.applications') }}
                 </router-link>
                 <router-link v-if="isEmployer" to="/employer/applications" class="dropdown-item" @click="closeMenu">
                   <CheckSquare :size="18" :stroke-width="2" class="dropdown-icon-lucide" />
-                  Applications
+                  {{ $t('nav.applications') }}
                 </router-link>
                 
                 <div class="dropdown-divider"></div>
@@ -111,11 +112,11 @@
                 <button @click="toggleDarkMode" class="dropdown-item">
                   <Moon v-if="!isDarkMode" :size="18" :stroke-width="2" class="dropdown-icon-lucide" />
                   <Sun v-else :size="18" :stroke-width="2" class="dropdown-icon-lucide" />
-                  {{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
+                  {{ isDarkMode ? $t('nav.lightMode') : $t('nav.darkMode') }}
                 </button>
                 <button @click="handleLogout" class="dropdown-item">
                   <LogOut :size="18" :stroke-width="2" class="dropdown-icon-lucide" />
-                  Logout
+                  {{ $t('nav.logout') }}
                 </button>
               </div>
             </div>
@@ -158,19 +159,19 @@
                 
                 <router-link to="/profile" class="dropdown-item" @click="closeMenus">
                   <User :size="18" :stroke-width="2" class="dropdown-icon-lucide" />
-                  Profile
+                  {{ $t('nav.profile') }}
                 </router-link>
                 <router-link v-if="isJobSeeker" to="/achievements" class="dropdown-item" @click="closeMenus">
                   <Trophy :size="18" :stroke-width="2" class="dropdown-icon-lucide" />
-                  Achievements
+                  {{ $t('nav.achievements') }}
                 </router-link>
                 <router-link v-if="isJobSeeker" to="/applications" class="dropdown-item" @click="closeMenus">
                   <Briefcase :size="18" :stroke-width="2" class="dropdown-icon-lucide" />
-                  Applications
+                  {{ $t('nav.applications') }}
                 </router-link>
                 <router-link v-if="isEmployer" to="/employer/applications" class="dropdown-item" @click="closeMenus">
                   <CheckSquare :size="18" :stroke-width="2" class="dropdown-icon-lucide" />
-                  Applications
+                  {{ $t('nav.applications') }}
                 </router-link>
                 
                 <div class="dropdown-divider"></div>
@@ -178,11 +179,11 @@
                 <button @click="toggleDarkMode" class="dropdown-item">
                   <Moon v-if="!isDarkMode" :size="18" :stroke-width="2" class="dropdown-icon-lucide" />
                   <Sun v-else :size="18" :stroke-width="2" class="dropdown-icon-lucide" />
-                  {{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}
+                  {{ isDarkMode ? $t('nav.lightMode') : $t('nav.darkMode') }}
                 </button>
                 <button @click="handleLogout" class="dropdown-item">
                   <LogOut :size="18" :stroke-width="2" class="dropdown-icon-lucide" />
-                  Logout
+                  {{ $t('nav.logout') }}
                 </button>
               </div>
             </div>
@@ -192,14 +193,14 @@
             <button @click="toggleDarkMode" class="dark-mode-toggle mobile-control-item" title="Toggle Dark Mode">
               <img v-if="isDarkMode" src="../assets/sun-white.svg" alt="Light Mode" class="toggle-icon" />
               <img v-else src="../assets/moon-black.svg" alt="Dark Mode" class="toggle-icon" />
-              <span class="control-label">{{ isDarkMode ? 'Light Mode' : 'Dark Mode' }}</span>
+              <span class="control-label">{{ isDarkMode ? $t('nav.lightMode') : $t('nav.darkMode') }}</span>
             </button>
             
             <router-link to="/login" class="nav-link" @click="closeMenu">
-              Login
+              {{ $t('nav.login') }}
             </router-link>
             <router-link to="/register" class="nav-link nav-link-signup" @click="closeMenu">
-              Sign Up
+              {{ $t('nav.signUp') }}
             </router-link>
           </template>
         </div>
@@ -213,6 +214,7 @@ import { ref, computed, onMounted, watch, onUnmounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { User, Trophy, Briefcase, LogOut, CheckSquare, Moon, Sun } from 'lucide-vue-next'
+import LanguageSelector from './LanguageSelector.vue'
 
 export default {
   name: 'NavBar',
@@ -223,7 +225,8 @@ export default {
     LogOut,
     CheckSquare,
     Moon,
-    Sun
+    Sun,
+    LanguageSelector
   },
   setup() {
     const store = useStore()
