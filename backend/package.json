@@ -6,7 +6,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "smoke:whatsapp": "node scripts/smoke-whatsapp.js"
   },
   "keywords": [
     "express",
