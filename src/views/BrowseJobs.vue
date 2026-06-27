@@ -21,16 +21,16 @@
             <!-- Header with Sort -->
             <div class="jobs-header-section">
               <div class="jobs-header-left">
-                <h2>Browse Jobs</h2>
-                <p class="jobs-count">{{ filteredJobs.length }} opportunities available</p>
+                <h2>{{ $t('marketplace.browse') }}</h2>
+                <p class="jobs-count">{{ $t('marketplace.opportunities', { count: filteredJobs.length }) }}</p>
               </div>
               <div class="header-middle">
                 <div class="search-bar-wrapper">
-                  <img src="/icons/search.svg" alt="Search" class="search-icon" />
+                  <img src="/icons/search.svg" :alt="$t('marketplace.search')" class="search-icon" />
                   <input
                     type="text"
                     v-model="searchQuery"
-                    placeholder="Search"
+                    :placeholder="$t('marketplace.search')"
                     class="search-input"
                     @input="applyFilters"
                   />
@@ -38,10 +38,10 @@
               </div>
               <div class="sort-select-wrapper">
                 <select v-model="sortBy" class="sort-select">
-                  <option value="recent">Most Recent</option>
-                  <option value="salary-high">Salary: High to Low</option>
-                  <option value="salary-low">Salary: Low to High</option>
-                  <option value="relevant">Most Relevant</option>
+                  <option value="recent">{{ $t('marketplace.recent') }}</option>
+                  <option value="salary-high">{{ $t('marketplace.salaryHigh') }}</option>
+                  <option value="salary-low">{{ $t('marketplace.salaryLow') }}</option>
+                  <option value="relevant">{{ $t('marketplace.relevant') }}</option>
                 </select>
               </div>
             </div>
@@ -53,7 +53,7 @@
 
             <!-- No Results -->
             <div v-else-if="filteredJobs.length === 0" class="no-results">
-              <p>No jobs found. Try adjusting your search.</p>
+              <p>{{ $t('marketplace.noResults') }}</p>
             </div>
 
             <!-- Jobs Grid -->

@@ -15,39 +15,39 @@
             <img :src="logoBlack" alt="Bridge Logo" class="footer-logo footer-logo-dark" />
             <h3>Bridge</h3>
           </div>
-          <p>Connecting employers with skilled migrant workers in Singapore</p>
+          <p>{{ $t('footer.mission') }}</p>
         </div>
         <div class="footer-section" v-if="!isAuthenticated || isJobSeeker">
-          <h4>For Job Seekers</h4>
+          <h4>{{ $t('footer.workers') }}</h4>
           <ul>
             <li v-if="!isAuthenticated || isJobSeeker">
-              <router-link to="/browse-jobs">Browse Jobs</router-link>
+              <router-link to="/browse-jobs">{{ $t('nav.browseJobs') }}</router-link>
             </li>
             <li v-if="!isAuthenticated || isJobSeeker">
-              <router-link to="/quizzes">Take Quizzes</router-link>
+              <router-link to="/quizzes">{{ $t('nav.quiz') }}</router-link>
             </li>
             <li v-if="!isAuthenticated || isJobSeeker">
-              <router-link to="/applications">My Applications</router-link>
+              <router-link to="/applications">{{ $t('nav.applications') }}</router-link>
             </li>
           </ul>
         </div>
         <div class="footer-section" v-if="!isAuthenticated || isEmployer">
-          <h4>For Employers</h4>
+          <h4>{{ $t('footer.employers') }}</h4>
           <ul>
             <li v-if="!isAuthenticated || isEmployer">
-              <router-link to="/employer/post-job">Post a Job</router-link>
+              <router-link to="/employer/post-job">{{ $t('nav.postJob') }}</router-link>
             </li>
             <li v-if="!isAuthenticated || isEmployer">
-              <router-link to="/candidates">Find Candidates</router-link>
+              <router-link to="/candidates">{{ $t('nav.candidates') }}</router-link>
             </li>
             <li v-if="!isAuthenticated || isEmployer">
-              <router-link to="/employer/dashboard">Dashboard</router-link>
+              <router-link to="/employer/dashboard">{{ $t('nav.home') }}</router-link>
             </li>
           </ul>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2025 Bridge. All rights reserved.</p>
+        <p>&copy; 2025 Bridge. {{ $t('footer.rights') }}</p>
       </div>
     </footer>
   </div>

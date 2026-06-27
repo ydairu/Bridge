@@ -2,9 +2,9 @@
     <div class="category-chips">
       <div class="container">
         <div class="text-center mb-8">
-          <h2>Browse by Category</h2>
+          <h2>{{ $t('marketplace.browseCategory') }}</h2>
           <h4 class="">
-            Find jobs that match your skills and interests
+            {{ $t('marketplace.categoryHelp') }}
           </h4>
         </div>
   
@@ -24,14 +24,14 @@
             <div class="icon-container">
               <img
                 :src="iconSrc(category.icon)"
-                :alt="category.label"
+                :alt="$t(`categories.${category.id}`)"
                 class="category-icon"
                 loading="lazy"
               />
             </div>
             <div class="category-info">
-              <div class="category-label">{{ category.label }}</div>
-              <div class="category-count">{{ category.count }} jobs</div>
+              <div class="category-label">{{ $t(`categories.${category.id}`) }}</div>
+              <div class="category-count">{{ category.count }} {{ $t('marketplace.jobs') }}</div>
             </div>
           </button>
         </div>
@@ -372,4 +372,3 @@
     }
   }
   </style>
-  

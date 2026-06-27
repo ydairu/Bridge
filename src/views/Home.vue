@@ -16,7 +16,7 @@
             </h1>
             <p class="hero-subtitle">
               <TextType 
-                :text="['Matching Job-Seekers with Singaporean Employers', 'Connecting Talent with Opportunities', 'Building Careers in Singapore']"
+                :text="[$t('hero.line1'), $t('hero.line2'), $t('hero.line3')]"
                 :typingSpeed="75"
                 :pauseDuration="2000"
                 :showCursor="true"
@@ -24,14 +24,14 @@
               />
             </p>
             <p class="hero-description">
-              Your pathway to success in Singapore. Connect with top employers and build your career today.
+              {{ $t('hero.description') }}
             </p>
             <div class="hero-actions">
               <router-link to="/login" class="btn btn-primary btn-hero">
-                Sign In
+                {{ $t('auth.signIn') }}
               </router-link>
               <router-link to="/register" class="btn btn-secondary btn-hero">
-                Register
+                {{ $t('nav.signUp') }}
               </router-link>
             </div>
           </div>
@@ -101,9 +101,9 @@
       <section class="categories-section">
         <div class="section-container">
           <div class="section-header">
-            <h2 class="section-title">Explore Opportunities</h2>
+            <h2 class="section-title">{{ $t('home.exploreTitle') }}</h2>
             <p class="section-description">
-              Browse jobs by category and find the perfect match for your skills
+              {{ $t('home.exploreDescription') }}
             </p>
           </div>
           <CategoryChips @category-selected="onCategorySelected" />
@@ -115,14 +115,14 @@
         <div class="section-container">
           <div class="cta-content">
             <div class="cta-icon">
-              <img src="../assets/briefcase.svg" alt="Briefcase" class="cta-icon-img" />
+              <img src="../assets/briefcase.svg" :alt="$t('marketplace.browse')" class="cta-icon-img" />
             </div>
-            <h2 class="cta-title">Ready to Find Your Next Job?</h2>
+            <h2 class="cta-title">{{ $t('home.ctaTitle') }}</h2>
             <p class="cta-description">
-              Browse through hundreds of job opportunities from top employers in Singapore
+              {{ $t('home.ctaDescription') }}
             </p>
             <router-link to="/browse-jobs" class="btn btn-primary btn-cta">
-              Browse All Jobs
+              {{ $t('home.ctaButton') }}
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>

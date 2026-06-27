@@ -61,7 +61,7 @@
       <div class="job-footer">
         <span class="posted-date">{{ formatDate(job.createdAt) }}</span>
         <button class="view-details-btn">
-          View Details
+          {{ $t('marketplace.viewDetails') }}
         </button>
       </div>
     </div>

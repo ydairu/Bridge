@@ -2,9 +2,9 @@
   <div class="how-it-works">
     <div class="container">
       <div class="text-center mb-12">
-        <h2 class="section-title">How It Works</h2>
+        <h2 class="section-title">{{ t('home.howTitle') }}</h2>
         <p class="section-description">
-          Getting started with Bridge is easy. Follow these simple steps to find your dream job.
+          {{ t('home.howDescription') }}
         </p>
       </div>
 
@@ -40,40 +40,44 @@
 </template>
 
 <script>
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
 export default {
   name: "HowItWorks",
   setup() {
+    const { t } = useI18n()
     const base = import.meta.env.BASE_URL
     const iconSrc = (file) => base + "icons/" + file
 
-    const steps = [
+    const steps = computed(() => [
       {
         icon: "search.svg",
-        title: "Browse for Jobs",
-        description: "Search for jobs by category, location, or keywords.",
+        title: t('home.browseTitle'),
+        description: t('home.browseDescription'),
         colorClass: "gradient-blue",
       },
       {
         icon: "file-text.svg",
-        title: "Apply Online",
-        description: "Submit your application directly to the employer.",
+        title: t('home.applyTitle'),
+        description: t('home.applyDescription'),
         colorClass: "gradient-purple",
       },
       {
         icon: "check-circle.svg",
-        title: "Get Matched",
-        description: "Employers review your application and reach out if you're a good fit for the position.",
+        title: t('home.matchTitle'),
+        description: t('home.matchDescription'),
         colorClass: "gradient-orange",
       },
       {
         icon: "rocket.svg",
-        title: "Start Working!",
-        description: "Start your new job and build your career in Singapore.",
+        title: t('home.startTitle'),
+        description: t('home.startDescription'),
         colorClass: "gradient-green",
       },
-    ]
+    ])
 
-    return { steps, iconSrc }
+    return { steps, iconSrc, t }
   },
 }
 </script>
