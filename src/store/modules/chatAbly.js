@@ -22,6 +22,18 @@ import {
 } from 'firebase/firestore'
 import { db } from '../../firebase/config'
 
+const normalizeRoomDate = (value) => {
+  if (!value) return new Date()
+  if (value instanceof Date) return value
+  if (typeof value.toDate === 'function') return value.toDate()
+  if (typeof value.seconds === 'number') {
+    return new Date(value.seconds * 1000 + (value.nanoseconds || 0) / 1000000)
+  }
+
+  const date = new Date(value)
+  return isNaN(date.getTime()) ? new Date() : date
+}
+
 const autoSubscribeToAllRooms = async ({ commit, state, dispatch }, userId) => {
   try {
     const { chatClient } = getAblyClients()
@@ -280,8 +292,8 @@ const startAutoCreateRoomsListener = ({ commit, state, dispatch }, userId) => {
             deletedFor: deletedFor,
             roomName: roomData.roomName,
             lastMessage: roomData.lastMessage || '',
-            lastMessageAt: roomData.lastMessageAt?.toDate() || new Date(),
-            createdAt: roomData.createdAt?.toDate() || new Date()
+            lastMessageAt: normalizeRoomDate(roomData.lastMessageAt),
+            createdAt: normalizeRoomDate(roomData.createdAt)
           }
           
 
@@ -311,8 +323,8 @@ const startAutoCreateRoomsListener = ({ commit, state, dispatch }, userId) => {
             deletedFor: deletedFor,
             roomName: roomData.roomName,
             lastMessage: roomData.lastMessage || '',
-            lastMessageAt: roomData.lastMessageAt?.toDate() || new Date(),
-            createdAt: roomData.createdAt?.toDate() || new Date()
+            lastMessageAt: normalizeRoomDate(roomData.lastMessageAt),
+            createdAt: normalizeRoomDate(roomData.createdAt)
           }
           
           if (existingRoom) {
@@ -820,8 +832,8 @@ export default {
             deletedAt: roomData.deletedAt || {}, // Store deletion timestamps per user
             roomName: roomData.roomName, // Ensure roomName is included
             lastMessage: roomData.lastMessage || '',
-            lastMessageAt: roomData.lastMessageAt?.toDate() || new Date(),
-            createdAt: roomData.createdAt?.toDate() || new Date()
+            lastMessageAt: normalizeRoomDate(roomData.lastMessageAt),
+            createdAt: normalizeRoomDate(roomData.createdAt)
           })
           
           // Load lastViewedAt from Firebase for this room
@@ -996,8 +1008,8 @@ export default {
               deletedAt: roomData.deletedAt || {}, // Store deletion timestamps per user
               roomName: roomData.roomName, // Ensure roomName is included
               lastMessage: roomData.lastMessage || '',
-              lastMessageAt: roomData.lastMessageAt?.toDate() || new Date(),
-              createdAt: roomData.createdAt?.toDate() || new Date()
+              lastMessageAt: normalizeRoomDate(roomData.lastMessageAt),
+              createdAt: normalizeRoomDate(roomData.createdAt)
             })
             
             // Load lastViewedAt from Firebase for this room
@@ -1178,8 +1190,8 @@ export default {
                 deletedFor: roomData.deletedFor || [],
                 roomName: roomData.roomName,
                 lastMessage: roomData.lastMessage || '',
-                lastMessageAt: roomData.lastMessageAt?.toDate() || new Date(),
-                createdAt: roomData.createdAt?.toDate() || new Date()
+                lastMessageAt: normalizeRoomDate(roomData.lastMessageAt),
+                createdAt: normalizeRoomDate(roomData.createdAt)
               })
             }
           })
