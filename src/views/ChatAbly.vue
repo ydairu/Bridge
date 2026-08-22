@@ -1021,23 +1021,17 @@ export default {
         
       } catch (error) {
         console.error('Error searching users:', error)
-        // Fallback to mock users if Firebase search fails
-        const mockUsers = [
-          { id: 'user1', name: 'John Doe', role: 'jobseeker' },
-          { id: 'user2', name: 'Jane Smith', role: 'employer' },
-          { id: 'user3', name: 'Mike Johnson', role: 'jobseeker' },
-          { id: 'user4', name: 'Sarah Wilson', role: 'employer' }
-        ]
-        
-        searchResults.value = mockUsers.filter(user => 
-          user.name.toLowerCase().includes(searchQuery.value.toLowerCase()) &&
-          user.id !== currentUser.value.uid
-        )
+        searchResults.value = []
+        showToast(`Unable to search users: ${error.message}`, 'error')
       }
     }
     
     const startChatWithUser = async (user) => {
       try {
+        if (!currentUser.value?.uid || !user?.id) {
+          throw new Error('A valid signed-in user and recipient are required')
+        }
+
         const participants = [currentUser.value.uid, user.id]
         // Get current user's name from profile, fall back to auth displayName or email
         const currentUserName = userProfile.value?.name || currentUser.value?.displayName || currentUser.value?.email || 'You'
