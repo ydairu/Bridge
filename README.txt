@@ -1,127 +1,156 @@
-# Bridge – Job Matching Platform
+# Bridge
 
-**Bridge** is a comprehensive web application that connects Singapore employers with skilled migrant workers, eliminating the need for expensive middlemen agencies. The platform features **AI-powered job matching**, **skill development through quizzes**, **real-time chat**, and a **robust review system**, all built on a modern full-stack architecture.
+Bridge is a job-matching platform for Singapore employers and migrant workers. It combines searchable jobs, direct applications, skills assessments, trust checks, and employer-worker communication in one product.
 
----
+## Live services
 
-## Features
+- **Frontend:** [bridge-platform-sg.vercel.app](https://bridge-platform-sg.vercel.app/)
+- **Backend health:** [bridge-production-a28b.up.railway.app/health](https://bridge-production-a28b.up.railway.app/health)
 
-### Core Functionality
+## What the platform does
 
-* **Job Listings:** Browse and post job opportunities
-* **User Authentication:** Secure Firebase-based authentication
-* **AI-Powered Quizzes:** OpenAI-generated skill assessments with badges
-* **Real-Time Chat:** Direct communication between employers and job seekers
-* **Review System:** Employer reviews and testimonials
-* **Mobile Responsive:** Works seamlessly on all devices
+### Job seekers
 
-### For Job Seekers (Migrant Workers)
+- Create a profile with skills, experience, location, and language.
+- Browse and filter jobs stored in Firestore.
+- Apply to jobs and track application status.
+- Take OpenAI-generated skill and construction spelling quizzes.
+- Earn badges for quiz scores of 80% or higher.
+- Use web chat, WhatsApp, or Telegram to search jobs, apply, check applications, request support, and check suspicious offers.
 
-* Create detailed profiles with skills and experience
-* Browse job listings with advanced filters
-* Apply for jobs with cover letters and resumes
-* Take AI-generated quizzes to upskill and earn badges
-* Chat directly with employers
-* View and manage job applications
+### Employers
 
-### For Employers
+- Create and manage job listings.
+- Review applications and discover candidates.
+- Chat with job seekers in real time.
+- Collect and view company and candidate reviews.
 
-* Post job listings with detailed requirements
-* Browse and search for qualified candidates
-* Manage job applications and hiring process
-* Review and rate job seekers
-* Chat with potential candidates
-* Access employer dashboard with analytics
+### Trust and safety
 
----
+The WhatsApp and Telegram assistant can verify employers and analyze pasted job offers. It uses Exa evidence plus a risk rubric and highlights signals such as upfront fees, unusually high salaries, and requests for sensitive documents. Flagged or fee-required jobs are not presented as safe application options.
 
-## Tech Stack
+## Architecture
 
-| Layer       | Technologies                                            | Purpose                                   |
-| ----------- | ------------------------------------------------------- | ----------------------------------------- |
-| Frontend    | Vue 3, Vite, Vue Router, Axios                          | UI, routing, state management             |
-| Backend     | Node.js, Express, Firebase Admin SDK, OpenAI API        | Protected REST endpoints, quiz generation |
-| Data & Auth | Firebase Auth, Firestore, Storage                       | Identity, data persistence, file uploads  |
-| Deployment  | Vercel (frontend), Render (backend)                     | CI/CD & hosting                           |
+| Area | Implementation |
+| --- | --- |
+| Frontend | Vue 3, Vite, Vue Router, Vuex, Axios, Tailwind CSS |
+| Authentication | Firebase Authentication with employer and jobseeker roles |
+| Data | Cloud Firestore, accessed directly by the frontend Vuex modules for most product data |
+| Realtime chat | Ably and `@ably/chat`; the `chatAbly` store module is the active implementation |
+| Backend | Node.js and Express on Railway |
+| AI | OpenAI for quizzes and the Bridge conversational assistant |
+| Trust checks | Exa search evidence and OpenAI analysis |
+| Hosting | Vercel frontend, Railway backend |
 
----
+The Express backend is used for AI quiz generation, the conversational assistant, WhatsApp/Telegram integrations, and an example authenticated profile route. Jobs, users, applications, reviews, badges, and chat metadata are generally read and written directly through Firestore. Access control for those collections is defined in `firestore.rules`.
 
-## Project Structure
+## Repository layout
 
+```text
+src/                         Vue frontend, views, components, router, and Vuex modules
+backend/                     Express server, AI assistant, channel adapters, and tests
+backend/src/bridge-agent/    Channel-agnostic Bridge assistant and tool definitions
+backend/src/whatsapp/        WhatsApp Cloud API webhook and message helpers
+backend/src/telegram/        Telegram long-polling adapter
+backend/src/services/        Firestore, OpenAI, Exa, assessment, and verification services
+public/                      Frontend icons and images
+firestore.rules              Firestore access-control rules
+render.yaml                  Legacy Render blueprint; current backend deployment is Railway
 ```
-Bridge/
-├── src/          # Vue frontend
-├── backend/      # Express + OpenAI API
-├── public/       # Static assets
-└── README.txt
-```
 
----
+## Requirements
 
-## Setup
+- Node.js 18 or newer
+- npm 9 or newer
+- A Firebase project with Authentication and Firestore enabled
+- Private Firebase, OpenAI, and optional channel/integration credentials configured outside source control
 
-### Prerequisites
-
-* Node.js ≥ 18
-* npm ≥ 9
-* Firebase project with Firestore + Auth enabled
-* OpenAI API key
-
-### Installation
+## Installation
 
 ```bash
-git clone https://github.com/tate-d-lim/Bridge.git
-cd Bridge
 npm install
-cd backend && npm install
-```
-
-### Environment Variables
-
-Create a `.env` file at the project root:
-
-```bash
-VITE_FIREBASE_API_KEY=
-VITE_FIREBASE_AUTH_DOMAIN=
-VITE_FIREBASE_PROJECT_ID=
-OPENAI_API_KEY=
-OPENAI_MODEL=gpt-4o-mini
-```
-
-*(See Firebase Console → Project Settings for your keys.)*
-
----
-
-## Running Locally
-
-```bash
-# Frontend (http://localhost:5173)
-npm run dev
-
-# Backend (http://localhost:3000)
 cd backend
-npm start
+npm install
+cd ..
 ```
 
+## Configuration and secrets
+
+Never commit, paste, or document secret values. Keep the root `.env` file local and gitignored, and configure production secrets in the deployment provider's private environment settings. The repository includes code that reads these variable names, but this README intentionally contains no values:
+
+- Frontend Firebase settings: `VITE_FIREBASE_*`
+- Frontend API base URL: `VITE_API_URL`
+- Ably client key: `VITE_ABLY_API_KEY`
+- Backend AI: `OPENAI_API_KEY`, optional `OPENAI_MODEL`
+- Backend Firebase Admin credentials: `FIREBASE_*`
+- WhatsApp Cloud API: `WHATSAPP_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_VERIFY_TOKEN`, `WHATSAPP_APP_SECRET`
+- Employer verification: `EXA_API_KEY`
+- Telegram fallback: `TELEGRAM_BOT_TOKEN`
+
+For local development, set the frontend API base URL to the local backend or the deployed backend URL. Firebase Admin credentials must remain server-side; do not place them in frontend variables or commit service-account JSON files.
+
+## Run locally
+
+Start the frontend:
+
+```bash
+npm run dev
+```
+
+It runs at `http://localhost:5173` by default.
+
+Start the backend in a second terminal:
+
+```bash
+npm run backend:dev
+# or: npm run backend
+```
+
+It runs at `http://localhost:3000` by default. Check it with:
+
+```bash
+curl http://localhost:3000/health
+```
+
+## Backend API
+
+Public quiz routes used by the frontend:
+
+```text
+POST /api/quizzes/generate
+GET  /api/quizzes
+GET  /api/quizzes/:id
+POST /api/quizzes/results
+POST /api/spelling-quiz/generate
+GET  /api/spelling-quizzes
+GET  /api/spelling-quizzes/:id
+POST /api/construction-spelling/generate
+GET  /health
+```
+
+Integration routes:
+
+```text
+GET  /webhooks/whatsapp   WhatsApp verification challenge
+POST /webhooks/whatsapp   Signature-verified inbound WhatsApp messages
+GET  /api/user/profile    Firebase ID-token protected example route
+```
+
+The Telegram adapter uses long polling, so it does not need a public webhook URL.
+
+## Tests and checks
+
+The backend has a hermetic Node test suite using fake Firestore and mocked external requests:
+
+```bash
+cd backend
+npm test
+npm run smoke:whatsapp
+```
+
+An optional live assistant check uses the real OpenAI service but keeps Firestore in memory. It requires credentials already configured in the local environment and must never be run with secrets printed to logs:
+
+```bash
+node scripts/live-agent-check.js
+```
 ---
-
-## Demo Accounts
-
-| Role           | Email                                                     | Password |
-| -------------- | --------------------------------------------------------- | -------- |
-| Migrant Worker | [migrantworker@gmail.com]                                 | password |
-| Employer       | [employer@gmail.com]                                      | password |
-
-> These accounts use mock data for testing and demonstration only.
-
----
-
-## Deployment
-
-* **Frontend:** Deployed to Vercel(https://bridge-lake-eight.vercel.app/) 
-* **Backend:** Deployed Express server to Render
-
-
----
-
-
