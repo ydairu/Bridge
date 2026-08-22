@@ -7,7 +7,7 @@
       </router-link>
 
       <!-- Hamburger (mobile) -->
-      <button class="nav-toggle" @click="toggleMenu" :class="{ active: menuOpen }" aria-label="Menu">
+      <button class="nav-toggle" @click="toggleMenu" :class="{ active: menuOpen }" :aria-label="$t('common.menu')">
         <span></span>
         <span></span>
         <span></span>
@@ -16,7 +16,7 @@
       <!-- Nav Menu -->
       <div class="nav-menu" :class="{ active: menuOpen }">
         <!-- Mobile close -->
-        <button class="menu-close" @click="closeMenu" aria-label="Close menu">
+        <button class="menu-close" @click="closeMenu" :aria-label="$t('common.closeMenu')">
           <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"></line>
             <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -70,8 +70,8 @@
                   <span v-else>{{ userInitials }}</span>
                 </div>
                 <div class="user-info">
-                  <span class="user-name">{{ userProfile?.name || 'User' }}</span>
-                  <span class="user-type">{{ isJobSeeker ? 'Job Seeker' : 'Employer' }}</span>
+                  <span class="user-name">{{ userProfile?.name || $t('common.user') }}</span>
+                  <span class="user-type">{{ isJobSeeker ? $t('auth.jobSeeker') : $t('auth.employer') }}</span>
                 </div>
               </div>
               <div class="mobile-user-links">
@@ -102,8 +102,8 @@
                     <span v-else>{{ userInitials }}</span>
                   </div>
                   <div class="user-info-dropdown">
-                    <span class="user-name-dropdown">{{ userProfile?.name || 'User' }}</span>
-                    <span class="user-type-dropdown">{{ isJobSeeker ? 'Job Seeker' : 'Employer' }}</span>
+                    <span class="user-name-dropdown">{{ userProfile?.name || $t('common.user') }}</span>
+                    <span class="user-type-dropdown">{{ isJobSeeker ? $t('auth.jobSeeker') : $t('auth.employer') }}</span>
                   </div>
                 </div>
                 <div class="dropdown-divider"></div>

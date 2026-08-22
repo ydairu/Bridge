@@ -8,9 +8,9 @@
             <img src="../assets/briefcase.svg" alt="Briefcase" class="icon-img" />
           </div>
           <div class="header-text">
-            <h1>{{ isEditMode ? 'Edit Job Listing' : 'Post a New Job' }}</h1>
+            <h1>{{ isEditMode ? $t('postJob.editTitle') : $t('postJob.postTitle') }}</h1>
             <p class="header-subtitle">
-              {{ isEditMode ? 'Update the details of your job listing' : 'Fill in the details to attract the best candidates' }}
+              {{ isEditMode ? $t('postJob.editSubtitle') : $t('postJob.postSubtitle') }}
             </p>
           </div>
         </div>
@@ -22,7 +22,7 @@
           <img src="/icons/check-circle.svg" alt="Success" class="icon-small" />
         </div>
         <div class="alert-content">
-          Job {{ isEditMode ? 'updated' : 'posted' }} successfully! Redirecting to dashboard...
+          {{ isEditMode ? $t('postJob.successUpdated') : $t('postJob.successPosted') }}
         </div>
       </div>
 
@@ -40,8 +40,8 @@
             <div class="card-header-content">
               <img src="/icons/sparkles.svg" alt="Sparkles" class="card-header-icon" />
               <div>
-                <h2 class="card-title">Basic Information</h2>
-                <p class="card-description">Let's start with the essentials about the position</p>
+                <h2 class="card-title">{{ $t('postJob.basicInfo') }}</h2>
+                <p class="card-description">{{ $t('postJob.basicInfoDesc') }}</p>
               </div>
             </div>
           </div>
@@ -51,15 +51,15 @@
               <label for="title" class="label-with-badge">
                 <div class="label-content">
                   <img src="../assets/briefcase.svg" alt="Briefcase" class="label-icon" />
-                  <span>Job Title</span>
+                  <span>{{ $t('postJob.jobTitle') }}</span>
                 </div>
-                <span class="badge badge-required">Required</span>
+                <span class="badge badge-required">{{ $t('postJob.required') }}</span>
               </label>
               <input
                 id="title"
                 type="text"
                 v-model="formData.title"
-                placeholder="e.g., Senior Construction Worker"
+                :placeholder="$t('postJob.titlePlaceholder')"
                 class="form-input"
                 required
               />
@@ -71,9 +71,9 @@
                 <label for="category" class="label-with-badge">
                   <div class="label-content">
                     <img src="/icons/file-text.svg" alt="File" class="label-icon" />
-                    <span>Category</span>
+                    <span>{{ $t('postJob.category') }}</span>
                   </div>
-                  <span class="badge badge-required">Required</span>
+                  <span class="badge badge-required">{{ $t('postJob.required') }}</span>
                 </label>
                 <select
                   id="category"
@@ -81,9 +81,9 @@
                   class="form-select"
                   required
                 >
-                  <option value="">Select a category</option>
-                  <option v-for="cat in categories" :key="cat.value" :value="cat.value">
-                    {{ cat.label }}
+                  <option value="">{{ $t('postJob.selectCategory') }}</option>
+                  <option v-for="cat in categories" :key="cat" :value="cat">
+                    {{ $t('home.categories.' + cat) }}
                   </option>
                 </select>
               </div>
@@ -92,9 +92,9 @@
                 <label for="type" class="label-with-badge">
                   <div class="label-content">
                     <img src="../assets/clock.svg" alt="Clock" class="label-icon" />
-                    <span>Job Type</span>
+                    <span>{{ $t('postJob.jobType') }}</span>
                   </div>
-                  <span class="badge badge-required">Required</span>
+                  <span class="badge badge-required">{{ $t('postJob.required') }}</span>
                 </label>
                 <select
                   id="type"
@@ -102,9 +102,9 @@
                   class="form-select"
                   required
                 >
-                  <option value="">Select job type</option>
-                  <option v-for="type in jobTypes" :key="type.value" :value="type.value">
-                    {{ type.label }}
+                  <option value="">{{ $t('postJob.selectType') }}</option>
+                  <option v-for="type in jobTypes" :key="type" :value="type">
+                    {{ $t('postJob.jobTypes.' + type) }}
                   </option>
                 </select>
               </div>
@@ -116,9 +116,9 @@
                 <label for="location" class="label-with-badge">
                   <div class="label-content">
                     <img src="../assets/location.svg" alt="Location" class="label-icon" />
-                    <span>Location</span>
+                    <span>{{ $t('postJob.location') }}</span>
                   </div>
-                  <span class="badge badge-required">Required</span>
+                  <span class="badge badge-required">{{ $t('postJob.required') }}</span>
                 </label>
                 <select
                   id="location"
@@ -126,9 +126,9 @@
                   class="form-select"
                   required
                 >
-                  <option value="">Select location</option>
-                  <option v-for="loc in locations" :key="loc.value" :value="loc.value">
-                    {{ loc.label }}
+                  <option value="">{{ $t('postJob.selectLocation') }}</option>
+                  <option v-for="loc in locations" :key="loc" :value="loc">
+                    {{ $t('postJob.locations.' + loc) }}
                   </option>
                 </select>
               </div>
@@ -137,15 +137,15 @@
                 <label for="salary" class="label-with-badge">
                   <div class="label-content">
                     <img src="../assets/salary.svg" alt="Salary" class="label-icon" />
-                    <span>Monthly Salary (SGD)</span>
+                    <span>{{ $t('postJob.salary') }}</span>
                   </div>
-                  <span class="badge badge-required">Required</span>
+                  <span class="badge badge-required">{{ $t('postJob.required') }}</span>
                 </label>
                 <input
                   id="salary"
                   type="number"
                   v-model="formData.salary"
-                  placeholder="e.g., 3000"
+                  :placeholder="$t('postJob.salaryPlaceholder')"
                   class="form-input"
                   required
                 />
@@ -160,8 +160,8 @@
             <div class="card-header-content">
               <img src="/icons/file-text.svg" alt="File" class="card-header-icon" />
               <div>
-                <h2 class="card-title">Job Details</h2>
-                <p class="card-description">Provide comprehensive information about the role</p>
+                <h2 class="card-title">{{ $t('postJob.detailsTitle') }}</h2>
+                <p class="card-description">{{ $t('postJob.detailsDesc') }}</p>
               </div>
             </div>
           </div>
@@ -169,18 +169,18 @@
             <!-- Description -->
             <div class="form-group">
               <label for="description" class="label-with-badge">
-                <span>Job Description</span>
-                <span class="badge badge-required">Required</span>
+                <span>{{ $t('postJob.description') }}</span>
+                <span class="badge badge-required">{{ $t('postJob.required') }}</span>
               </label>
               <textarea
                 id="description"
                 v-model="formData.description"
-                placeholder="Describe the role, responsibilities, and what makes this position exciting..."
+                :placeholder="$t('postJob.descPlaceholder')"
                 class="form-textarea"
                 rows="6"
                 required
               ></textarea>
-              <p class="form-hint">Tip: Be clear and detailed to attract qualified candidates</p>
+              <p class="form-hint">{{ $t('postJob.descHint') }}</p>
             </div>
 
             <!-- Requirements -->
@@ -188,14 +188,14 @@
               <label for="requirements" class="label-with-badge">
                 <div class="label-content">
                   <img src="/icons/check-circle.svg" alt="Check" class="label-icon" />
-                  <span>Requirements</span>
+                  <span>{{ $t('postJob.requirements') }}</span>
                 </div>
-                <span class="badge badge-optional">Optional</span>
+                <span class="badge badge-optional">{{ $t('postJob.optional') }}</span>
               </label>
               <textarea
                 id="requirements"
                 v-model="requirementsText"
-                placeholder="Enter each requirement on a new line, e.g.:&#10;• 2+ years of experience&#10;• Valid certification&#10;• Good communication skills"
+                :placeholder="$t('postJob.reqPlaceholder')"
                 class="form-textarea"
                 rows="5"
               ></textarea>
@@ -206,14 +206,14 @@
               <label for="benefits" class="label-with-badge">
                 <div class="label-content">
                   <img src="/icons/star.svg" alt="Star" class="label-icon" />
-                  <span>Benefits & Perks</span>
+                  <span>{{ $t('postJob.benefits') }}</span>
                 </div>
-                <span class="badge badge-optional">Optional</span>
+                <span class="badge badge-optional">{{ $t('postJob.optional') }}</span>
               </label>
               <textarea
                 id="benefits"
                 v-model="benefitsText"
-                placeholder="Enter each benefit on a new line, e.g.:&#10;• Health insurance&#10;• Annual bonus&#10;• Flexible working hours"
+                :placeholder="$t('postJob.benefitsPlaceholder')"
                 class="form-textarea"
                 rows="5"
               ></textarea>
@@ -230,7 +230,7 @@
               class="btn btn-outline"
             >
               <span class="btn-icon">←</span>
-              Cancel
+              {{ $t('common.cancel') }}
             </button>
 
             <button
@@ -240,12 +240,12 @@
             >
               <span v-if="loading" class="spinner">⏳</span>
               <img v-else src="../assets/briefcase.svg" alt="Briefcase" class="btn-icon-img" />
-              {{ loading ? (isEditMode ? 'Updating...' : 'Posting...') : (isEditMode ? 'Update Job' : 'Post Job') }}
+              {{ loading ? (isEditMode ? $t('postJob.updating') : $t('postJob.posting')) : (isEditMode ? $t('postJob.updateJob') : $t('postJob.postJobBtn')) }}
             </button>
           </div>
 
           <p v-if="!isFormValid" class="form-validation-hint">
-            Please fill in all required fields to continue
+            {{ $t('postJob.validationHint') }}
           </p>
         </div>
       </form>
@@ -257,6 +257,7 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { useToast } from '../composables/useToast'
 
 export default {
@@ -265,6 +266,7 @@ export default {
     const store = useStore()
     const router = useRouter()
     const route = useRoute()
+    const { t } = useI18n()
     const { showToast } = useToast()
     
     const loading = ref(false)
@@ -278,30 +280,11 @@ export default {
     const userProfile = computed(() => store.getters['auth/userProfile'])
     const currentUser = computed(() => store.getters['auth/currentUser'])
 
-    const categories = [
-      { value: 'construction', label: 'Construction' },
-      { value: 'manufacturing', label: 'Manufacturing' },
-      { value: 'hospitality', label: 'Hospitality' },
-      { value: 'maintenance', label: 'Maintenance' },
-      { value: 'logistics', label: 'Logistics' },
-      { value: 'cleaning', label: 'Cleaning' },
-      { value: 'security', label: 'Security' },
-      { value: 'facilities', label: 'Facilities' },
-    ]
-
-    const jobTypes = [
-      { value: 'full-time', label: 'Full Time' },
-      { value: 'part-time', label: 'Part Time' },
-      { value: 'contract', label: 'Contract' },
-    ]
-
-    const locations = [
-      { value: 'central', label: 'Central' },
-      { value: 'east', label: 'East' },
-      { value: 'west', label: 'West' },
-      { value: 'north', label: 'North' },
-      { value: 'south', label: 'South' },
-    ]
+    // Values only — labels are rendered in the template via i18n keys
+    // (home.categories.* / postJob.jobTypes.* / postJob.locations.*).
+    const categories = ['construction', 'manufacturing', 'hospitality', 'maintenance', 'logistics', 'cleaning', 'security', 'facilities']
+    const jobTypes = ['full-time', 'part-time', 'contract']
+    const locations = ['central', 'east', 'west', 'north', 'south']
 
     const formData = reactive({
       title: '',
@@ -354,8 +337,8 @@ export default {
             }
           }
         } catch (err) {
-          error.value = err.message || 'Failed to load job data. Please try again.'
-          showToast('Failed to load job data', 'error')
+          error.value = err.message || t('postJob.loadError')
+          showToast(t('postJob.loadErrorToast'), 'error')
         } finally {
           loading.value = false
         }
@@ -378,10 +361,10 @@ export default {
 
         if (isEditMode.value && jobId.value) {
           await store.dispatch('jobs/updateJob', { jobId: jobId.value, jobData })
-          showToast('Job updated successfully!', 'success')
+          showToast(t('postJob.updateSuccess'), 'success')
         } else {
           await store.dispatch('jobs/createJob', jobData)
-          showToast('Job posted successfully!', 'success')
+          showToast(t('postJob.postSuccess'), 'success')
         }
         
         success.value = true
@@ -390,7 +373,7 @@ export default {
           router.push('/employer/dashboard')
         }, 1500)
       } catch (err) {
-        error.value = err.message || (isEditMode.value ? 'Failed to update job. Please try again.' : 'Failed to post job. Please try again.')
+        error.value = err.message || (isEditMode.value ? t('postJob.updateError') : t('postJob.postError'))
         showToast(error.value, 'error')
       } finally {
         loading.value = false

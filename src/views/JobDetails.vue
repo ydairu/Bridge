@@ -1,7 +1,7 @@
 <template>
   <div class="job-details">
     <div v-if="loading" class="loading">
-      <p>Loading job details...</p>
+      <p>{{ $t('jobDetails.loading') }}</p>
     </div>
 
     <div v-else-if="job" class="job-content">
@@ -37,7 +37,7 @@
             <img :src="salaryIcon" alt="Salary" />
           </div>
           <div class="detail-content">
-            <p class="detail-label">Salary</p>
+            <p class="detail-label">{{ $t('jobDetails.salary') }}</p>
             <p class="detail-value">${{ job.salary }}/mo</p>
           </div>
         </div>
@@ -47,7 +47,7 @@
             <img :src="locationIcon" alt="Location" />
           </div>
           <div class="detail-content">
-            <p class="detail-label">Location</p>
+            <p class="detail-label">{{ $t('jobDetails.location') }}</p>
             <p class="detail-value">{{ capitalizeLocation(job.location) }}</p>
           </div>
         </div>
@@ -57,7 +57,7 @@
             <img :src="briefcaseIcon" alt="Job Type" />
           </div>
           <div class="detail-content">
-            <p class="detail-label">Job Type</p>
+            <p class="detail-label">{{ $t('jobDetails.jobType') }}</p>
             <p class="detail-value">{{ capitalize(job.type) }}</p>
           </div>
         </div>
@@ -67,7 +67,7 @@
             <img :src="clockIcon" alt="Posted" />
           </div>
           <div class="detail-content">
-            <p class="detail-label">Posted</p>
+            <p class="detail-label">{{ $t('jobDetails.posted') }}</p>
             <p class="detail-value">{{ formatDate(job.createdAt) }}</p>
           </div>
         </div>
@@ -79,12 +79,11 @@
       <div class="section">
         <div class="section-header">
           <img :src="briefcaseIcon" alt="Briefcase" class="section-icon" />
-          <h3>Job Description</h3>
+          <h3>{{ $t('jobDetails.description') }}</h3>
         </div>
         <p class="section-text">{{ job.description }}</p>
         <p class="section-text">
-          We are looking for dedicated and hardworking individuals to join our team. 
-          This role offers competitive compensation, good working conditions, and opportunities for career advancement.
+          {{ $t('jobDetails.boilerplate') }}
         </p>
       </div>
 
@@ -94,7 +93,7 @@
       <div class="section">
         <div class="section-header">
           <img src="/public/icons/check-circle.svg" alt="Requirements" class="section-icon" />
-          <h3>Requirements</h3>
+          <h3>{{ $t('jobDetails.requirements') }}</h3>
         </div>
         <ul class="requirements-list">
           <li v-for="(req, index) in job.requirements" :key="index" class="requirement-item">
@@ -110,7 +109,7 @@
       <div class="section">
         <div class="section-header">
           <img src="/public/icons/sparkles.svg" alt="Benefits" class="section-icon" />
-          <h3>Benefits</h3>
+          <h3>{{ $t('jobDetails.benefits') }}</h3>
         </div>
         <div class="benefits-grid">
           <div class="benefit-item" v-for="(benefit, index) in job.benefits" :key="index">
@@ -126,14 +125,14 @@
       <div v-if="employerProfile" class="section">
         <div class="section-header">
           <img src="/icons/building.svg" alt="Building" class="section-icon" />
-          <h3>About {{ job.company }}</h3>
+          <h3>{{ $t('jobDetails.about', { company: job.company }) }}</h3>
         </div>
         
         <div class="company-details-grid">
           <div v-if="employerProfile.industry" class="company-detail-item">
             <div class="company-detail-label">
               <img :src="briefcaseIcon" alt="Industry" class="detail-icon" />
-              <span>Industry</span>
+              <span>{{ $t('jobDetails.industry') }}</span>
             </div>
             <p class="company-detail-value">{{ employerProfile.industry }}</p>
           </div>
@@ -141,7 +140,7 @@
           <div v-if="employerProfile.companySize" class="company-detail-item">
             <div class="company-detail-label">
               <img src="/icons/users.svg" alt="Company Size" class="detail-icon" />
-              <span>Company Size</span>
+              <span>{{ $t('jobDetails.companySize') }}</span>
             </div>
             <p class="company-detail-value">{{ formatCompanySize(employerProfile.companySize) }}</p>
           </div>
@@ -149,7 +148,7 @@
           <div v-if="employerProfile.companyWebsite" class="company-detail-item">
             <div class="company-detail-label">
               <img src="/icons/search.svg" alt="Website" class="detail-icon" />
-              <span>Website</span>
+              <span>{{ $t('jobDetails.website') }}</span>
             </div>
             <p class="company-detail-value">
               <a :href="employerProfile.companyWebsite" target="_blank" rel="noopener noreferrer" class="website-link">
@@ -161,16 +160,16 @@
           <div v-if="employerProfile.companyUEN" class="company-detail-item">
             <div class="company-detail-label">
               <img src="/icons/file-text.svg" alt="UEN" class="detail-icon" />
-              <span>UEN</span>
+              <span>{{ $t('jobDetails.uen') }}</span>
             </div>
             <p class="company-detail-value">{{ employerProfile.companyUEN }}</p>
-            <p class="company-detail-hint">Unique Entity Number (Singapore)</p>
+            <p class="company-detail-hint">{{ $t('jobDetails.uenHint') }}</p>
           </div>
           
           <div v-if="employerProfile.companyAddress" class="company-detail-item">
             <div class="company-detail-label">
               <img :src="locationIcon" alt="Address" class="detail-icon" />
-              <span>Address</span>
+              <span>{{ $t('jobDetails.address') }}</span>
             </div>
             <p class="company-detail-value">{{ employerProfile.companyAddress }}</p>
           </div>
@@ -178,7 +177,7 @@
           <div v-if="employerProfile.companyDescription" class="company-detail-item full-width">
             <div class="company-detail-label">
               <img src="/icons/file-text.svg" alt="Description" class="detail-icon" />
-              <span>Company Description</span>
+              <span>{{ $t('jobDetails.companyDescription') }}</span>
             </div>
             <p class="company-detail-value">{{ employerProfile.companyDescription }}</p>
           </div>
@@ -190,41 +189,41 @@
       <!-- Action Buttons -->
       <div class="actions" v-if="isJobSeeker">
         <button @click="applyForJob" class="btn btn-primary">
-          Apply Now
+          {{ $t('jobDetails.applyNow') }}
         </button>
       </div>
 
       <!-- Application Form Modal -->
       <div v-if="showApplicationForm" class="modal-overlay" @click="closeModal">
         <div class="modal-content" @click.stop>
-          <h2>Apply for {{ job.title }}</h2>
+          <h2>{{ $t('jobDetails.applyFor', { title: job.title }) }}</h2>
           <form @submit.prevent="submitApplication">
             <div class="form-group">
-              <label>Cover Letter</label>
+              <label>{{ $t('jobDetails.coverLetter') }}</label>
               <textarea
                 v-model="application.coverLetter"
                 rows="6"
-                placeholder="Tell us why you're a great fit..."
+                :placeholder="$t('jobDetails.coverLetterPlaceholder')"
                 required
               ></textarea>
             </div>
 
             <div class="form-group">
-              <label>Resume (URL or text)</label>
+              <label>{{ $t('jobDetails.resume') }}</label>
               <input
                 type="text"
                 v-model="application.resume"
-                placeholder="Paste resume URL or brief summary"
+                :placeholder="$t('jobDetails.resumePlaceholder')"
                 required
               />
             </div>
 
             <div class="modal-actions">
               <button type="button" @click="closeModal" class="btn btn-secondary">
-                Cancel
+                {{ $t('common.cancel') }}
               </button>
               <button type="submit" class="btn btn-primary">
-                Submit Application
+                {{ $t('jobDetails.submitApplication') }}
               </button>
             </div>
           </form>
@@ -238,6 +237,7 @@
 import { ref, computed, onMounted, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import { useI18n } from 'vue-i18n'
 import { useToast } from '../composables/useToast'
 import { db } from '../firebase/config'
 import { doc, getDoc } from 'firebase/firestore'
@@ -254,6 +254,7 @@ export default {
     const route = useRoute()
     const router = useRouter()
     const store = useStore()
+    const { t } = useI18n()
     const { showToast } = useToast()
     
     const job = ref(null)
@@ -299,46 +300,39 @@ export default {
     }
 
     const formatDate = (timestamp) => {
-      if (!timestamp) return 'Recently'
+      if (!timestamp) return t('common.date.recently')
       const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp)
       const now = new Date()
-      
+
       // Check if same calendar day
       const isSameDay = date.getFullYear() === now.getFullYear() &&
                        date.getMonth() === now.getMonth() &&
                        date.getDate() === now.getDate()
-      
-      if (isSameDay) return 'Today'
-      
+
+      if (isSameDay) return t('common.date.today')
+
       // Check if yesterday (previous calendar day)
       const yesterday = new Date(now)
       yesterday.setDate(yesterday.getDate() - 1)
       const isYesterday = date.getFullYear() === yesterday.getFullYear() &&
                          date.getMonth() === yesterday.getMonth() &&
                          date.getDate() === yesterday.getDate()
-      
-      if (isYesterday) return 'Yesterday'
-      
+
+      if (isYesterday) return t('common.date.yesterday')
+
       // Calculate difference in days using floor instead of ceil
       const diffTime = Math.abs(now - date)
       const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
-      
-      if (diffDays < 7) return `${diffDays} days ago`
-      if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`
-      return `${Math.floor(diffDays / 30)} months ago`
+
+      if (diffDays < 7) return t('common.date.daysAgo', { n: diffDays })
+      if (diffDays < 30) return t('common.date.weeksAgo', { n: Math.floor(diffDays / 7) })
+      return t('common.date.monthsAgo', { n: Math.floor(diffDays / 30) })
     }
 
     const formatCompanySize = (size) => {
       if (!size) return ''
-      const sizeMap = {
-        '1-10': '1-10 employees',
-        '11-50': '11-50 employees',
-        '51-200': '51-200 employees',
-        '201-500': '201-500 employees',
-        '501-1000': '501-1000 employees',
-        '1000+': '1000+ employees'
-      }
-      return sizeMap[size] || size
+      const ranges = ['1-10', '11-50', '51-200', '201-500', '501-1000', '1000+']
+      return ranges.includes(size) ? t('jobDetails.employees', { range: size }) : size
     }
 
     const fetchJob = async () => {
@@ -390,14 +384,14 @@ export default {
           resume: application.resume
         })
         
-        showToast('Application submitted successfully!', 'success')
+        showToast(t('jobDetails.submitSuccess'), 'success')
         showApplicationForm.value = false
         setTimeout(() => {
           router.push('/applications')
         }, 500)
       } catch (error) {
         console.error('Error submitting application:', error)
-        showToast('Failed to submit application. Please try again.', 'error')
+        showToast(t('jobDetails.submitError'), 'error')
       }
     }
 

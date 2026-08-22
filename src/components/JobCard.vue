@@ -71,6 +71,7 @@
 <script>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'JobCard',
@@ -82,6 +83,7 @@ export default {
   },
   setup(props) {
     const router = useRouter()
+    const { t } = useI18n()
     const isBookmarked = ref(false)
 
     const tags = computed(() => {
@@ -123,29 +125,29 @@ export default {
     }
 
     const formatDate = (dateString) => {
-      if (!dateString) return 'Recently'
+      if (!dateString) return t('common.date.recently')
       const date = new Date(dateString)
       const now = new Date()
-      
+
       const isSameDay = date.getFullYear() === now.getFullYear() &&
                        date.getMonth() === now.getMonth() &&
                        date.getDate() === now.getDate()
-      
-      if (isSameDay) return 'Today'
-      
+
+      if (isSameDay) return t('common.date.today')
+
       const yesterday = new Date(now)
       yesterday.setDate(yesterday.getDate() - 1)
       const isYesterday = date.getFullYear() === yesterday.getFullYear() &&
                          date.getMonth() === yesterday.getMonth() &&
                          date.getDate() === yesterday.getDate()
-      
-      if (isYesterday) return 'Yesterday'
-      
+
+      if (isYesterday) return t('common.date.yesterday')
+
       const diffTime = Math.abs(now - date)
       const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
-      
-      if (diffDays < 7) return `${diffDays} days ago`
-      if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`
+
+      if (diffDays < 7) return t('common.date.daysAgo', { n: diffDays })
+      if (diffDays < 30) return t('common.date.weeksAgo', { n: Math.floor(diffDays / 7) })
       return date.toLocaleDateString()
     }
 

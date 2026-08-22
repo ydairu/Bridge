@@ -31,15 +31,14 @@
 
           <FadeIn :delay="900" :duration="900" class="hero-sub-wrap">
             <p class="hero-subtitle">
-              Bridge connects migrant workers in Singapore directly with employers
-              — no agencies, no hidden fees, no empty promises.
+              {{ $t('homeView.heroSubtitle') }}
             </p>
           </FadeIn>
 
           <FadeIn :delay="1300" :duration="800" class="hero-actions-wrap">
             <div class="hero-actions">
-              <router-link to="/register" class="btn-hero-primary">Find jobs now</router-link>
-              <router-link to="/login"    class="btn-hero-glass">Sign in</router-link>
+              <router-link to="/register" class="btn-hero-primary">{{ $t('homeView.findJobs') }}</router-link>
+              <router-link to="/login"    class="btn-hero-glass">{{ $t('auth.signIn') }}</router-link>
             </div>
           </FadeIn>
         </div>
@@ -52,15 +51,15 @@
             @click="currentSlide = index"
             class="dot"
             :class="{ active: currentSlide === index }"
-            :aria-label="`Slide ${index + 1}`"
+            :aria-label="$t('homeView.slide', { n: index + 1 })"
           ></button>
         </div>
-        <button @click="previousSlide" class="carousel-arrow carousel-arrow-prev" aria-label="Previous">
+        <button @click="previousSlide" class="carousel-arrow carousel-arrow-prev" :aria-label="$t('homeView.previous')">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
         </button>
-        <button @click="nextSlide" class="carousel-arrow carousel-arrow-next" aria-label="Next">
+        <button @click="nextSlide" class="carousel-arrow carousel-arrow-next" :aria-label="$t('homeView.next')">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
           </svg>
@@ -81,9 +80,9 @@
       <section class="content-section">
         <div class="section-container">
           <div class="section-header">
-            <h2 class="section-title">Explore Opportunities</h2>
+            <h2 class="section-title">{{ $t('home.exploreTitle') }}</h2>
             <p class="section-description">
-              Browse jobs by category and find the perfect match for your skills
+              {{ $t('home.exploreDescription') }}
             </p>
           </div>
           <CategoryChips @category-selected="onCategorySelected" />
@@ -97,12 +96,12 @@
             <div class="cta-icon">
               <img src="../assets/briefcase.svg" alt="Briefcase" class="cta-icon-img" />
             </div>
-            <h2 class="cta-title">Ready to Find Your Next Job?</h2>
+            <h2 class="cta-title">{{ $t('home.ctaTitle') }}</h2>
             <p class="cta-description">
-              Browse through hundreds of job opportunities from top employers in Singapore
+              {{ $t('home.ctaDescription') }}
             </p>
             <router-link to="/browse-jobs" class="btn btn-primary btn-cta">
-              Browse All Jobs
+              {{ $t('home.ctaButton') }}
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
@@ -140,7 +139,7 @@
               </div>
               <div class="stat-body">
                 <div class="stat-value">{{ totalApplications }}</div>
-                <div class="stat-label">Total Applications</div>
+                <div class="stat-label">{{ $t('homeView.totalApplications') }}</div>
               </div>
             </div>
 
@@ -152,7 +151,7 @@
               </div>
               <div class="stat-body">
                 <div class="stat-value">{{ pendingApplications }}</div>
-                <div class="stat-label">Pending</div>
+                <div class="stat-label">{{ $t('common.status.pending') }}</div>
               </div>
             </div>
 
@@ -164,7 +163,7 @@
               </div>
               <div class="stat-body">
                 <div class="stat-value">{{ profileCompletion }}%</div>
-                <div class="stat-label">Profile Complete</div>
+                <div class="stat-label">{{ $t('homeView.profileComplete') }}</div>
               </div>
             </div>
 
@@ -176,7 +175,7 @@
               </div>
               <div class="stat-body">
                 <div class="stat-value">{{ recommendedJobsCount }}</div>
-                <div class="stat-label">Recommended Jobs</div>
+                <div class="stat-label">{{ $t('homeView.recommendedJobs') }}</div>
               </div>
             </div>
           </div>
@@ -188,11 +187,11 @@
         <div class="section-container">
           <div class="section-header-row">
             <div>
-              <h2 class="section-title">Recent Applications</h2>
-              <p class="section-desc">Track the status of your latest job applications</p>
+              <h2 class="section-title">{{ $t('homeView.recentApplications') }}</h2>
+              <p class="section-desc">{{ $t('homeView.recentSubtitle') }}</p>
             </div>
             <router-link to="/applications" class="view-all">
-              View All
+              {{ $t('homeView.viewAll') }}
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
               </svg>
@@ -227,7 +226,7 @@
       <!-- Quick Actions -->
       <section class="content-section alt">
         <div class="section-container">
-          <h2 class="section-title">Quick Actions</h2>
+          <h2 class="section-title">{{ $t('homeView.quickActions') }}</h2>
           <div class="actions-grid">
             <router-link to="/browse-jobs"   class="action-card">
               <div class="action-icon icon-blue">
@@ -235,8 +234,8 @@
                   <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
-              <h3>Browse Jobs</h3>
-              <p>Explore new opportunities</p>
+              <h3>{{ $t('nav.browseJobs') }}</h3>
+              <p>{{ $t('homeView.browseJobsDesc') }}</p>
             </router-link>
 
             <router-link to="/profile"       class="action-card">
@@ -245,8 +244,8 @@
                   <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
               </div>
-              <h3>Update Profile</h3>
-              <p>Keep your profile current</p>
+              <h3>{{ $t('homeView.updateProfile') }}</h3>
+              <p>{{ $t('homeView.updateProfileDesc') }}</p>
             </router-link>
 
             <router-link to="/quizzes"       class="action-card">
@@ -255,8 +254,8 @@
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                 </svg>
               </div>
-              <h3>Take Quiz</h3>
-              <p>Improve your skills</p>
+              <h3>{{ $t('homeView.takeQuiz') }}</h3>
+              <p>{{ $t('homeView.takeQuizDesc') }}</p>
             </router-link>
 
             <router-link to="/achievements"  class="action-card">
@@ -265,8 +264,8 @@
                   <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
                 </svg>
               </div>
-              <h3>Achievements</h3>
-              <p>See your progress</p>
+              <h3>{{ $t('nav.achievements') }}</h3>
+              <p>{{ $t('homeView.achievementsDesc') }}</p>
             </router-link>
           </div>
         </div>
@@ -286,6 +285,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import CategoryChips from '../components/CategoryChips.vue'
 import HowItWorks from '../components/HowItWorks.vue'
 import StatsSection from '../components/StatsSection.vue'
@@ -305,6 +305,7 @@ export default {
   setup() {
     const store = useStore()
     const router = useRouter()
+    const { t } = useI18n()
     const loading = computed(() => store.getters['jobs/loading'])
     const isAuthenticated = computed(() => store.getters['auth/isAuthenticated'])
     const isJobSeeker = computed(() => store.getters['auth/isJobSeeker'])
@@ -320,21 +321,21 @@ export default {
 
     const timeBasedGreeting = computed(() => {
       const hour = new Date().getHours()
-      if (hour < 12) return 'Good Morning'
-      if (hour < 17) return 'Good Afternoon'
-      return 'Good Evening'
+      if (hour < 12) return t('homeView.greetingMorning')
+      if (hour < 17) return t('homeView.greetingAfternoon')
+      return t('homeView.greetingEvening')
     })
 
-    const userName = computed(() => userProfile.value?.name || 'there')
+    const userName = computed(() => userProfile.value?.name || t('homeView.there'))
 
     const personalizedMessage = computed(() => {
-      if (!userProfile.value) return 'Welcome back!'
+      if (!userProfile.value) return t('homeView.welcomeBack')
       const totalApps = totalApplications.value
       const pendingApps = pendingApplications.value
-      if (totalApps === 0) return 'Start your job search journey today! Browse opportunities that match your skills.'
-      if (pendingApps > 0) return `You have ${pendingApps} ${pendingApps === 1 ? 'application' : 'applications'} pending. Keep it up!`
-      if (profileCompletion.value < 50) return 'Complete your profile to unlock better job recommendations!'
-      return 'Your career journey continues. Check out new opportunities below!'
+      if (totalApps === 0) return t('homeView.msgNoApps')
+      if (pendingApps > 0) return t('homeView.msgPending', { count: pendingApps })
+      if (profileCompletion.value < 50) return t('homeView.msgProfile')
+      return t('homeView.msgContinue')
     })
 
     const totalApplications = computed(() => allApplications.value.length)
@@ -374,7 +375,7 @@ export default {
 
     const recommendedJobsCount = computed(() => recommendedJobs.value.length)
 
-    const heroHeadingText = 'Your skills deserve\na direct path\nforward.'
+    const heroHeadingText = computed(() => t('homeView.heroHeading'))
 
     const nextSlide = () => { currentSlide.value = (currentSlide.value + 1) % heroImages.length }
     const previousSlide = () => { currentSlide.value = (currentSlide.value - 1 + heroImages.length) % heroImages.length }
@@ -383,16 +384,19 @@ export default {
 
     const onCategorySelected = (category) => { router.push(`/browse-jobs?category=${category.id}`) }
 
-    const formatStatus = (status) => ({ pending: 'Pending', accepted: 'Accepted', rejected: 'Rejected' }[status] || status)
+    const formatStatus = (status) => {
+      const map = { pending: 'common.status.pending', accepted: 'common.status.accepted', rejected: 'common.status.rejected' }
+      return map[status] ? t(map[status]) : status
+    }
 
     const formatDate = (dateString) => {
-      if (!dateString) return 'Recently'
+      if (!dateString) return t('common.date.recently')
       const date = new Date(dateString)
       const diffDays = Math.ceil(Math.abs(new Date() - date) / (1000 * 60 * 60 * 24))
-      if (diffDays === 0) return 'Today'
-      if (diffDays === 1) return 'Yesterday'
-      if (diffDays < 7) return `${diffDays} days ago`
-      if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`
+      if (diffDays === 0) return t('common.date.today')
+      if (diffDays === 1) return t('common.date.yesterday')
+      if (diffDays < 7) return t('common.date.daysAgo', { n: diffDays })
+      if (diffDays < 30) return t('common.date.weeksAgo', { n: Math.floor(diffDays / 7) })
       return date.toLocaleDateString()
     }
 

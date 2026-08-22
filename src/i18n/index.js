@@ -1,5 +1,6 @@
 import { createI18n } from 'vue-i18n'
 import homeTranslations from './home'
+import appTranslations from './app'
 
 export const supportedLocales = [
   { code: 'en', name: 'English' },
@@ -221,6 +222,13 @@ Object.entries(homeTranslations).forEach(([localeCode, localizedHomepage]) => {
   messages[localeCode] = {
     ...messages[localeCode],
     ...localizedHomepage
+  }
+})
+
+Object.entries(appTranslations).forEach(([localeCode, localizedScreens]) => {
+  messages[localeCode] = {
+    ...messages[localeCode],
+    ...localizedScreens
   }
 })
 

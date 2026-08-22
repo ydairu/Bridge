@@ -44,7 +44,7 @@
               type="text"
               id="name"
               v-model="formData.name"
-              placeholder="Enter your full name"
+              :placeholder="$t('register.namePlaceholder')"
               required
             />
           </div>
@@ -55,7 +55,7 @@
               type="email"
               id="email"
               v-model="formData.email"
-              placeholder="Enter your email"
+              :placeholder="$t('register.emailPlaceholder')"
               required
             />
           </div>
@@ -66,7 +66,7 @@
               type="tel"
               id="phone"
               v-model="formData.phone"
-              placeholder="Enter your phone number"
+              :placeholder="$t('register.phonePlaceholder')"
               required
             />
           </div>
@@ -77,7 +77,7 @@
               type="password"
               id="password"
               v-model="formData.password"
-              placeholder="Create a password"
+              :placeholder="$t('register.passwordPlaceholder')"
               required
             />
           </div>
@@ -88,7 +88,7 @@
               type="password"
               id="confirmPassword"
               v-model="confirmPassword"
-              placeholder="Confirm your password"
+              :placeholder="$t('register.confirmPlaceholder')"
               required
             />
           </div>
@@ -96,22 +96,22 @@
           <!-- Job Seeker Specific Fields -->
           <div v-if="userType === 'jobseeker'" class="role-specific-fields">
             <div class="form-group">
-              <label for="skills">Skills (comma-separated)</label>
+              <label for="skills">{{ $t('register.skillsLabel') }}</label>
               <input
                 type="text"
                 id="skills"
                 v-model="formData.skills"
-                placeholder="e.g., Construction, Plumbing, Electrical"
+                :placeholder="$t('register.skillsPlaceholder')"
               />
             </div>
 
             <div class="form-group">
-              <label for="experience">Years of Experience</label>
+              <label for="experience">{{ $t('register.experienceLabel') }}</label>
               <input
                 type="number"
                 id="experience"
                 v-model="formData.experience"
-                placeholder="Years"
+                :placeholder="$t('register.experiencePlaceholder')"
                 min="0"
               />
             </div>
@@ -120,23 +120,23 @@
           <!-- Employer Specific Fields -->
           <div v-if="userType === 'employer'" class="role-specific-fields">
             <div class="form-group">
-              <label for="company">Company Name</label>
+              <label for="company">{{ $t('register.companyLabel') }}</label>
               <input
                 type="text"
                 id="company"
                 v-model="formData.company"
-                placeholder="Enter company name"
+                :placeholder="$t('register.companyPlaceholder')"
                 required
               />
             </div>
 
             <div class="form-group">
-              <label for="industry">Industry</label>
+              <label for="industry">{{ $t('register.industryLabel') }}</label>
               <input
                 type="text"
                 id="industry"
                 v-model="formData.industry"
-                placeholder="e.g., Construction, Hospitality"
+                :placeholder="$t('register.industryPlaceholder')"
               />
             </div>
           </div>
@@ -162,12 +162,14 @@
 import { ref, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'Register',
   setup() {
     const store = useStore()
     const router = useRouter()
+    const { t } = useI18n()
     
     const userType = ref('jobseeker')
     const confirmPassword = ref('')
@@ -187,7 +189,7 @@ export default {
 
     const handleRegister = async () => {
       if (formData.password !== confirmPassword.value) {
-        error.value = 'Passwords do not match'
+        error.value = t('register.passwordMismatch')
         return
       }
 
@@ -222,7 +224,7 @@ export default {
           router.push('/')
         }
       } catch (err) {
-        error.value = err.message || 'Failed to create account. Please try again.'
+        error.value = err.message || t('register.genericError')
       } finally {
         loading.value = false
       }

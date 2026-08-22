@@ -39,7 +39,7 @@
         </form>
 
         <div class="divider">
-          <span>or</span>
+          <span>{{ $t('common.or') }}</span>
         </div>
 
         <p class="signup-link">
@@ -54,12 +54,14 @@
 import { ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'Login',
   setup() {
     const store = useStore()
     const router = useRouter()
+    const { t } = useI18n()
     
     const email = ref('')
     const password = ref('')
@@ -88,17 +90,17 @@ export default {
         // Map Firebase Auth error codes to user-friendly messages
         const code = err?.code || ''
         if (code === 'auth/wrong-password' || code === 'auth/invalid-credential' || code === 'auth/invalid-password') {
-          error.value = 'Incorrect email or password.'
+          error.value = t('login.errors.wrongPassword')
         } else if (code === 'auth/user-not-found') {
-          error.value = 'No account found with this email.'
+          error.value = t('login.errors.userNotFound')
         } else if (code === 'auth/too-many-requests') {
-          error.value = 'Too many attempts. Please try again later.'
+          error.value = t('login.errors.tooManyRequests')
         } else if (code === 'auth/invalid-email') {
-          error.value = 'Please enter a valid email address.'
+          error.value = t('login.errors.invalidEmail')
         } else if (code === 'auth/network-request-failed') {
-          error.value = 'Network error. Check your connection and try again.'
+          error.value = t('login.errors.network')
         } else {
-          error.value = 'Failed to sign in. Please check your credentials.'
+          error.value = t('login.errors.generic')
         }
       } finally {
         loading.value = false

@@ -3,7 +3,7 @@
     <div class="profile-container">
       <!-- Loading State -->
       <div v-if="loading" class="loading-state">
-        <p>Loading profile...</p>
+        <p>{{ $t('profile.loadingProfile') }}</p>
       </div>
       
       <!-- Profile Content -->
@@ -39,16 +39,16 @@
                     :disabled="uploadingPhoto"
                   >
                     <img src="../assets/add-profile-picture.svg" alt="" class="btn-icon" />
-                    {{ userProfile?.photoURL || photoPreviewUrl ? 'Change Photo' : 'Add Photo' }}
+                    {{ userProfile?.photoURL || photoPreviewUrl ? $t('profile.changePhoto') : $t('profile.addPhoto') }}
                   </button>
-                  <button 
+                  <button
                     v-if="userProfile?.photoURL || photoPreviewUrl"
                     @click="removePhoto"
                     class="btn-remove-photo"
                     :disabled="uploadingPhoto"
                   >
                     <img src="../assets/trash.svg" alt="" class="btn-icon" />
-                    Remove
+                    {{ $t('common.remove') }}
                   </button>
                 </div>
               </div>
@@ -56,29 +56,29 @@
 
             <div class="header-info">
               <div class="name-section">
-                <h1>{{ userProfile?.name || 'User Profile' }}</h1>
+                <h1>{{ userProfile?.name || $t('profile.userProfileTitle') }}</h1>
                 <div class="role-badge" :class="userProfile?.role">
-                  {{ userProfile?.role === 'jobseeker' ? 'Job Seeker' : 'Employer' }}
+                  {{ userProfile?.role === 'jobseeker' ? $t('auth.jobSeeker') : $t('auth.employer') }}
                 </div>
               </div>
               <p class="subtitle">
                 <span v-if="userProfile?.role === 'jobseeker'">
-                  {{ userProfile?.experience || 0 }} years of experience
+                  {{ $t('profile.yearsExperience', { n: userProfile?.experience || 0 }) }}
                 </span>
-                <span v-else>{{ userProfile?.company || 'No company' }}</span>
+                <span v-else>{{ userProfile?.company || $t('profile.noCompany') }}</span>
               </p>
             </div>
 
             <div v-if="!isViewingOtherProfile" class="header-actions">
               <button v-if="!editing" @click="startEditing" class="btn-edit">
-                Edit Profile
+                {{ $t('profile.editProfile') }}
               </button>
               <div v-else class="edit-buttons">
                 <button @click="saveProfile" :disabled="savingProfile" class="btn-save">
-                  {{ savingProfile ? 'Saving...' : 'Save' }}
+                  {{ savingProfile ? $t('common.saving') : $t('common.save') }}
                 </button>
                 <button @click="cancelEditing" class="btn-cancel">
-                  Cancel
+                  {{ $t('common.cancel') }}
                 </button>
               </div>
             </div>
@@ -118,89 +118,89 @@
             <div v-if="activeTab === 'overview'" class="tab-panel">
               <!-- Personal Information Section -->
               <div class="section-card">
-                <h2 class="section-title">Personal Information</h2>
+                <h2 class="section-title">{{ $t('profile.personalInfo') }}</h2>
                 <div class="info-grid">
                   <div class="info-item">
-                    <label>Name</label>
-                    <input 
-                      v-if="editing" 
+                    <label>{{ $t('profile.name') }}</label>
+                    <input
+                      v-if="editing"
                       v-model="editableFields.name"
-                      type="text" 
+                      type="text"
                       class="edit-input"
-                      placeholder="Enter your name"
+                      :placeholder="$t('profile.enterName')"
                     />
                     <p v-else>{{ userProfile?.name }}</p>
                   </div>
                   <div class="info-item">
-                    <label>Email</label>
+                    <label>{{ $t('profile.email') }}</label>
                     <p class="readonly-field">{{ userProfile?.email }}</p>
                   </div>
                   <div class="info-item">
-                    <label>{{ userProfile?.role === 'jobseeker' ? 'Phone' : 'Contact Phone' }}</label>
-                    <input 
-                      v-if="editing" 
+                    <label>{{ userProfile?.role === 'jobseeker' ? $t('profile.phone') : $t('profile.contactPhone') }}</label>
+                    <input
+                      v-if="editing"
                       v-model="editableFields.phone"
-                      type="tel" 
+                      type="tel"
                       class="edit-input"
-                      placeholder="Enter phone number"
+                      :placeholder="$t('profile.enterPhone')"
                     />
-                    <p v-else>{{ userProfile?.phone || 'Not provided' }}</p>
+                    <p v-else>{{ userProfile?.phone || $t('profile.notProvided') }}</p>
                   </div>
                   <div v-if="userProfile?.role === 'jobseeker'" class="info-item">
-                    <label>Experience (years)</label>
-                    <input 
-                      v-if="editing" 
+                    <label>{{ $t('profile.experienceYears') }}</label>
+                    <input
+                      v-if="editing"
                       v-model="editableFields.experience"
-                      type="number" 
+                      type="number"
                       min="0"
                       class="edit-input"
-                      placeholder="Years of experience"
+                      :placeholder="$t('profile.yearsOfExperience')"
                     />
                     <p v-else>{{ userProfile?.experience || 0 }}</p>
                   </div>
                   <div v-if="userProfile?.role === 'employer'" class="info-item">
-                    <label>Company Name</label>
-                    <input 
-                      v-if="editing" 
+                    <label>{{ $t('profile.companyName') }}</label>
+                    <input
+                      v-if="editing"
                       v-model="editableFields.company"
-                      type="text" 
+                      type="text"
                       class="edit-input"
-                      placeholder="Enter company name"
+                      :placeholder="$t('profile.enterCompanyName')"
                     />
                     <p v-else>{{ userProfile?.company }}</p>
                   </div>
                   <div v-if="userProfile?.role === 'employer'" class="info-item">
-                    <label>Industry</label>
-                    <input 
-                      v-if="editing" 
+                    <label>{{ $t('profile.industry') }}</label>
+                    <input
+                      v-if="editing"
                       v-model="editableFields.industry"
-                      type="text" 
+                      type="text"
                       class="edit-input"
-                      placeholder="Enter industry"
+                      :placeholder="$t('profile.enterIndustry')"
                     />
-                    <p v-else>{{ userProfile?.industry || 'Not provided' }}</p>
+                    <p v-else>{{ userProfile?.industry || $t('profile.notProvided') }}</p>
                   </div>
                 </div>
               </div>
 
               <!-- Skills Section (Job Seekers) -->
               <div v-if="userProfile?.role === 'jobseeker'" class="section-card">
-                <h2 class="section-title">Skills</h2>
+                <h2 class="section-title">{{ $t('profile.skills') }}</h2>
                 <div v-if="editing" class="skills-edit">
-                  <textarea 
+                  <textarea
                     v-model="editableFields.skills"
                     class="edit-textarea"
-                    placeholder="Enter skills separated by commas"
+                    :placeholder="$t('profile.skillsPlaceholder')"
                     rows="3"
                   ></textarea>
-                  <p class="help-text">Separate skills with commas</p>
+                  <p class="help-text">{{ $t('profile.separateCommas') }}</p>
                 </div>
                 <div v-else class="skills-container">
                   <span v-for="skill in userProfile?.skills" :key="skill" class="skill-tag">
                     {{ skill }}
                   </span>
                   <p v-if="!userProfile?.skills || userProfile?.skills.length === 0" class="empty-text">
-                    No skills added yet
+                    {{ $t('profile.noSkills') }}
                   </p>
                 </div>
               </div>
@@ -210,25 +210,25 @@
                 <!-- Applications Preview -->
                 <div v-if="!isViewingOtherProfile" class="section-card">
                   <div class="section-header">
-                    <h2 class="section-title">Recent Applications</h2>
+                    <h2 class="section-title">{{ $t('profile.recentApplications') }}</h2>
                     <router-link v-if="recentApplications.length > 0" to="/applications" class="view-all-link">
-                      View All →
+                      {{ $t('profile.viewAll') }} →
                     </router-link>
                   </div>
                   <div v-if="recentApplications.length === 0" class="empty-state">
-                    <p>You haven't applied to any jobs yet.</p>
-                    <router-link to="/" class="btn btn-primary">Browse Jobs</router-link>
+                    <p>{{ $t('profile.noApplications') }}</p>
+                    <router-link to="/" class="btn btn-primary">{{ $t('nav.browseJobs') }}</router-link>
                   </div>
                   <div v-else class="applications-preview">
-                    <div 
-                      v-for="app in recentApplications.slice(0, 3)" 
+                    <div
+                      v-for="app in recentApplications.slice(0, 3)"
                       :key="app.id"
                       class="application-preview-item"
                     >
                       <div class="preview-main">
                         <h3>{{ app.jobTitle }}</h3>
                         <p class="preview-company">{{ app.company }}</p>
-                        <span :class="['status-badge-small', app.status]">{{ app.status }}</span>
+                        <span :class="['status-badge-small', app.status]">{{ $t('common.status.' + app.status) }}</span>
                       </div>
                     </div>
                   </div>
@@ -237,7 +237,7 @@
                 <!-- Reviews Preview (for jobseekers viewing own profile) -->
                 <div v-if="!isViewingOtherProfile && currentUser?.uid" class="section-card">
                   <div class="section-header">
-                    <h2 class="section-title">Reviews</h2>
+                    <h2 class="section-title">{{ $t('profile.reviews') }}</h2>
                   </div>
                   <CandidateReviewList :candidate-id="currentUser.uid" />
                 </div>
@@ -245,8 +245,8 @@
 
               <!-- Employer Overview - Company Information -->
               <div v-if="userProfile?.role === 'employer'" class="section-card">
-                <h2 class="section-title">Company Information</h2>
-                
+                <h2 class="section-title">{{ $t('profile.companyInfo') }}</h2>
+
                 <!-- Company Logo Section -->
                 <div class="company-logo-section">
                   <div class="company-logo-wrapper">
@@ -275,16 +275,16 @@
                           :disabled="uploadingCompanyLogo"
                         >
                           <img src="../assets/add-profile-picture.svg" alt="" class="btn-icon" />
-                          {{ userProfile?.companyLogo || companyLogoPreviewUrl ? 'Change Logo' : 'Upload Logo' }}
+                          {{ userProfile?.companyLogo || companyLogoPreviewUrl ? $t('profile.changeLogo') : $t('profile.uploadLogo') }}
                         </button>
-                        <button 
+                        <button
                           v-if="userProfile?.companyLogo || companyLogoPreviewUrl"
                           @click="removeCompanyLogo"
                           class="btn-remove-logo"
                           :disabled="uploadingCompanyLogo"
                         >
                           <img src="../assets/trash.svg" alt="" class="btn-icon" />
-                          Remove
+                          {{ $t('common.remove') }}
                         </button>
                       </div>
                     </div>
@@ -294,94 +294,94 @@
                 <!-- Company Information Fields -->
                 <div class="info-grid">
                   <div class="info-item">
-                    <label>Company Name</label>
-                    <input 
-                      v-if="editing" 
+                    <label>{{ $t('profile.companyName') }}</label>
+                    <input
+                      v-if="editing"
                       v-model="editableFields.company"
-                      type="text" 
+                      type="text"
                       class="edit-input"
-                      placeholder="Enter company name"
+                      :placeholder="$t('profile.enterCompanyName')"
                     />
-                    <p v-else>{{ userProfile?.company || 'Not provided' }}</p>
+                    <p v-else>{{ userProfile?.company || $t('profile.notProvided') }}</p>
                   </div>
                   <div class="info-item">
-                    <label>Industry</label>
-                    <input 
-                      v-if="editing" 
+                    <label>{{ $t('profile.industry') }}</label>
+                    <input
+                      v-if="editing"
                       v-model="editableFields.industry"
-                      type="text" 
+                      type="text"
                       class="edit-input"
-                      placeholder="e.g., Construction, Manufacturing"
+                      :placeholder="$t('profile.industryExample')"
                     />
-                    <p v-else>{{ userProfile?.industry || 'Not provided' }}</p>
+                    <p v-else>{{ userProfile?.industry || $t('profile.notProvided') }}</p>
                   </div>
                   <div class="info-item">
-                    <label>Company Website</label>
-                    <input 
-                      v-if="editing" 
+                    <label>{{ $t('profile.companyWebsite') }}</label>
+                    <input
+                      v-if="editing"
                       v-model="editableFields.companyWebsite"
-                      type="url" 
+                      type="url"
                       class="edit-input"
-                      placeholder="https://www.example.com"
+                      :placeholder="$t('profile.websitePlaceholder')"
                     />
                     <p v-else>
                       <a v-if="userProfile?.companyWebsite" :href="userProfile.companyWebsite" target="_blank" rel="noopener noreferrer" class="website-link">
                         {{ userProfile.companyWebsite }}
                       </a>
-                      <span v-else>Not provided</span>
+                      <span v-else>{{ $t('profile.notProvided') }}</span>
                     </p>
                   </div>
                   <div class="info-item">
-                    <label>Company Address</label>
-                    <input 
-                      v-if="editing" 
+                    <label>{{ $t('profile.companyAddress') }}</label>
+                    <input
+                      v-if="editing"
                       v-model="editableFields.companyAddress"
-                      type="text" 
+                      type="text"
                       class="edit-input"
-                      placeholder="Enter company address"
+                      :placeholder="$t('profile.enterAddress')"
                     />
-                    <p v-else>{{ userProfile?.companyAddress || 'Not provided' }}</p>
+                    <p v-else>{{ userProfile?.companyAddress || $t('profile.notProvided') }}</p>
                   </div>
                   <div class="info-item">
-                    <label>Company Size</label>
-                    <select 
-                      v-if="editing" 
+                    <label>{{ $t('profile.companySize') }}</label>
+                    <select
+                      v-if="editing"
                       v-model="editableFields.companySize"
                       class="edit-input"
                     >
-                      <option value="">Select size</option>
-                      <option value="1-10">1-10 employees</option>
-                      <option value="11-50">11-50 employees</option>
-                      <option value="51-200">51-200 employees</option>
-                      <option value="201-500">201-500 employees</option>
-                      <option value="501-1000">501-1000 employees</option>
-                      <option value="1000+">1000+ employees</option>
+                      <option value="">{{ $t('profile.selectSize') }}</option>
+                      <option value="1-10">{{ $t('jobDetails.employees', { range: '1-10' }) }}</option>
+                      <option value="11-50">{{ $t('jobDetails.employees', { range: '11-50' }) }}</option>
+                      <option value="51-200">{{ $t('jobDetails.employees', { range: '51-200' }) }}</option>
+                      <option value="201-500">{{ $t('jobDetails.employees', { range: '201-500' }) }}</option>
+                      <option value="501-1000">{{ $t('jobDetails.employees', { range: '501-1000' }) }}</option>
+                      <option value="1000+">{{ $t('jobDetails.employees', { range: '1000+' }) }}</option>
                     </select>
-                    <p v-else>{{ formatCompanySize(userProfile?.companySize) || 'Not provided' }}</p>
+                    <p v-else>{{ formatCompanySize(userProfile?.companySize) || $t('profile.notProvided') }}</p>
                   </div>
                   <div class="info-item">
-                    <label>UEN (Unique Entity Number)</label>
-                    <input 
-                      v-if="editing" 
+                    <label>{{ $t('profile.uenLabel') }}</label>
+                    <input
+                      v-if="editing"
                       v-model="editableFields.companyUEN"
-                      type="text" 
+                      type="text"
                       class="edit-input"
-                      placeholder="e.g., 123456789A"
+                      :placeholder="$t('profile.uenPlaceholder')"
                       maxlength="10"
                     />
-                    <p v-else>{{ userProfile?.companyUEN || 'Not provided' }}</p>
-                    <p v-if="editing" class="help-text">Government-issued identification number for businesses in Singapore</p>
+                    <p v-else>{{ userProfile?.companyUEN || $t('profile.notProvided') }}</p>
+                    <p v-if="editing" class="help-text">{{ $t('profile.uenHelp') }}</p>
                   </div>
                   <div class="info-item full-width">
-                    <label>Company Description</label>
-                    <textarea 
-                      v-if="editing" 
+                    <label>{{ $t('profile.companyDescription') }}</label>
+                    <textarea
+                      v-if="editing"
                       v-model="editableFields.companyDescription"
                       class="edit-textarea"
-                      placeholder="Tell us about your company..."
+                      :placeholder="$t('profile.companyDescPlaceholder')"
                       rows="4"
                     ></textarea>
-                    <p v-else>{{ userProfile?.companyDescription || 'Not provided' }}</p>
+                    <p v-else>{{ userProfile?.companyDescription || $t('profile.notProvided') }}</p>
                   </div>
                 </div>
               </div>
@@ -393,20 +393,20 @@
                 <div class="section-header">
                   <h2 class="section-title">
                     <img src="../assets/trophy-star.svg" alt="" class="section-icon" />
-                    Badges & Achievements
+                    {{ $t('profile.badgesAchievements') }}
                   </h2>
-                  <router-link to="/achievements" class="view-all-link">View All →</router-link>
+                  <router-link to="/achievements" class="view-all-link">{{ $t('profile.viewAll') }} →</router-link>
                 </div>
-                
+
                 <div v-if="badgesLoading" class="loading-state">
-                  <p>Loading badges...</p>
+                  <p>{{ $t('profile.loadingBadges') }}</p>
                 </div>
-                
+
                 <div v-else-if="earnedBadges.length === 0" class="empty-badges">
-                  <p>No badges earned yet</p>
+                  <p>{{ $t('profile.noBadges') }}</p>
                   <template v-if="!isViewingOtherProfile">
-                    <p class="empty-subtitle">Complete quizzes to earn your first badge!</p>
-                    <router-link to="/quizzes" class="btn btn-primary">Start Learning</router-link>
+                    <p class="empty-subtitle">{{ $t('profile.completeQuizzes') }}</p>
+                    <router-link to="/quizzes" class="btn btn-primary">{{ $t('profile.startLearning') }}</router-link>
                   </template>
                 </div>
                 
@@ -432,18 +432,18 @@
             <div v-if="activeTab === 'applications' && !isViewingOtherProfile && userProfile?.role === 'jobseeker'" class="tab-panel">
               <div class="section-card">
                 <div class="section-header">
-                  <h2 class="section-title">My Applications</h2>
-                  <router-link to="/applications" class="view-all-link">View All →</router-link>
+                  <h2 class="section-title">{{ $t('profile.myApplications') }}</h2>
+                  <router-link to="/applications" class="view-all-link">{{ $t('profile.viewAll') }} →</router-link>
                 </div>
-                
+
                 <div v-if="recentApplications.length === 0" class="empty-state">
-                  <p>You haven't applied to any jobs yet.</p>
-                  <router-link to="/" class="btn btn-primary">Browse Jobs</router-link>
+                  <p>{{ $t('profile.noApplications') }}</p>
+                  <router-link to="/" class="btn btn-primary">{{ $t('nav.browseJobs') }}</router-link>
                 </div>
-                
+
                 <div v-else class="applications-full-list">
-                  <div 
-                    v-for="application in recentApplications" 
+                  <div
+                    v-for="application in recentApplications"
                     :key="application.id"
                     class="application-item"
                   >
@@ -451,12 +451,12 @@
                       <div class="application-info">
                         <h3>{{ application.jobTitle }}</h3>
                         <p class="company-name">{{ application.company }}</p>
-                        <p class="application-date">Applied {{ formatDate(application.createdAt) }}</p>
+                        <p class="application-date">{{ $t('profile.applied', { date: formatDate(application.createdAt) }) }}</p>
                       </div>
-                      <span :class="['status-badge', application.status]">{{ application.status }}</span>
+                      <span :class="['status-badge', application.status]">{{ $t('common.status.' + application.status) }}</span>
                     </div>
                     <router-link :to="`/jobs/${application.jobId}`" class="view-job-link">
-                      View Job →
+                      {{ $t('profile.viewJob') }} →
                     </router-link>
                   </div>
                 </div>
@@ -467,8 +467,8 @@
             <div v-if="activeTab === 'reviews' && ((isViewingOtherProfile && currentUserProfile?.role === 'employer' && viewedProfile?.role === 'jobseeker') || (!isViewingOtherProfile && currentUserProfile?.role === 'jobseeker')) && (isViewingOtherProfile ? viewedProfile?.id : currentUser?.uid)" class="tab-panel">
               <div class="section-card">
                 <div class="section-header">
-                  <h2 class="section-title">Reviews</h2>
-                  <span v-if="currentUserProfile?.role === 'employer'" class="employer-only-badge">Employer Only</span>
+                  <h2 class="section-title">{{ $t('profile.reviews') }}</h2>
+                  <span v-if="currentUserProfile?.role === 'employer'" class="employer-only-badge">{{ $t('profile.employerOnly') }}</span>
                 </div>
                 <CandidateReviewList :candidate-id="isViewingOtherProfile ? viewedProfile.id : (currentUser?.uid || '')" />
                 <!-- Form only visible to employers viewing someone else's profile -->
@@ -483,7 +483,7 @@
       
       <!-- Error State -->
       <div v-else class="error-state">
-        <p>Profile not found.</p>
+        <p>{{ $t('profile.notFound') }}</p>
       </div>
     </div>
   </div>
@@ -493,6 +493,7 @@
 import { ref, computed, onMounted, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { db } from '../firebase/config'
 import { doc, getDoc } from 'firebase/firestore'
 import CandidateReviewForm from '../components/reviews/CandidateReviewForm.vue'
@@ -512,6 +513,7 @@ export default {
   setup() {
     const store = useStore()
     const route = useRoute()
+    const { t } = useI18n()
     const editing = ref(false)
     const viewedProfile = ref(null)
     const loading = ref(false)
@@ -578,33 +580,26 @@ export default {
 
     const formatCompanySize = (size) => {
       if (!size) return ''
-      const sizeMap = {
-        '1-10': '1-10 employees',
-        '11-50': '11-50 employees',
-        '51-200': '51-200 employees',
-        '201-500': '201-500 employees',
-        '501-1000': '501-1000 employees',
-        '1000+': '1000+ employees'
-      }
-      return sizeMap[size] || size
+      const ranges = ['1-10', '11-50', '51-200', '201-500', '501-1000', '1000+']
+      return ranges.includes(size) ? t('jobDetails.employees', { range: size }) : size
     }
 
     const tabs = computed(() => {
-      const baseTabs = [{ id: 'overview', label: 'Overview' }]
-      
+      const baseTabs = [{ id: 'overview', label: t('profile.tabOverview') }]
+
       if (userProfile.value?.role === 'jobseeker') {
         baseTabs.push(
-          { id: 'achievements', label: 'Achievements' },
-          { id: 'applications', label: 'Applications' }
+          { id: 'achievements', label: t('profile.tabAchievements') },
+          { id: 'applications', label: t('profile.tabApplications') }
         )
       }
-      
+
       // Show reviews tab if viewing candidate as employer OR viewing own profile as jobseeker
       if ((isViewingOtherProfile.value && currentUserProfile.value?.role === 'employer' && viewedProfile.value?.role === 'jobseeker') ||
           (!isViewingOtherProfile.value && currentUserProfile.value?.role === 'jobseeker')) {
-        baseTabs.push({ id: 'reviews', label: 'Reviews' })
+        baseTabs.push({ id: 'reviews', label: t('profile.tabReviews') })
       }
-      
+
       return baseTabs
     })
 
@@ -625,7 +620,7 @@ export default {
     }
 
     const formatDate = (dateString) => {
-      if (!dateString) return 'Unknown'
+      if (!dateString) return t('profile.unknown')
       
       let date
       if (dateString.seconds) {
@@ -637,7 +632,7 @@ export default {
       }
       
       if (isNaN(date.getTime())) {
-        return 'Unknown'
+        return t('profile.unknown')
       }
       
       return date.toLocaleDateString('en-US', { 
@@ -660,12 +655,12 @@ export default {
       uploadError.value = ''
 
       if (!['image/jpeg', 'image/jpg', 'image/png'].includes(file.type)) {
-        uploadError.value = 'Please upload a JPG or PNG image'
+        uploadError.value = t('profile.errInvalidImage')
         return
       }
 
       if (file.size > 700 * 1024) {
-        uploadError.value = 'Image size must be less than 700KB'
+        uploadError.value = t('profile.errImageSize')
         return
       }
 
@@ -723,7 +718,7 @@ export default {
     }
 
     const removePhoto = async () => {
-      if (!confirm('Are you sure you want to remove your profile picture?')) {
+      if (!confirm(t('profile.confirmRemovePhoto'))) {
         return
       }
 
@@ -745,7 +740,7 @@ export default {
         uploadError.value = ''
       } catch (error) {
         console.error('Error removing profile picture:', error)
-        uploadError.value = 'Failed to remove profile picture. Please try again.'
+        uploadError.value = t('profile.errRemovePhoto')
       } finally {
         uploadingPhoto.value = false
       }
@@ -764,12 +759,12 @@ export default {
       companyLogoUploadError.value = ''
 
       if (!['image/jpeg', 'image/jpg', 'image/png'].includes(file.type)) {
-        companyLogoUploadError.value = 'Please upload a JPG or PNG image'
+        companyLogoUploadError.value = t('profile.errInvalidImage')
         return
       }
 
       if (file.size > 700 * 1024) {
-        companyLogoUploadError.value = 'Image size must be less than 700KB'
+        companyLogoUploadError.value = t('profile.errImageSize')
         return
       }
 
@@ -782,7 +777,7 @@ export default {
     }
 
     const removeCompanyLogo = async () => {
-      if (!confirm('Are you sure you want to remove your company logo?')) {
+      if (!confirm(t('profile.confirmRemoveLogo'))) {
         return
       }
 
@@ -804,7 +799,7 @@ export default {
         companyLogoUploadError.value = ''
       } catch (error) {
         console.error('Error removing company logo:', error)
-        companyLogoUploadError.value = 'Failed to remove company logo. Please try again.'
+        companyLogoUploadError.value = t('profile.errRemoveLogo')
       } finally {
         uploadingCompanyLogo.value = false
       }
@@ -814,7 +809,7 @@ export default {
       saveError.value = ''
       
       if (!editableFields.name.trim()) {
-        saveError.value = 'Name is required'
+        saveError.value = t('profile.nameRequired')
         return
       }
 
@@ -837,7 +832,7 @@ export default {
             }
           } catch (error) {
             console.error('Error uploading profile picture:', error)
-            saveError.value = 'Failed to upload profile picture. Please try again.'
+            saveError.value = t('profile.errUploadPhoto')
             uploadingPhoto.value = false
             savingProfile.value = false
             return
@@ -860,7 +855,7 @@ export default {
             }
           } catch (error) {
             console.error('Error uploading company logo:', error)
-            saveError.value = 'Failed to upload company logo. Please try again.'
+            saveError.value = t('profile.errUploadLogo')
             uploadingCompanyLogo.value = false
             savingProfile.value = false
             return
@@ -896,7 +891,7 @@ export default {
         saveError.value = ''
       } catch (error) {
         console.error('Error saving profile:', error)
-        saveError.value = error.message || 'Failed to save profile. Please try again.'
+        saveError.value = error.message || t('profile.errSave')
       } finally {
         savingProfile.value = false
         uploadingPhoto.value = false
