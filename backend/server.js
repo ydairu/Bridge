@@ -25,7 +25,31 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+const allowedOrigins = [
+  'https://bridge-ashen-psi.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl) or if in allowlist
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
+
+// Explicitly handle all preflight OPTIONS requests
+app.options('*', cors());
+
 app.use(
   express.json({
     // Capture the raw request body so the WhatsApp webhook can verify the
