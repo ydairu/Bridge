@@ -26,7 +26,7 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 const allowedOrigins = [
-  'https://bridge-ashen-psi.vercel.app',
+  'bridge-platform-sg.vercel.app',
   'http://localhost:5173',
   'http://localhost:3000'
 ];
