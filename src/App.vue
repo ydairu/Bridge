@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{ 'chat-layout': isChatRoute }">
     <NavBar />
     <main class="main-content">
       <router-view />
@@ -41,6 +41,7 @@
 <script>
 import { computed, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 import NavBar from './components/NavBar.vue'
 import BadgeNotification from './components/BadgeNotification.vue'
 import Toast from './components/Toast.vue'
@@ -54,6 +55,7 @@ export default {
   },
   setup() {
     const store = useStore()
+    const route = useRoute()
 
     onMounted(() => {
       // Initialize auth state listener
@@ -64,6 +66,7 @@ export default {
     const isEmployer = computed(() => store.getters['auth/isEmployer'])
     const isJobSeeker = computed(() => store.getters['auth/isJobSeeker'])
     const isDarkMode = computed(() => store.getters['theme/isDarkMode'])
+    const isChatRoute = computed(() => route.path === '/chat')
 
     // Watch for authentication changes to initialize chat
     watch(isAuthenticated, async (authenticated) => {
@@ -94,7 +97,8 @@ export default {
       isAuthenticated,
       isEmployer,
       isJobSeeker,
-      isDarkMode
+      isDarkMode,
+      isChatRoute
     }
   }
 }
@@ -108,13 +112,40 @@ export default {
   background: #0A1628;
 }
 
-.main-content { flex: 1; }
+.main-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+.main-content > * {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+#app.chat-layout .main-content {
+  flex: 0 0 auto;
+  height: calc(100dvh - 92px);
+  min-height: calc(100dvh - 92px);
+}
+
+@media (max-width: 768px) {
+  #app.chat-layout .main-content {
+    height: calc(100dvh - 78px);
+    min-height: calc(100dvh - 78px);
+  }
+}
 
 /* ─── Footer ─────────────────────────────────────────────────── */
 .app-footer {
   background: rgba(8, 16, 32, 0.95);
   border-top: 1px solid rgba(74, 158, 245, 0.12);
-  margin-top: 60px;
+  margin-top: 0;
 }
 
 .footer-content {

@@ -11,7 +11,6 @@ import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 
 import { BridgeFirestoreService } from "./src/services/firestoreBridge.js";
-import { registerWhatsAppWebhookRoutes } from "./src/whatsapp/webhook.js";
 import { startTelegramPoller } from "./src/telegram/poller.js";
 import { getPublicFeatureStatus, hasFeatureEnv, getEnv } from "./src/config/env.js";
 
@@ -50,15 +49,7 @@ app.use(
 // Explicitly handle all preflight OPTIONS requests
 app.options('*', cors());
 
-app.use(
-  express.json({
-    // Capture the raw request body so the WhatsApp webhook can verify the
-    // X-Hub-Signature-256 header (HMAC must run over the exact bytes Meta sent).
-    verify: (req, _res, buf) => {
-      req.rawBody = buf;
-    },
-  })
-);
+app.use(express.json());
 
 // Initialize Firebase Admin SDK
 // Prefer credentials from environment variables to avoid committing service account files
@@ -108,7 +99,7 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-// Bridge WhatsApp AI assistant: Firestore data layer shared by the orchestrator tools.
+// Bridge AI assistant: Firestore data layer shared by the orchestrator tools.
 const bridgeService = new BridgeFirestoreService(db);
 
 const ai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -282,9 +273,6 @@ app.get("/health", (req, res) => {
     features: getPublicFeatureStatus(),
   });
 });
-
-// Bridge WhatsApp AI assistant webhook (Meta verification + inbound messages).
-registerWhatsAppWebhookRoutes({ app, bridgeService });
 
 // Generate Quiz using OpenAI
 app.post("/api/quizzes/generate", async (req, res) => {
@@ -523,23 +511,15 @@ app.get("/api/user/profile", verifyToken, async (req, res) => {
   }
 });
 
-// Surface WhatsApp/OpenAI/Exa configuration status at boot. These are logged
-// (not fatal) so the existing OpenAI quiz endpoints keep working during the
-// WhatsApp rollout; the webhook itself rejects requests when its env is missing.
+// Surface assistant/OpenAI/Exa configuration status at boot.
 function reportBridgeFeatureStatus() {
   const features = {
-    "WhatsApp webhook": hasFeatureEnv("whatsapp"),
     "Telegram bot": hasFeatureEnv("telegram"),
     "OpenAI orchestrator": hasFeatureEnv("openai"),
     "Exa verification": hasFeatureEnv("exa"),
   };
   for (const [label, ok] of Object.entries(features)) {
     console.log(`${ok ? "✅" : "⚠️ "} ${label}: ${ok ? "configured" : "missing env vars"}`);
-  }
-  if (process.env.NODE_ENV === "production" && !hasFeatureEnv("whatsapp")) {
-    console.warn(
-      "⚠️  Running in production without WhatsApp env vars — inbound webhooks will be rejected."
-    );
   }
 }
 
@@ -548,13 +528,13 @@ app.listen(PORT, () => {
   console.log(`🚀 Backend running on http://localhost:${PORT}`);
   console.log(`📊 Firebase Project: ${process.env.VITE_FIREBASE_PROJECT_ID}`);
   console.log(`🤖 OpenAI: Integrated successfully (model: ${AI_MODEL})`);
-  console.log("🌉 Bridge WhatsApp assistant:");
+  console.log("🌉 Bridge assistant:");
   reportBridgeFeatureStatus();
   maybeStartTelegramBot();
 });
 
 // Start the Telegram bot (long-polling, no public URL needed) when a token is set.
-// Reuses the same orchestrator + Firestore service as the WhatsApp channel.
+// Reuses the same orchestrator + Firestore service as the web application.
 function maybeStartTelegramBot() {
   if (!hasFeatureEnv("telegram")) return;
   startTelegramPoller({

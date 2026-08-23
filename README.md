@@ -42,7 +42,7 @@ The WhatsApp and Telegram assistant can verify employers and analyze pasted job 
 | Trust checks | Exa search evidence and OpenAI analysis |
 | Hosting | Vercel frontend, Railway backend |
 
-The Express backend is used for AI quiz generation, the conversational assistant, WhatsApp/Telegram integrations, and an example authenticated profile route. Jobs, users, applications, reviews, badges, and chat metadata are generally read and written directly through Firestore. Access control for those collections is defined in `firestore.rules`.
+The Express backend is used for AI quiz generation, the conversational assistant, the Telegram integration, and an example authenticated profile route. Jobs, users, applications, reviews, badges, and chat metadata are generally read and written directly through Firestore. Access control for those collections is defined in `firestore.rules`.
 
 ## Repository layout
 
@@ -50,7 +50,6 @@ The Express backend is used for AI quiz generation, the conversational assistant
 src/                         Vue frontend, views, components, router, and Vuex modules
 backend/                     Express server, AI assistant, channel adapters, and tests
 backend/src/bridge-agent/    Channel-agnostic Bridge assistant and tool definitions
-backend/src/whatsapp/        WhatsApp Cloud API webhook and message helpers
 backend/src/telegram/        Telegram long-polling adapter
 backend/src/services/        Firestore, OpenAI, Exa, assessment, and verification services
 public/                      Frontend icons and images
@@ -83,9 +82,8 @@ Never commit, paste, or document secret values. Keep the root `.env` file local 
 - Ably client key: `VITE_ABLY_API_KEY`
 - Backend AI: `OPENAI_API_KEY`, optional `OPENAI_MODEL`
 - Backend Firebase Admin credentials: `FIREBASE_*`
-- WhatsApp Cloud API: `WHATSAPP_TOKEN`, `WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_VERIFY_TOKEN`, `WHATSAPP_APP_SECRET`
 - Employer verification: `EXA_API_KEY`
-- Telegram fallback: `TELEGRAM_BOT_TOKEN`
+- Telegram bot: `TELEGRAM_BOT_TOKEN`
 
 For local development, set the frontend API base URL to the local backend or the deployed backend URL. Firebase Admin credentials must remain server-side; do not place them in frontend variables or commit service-account JSON files.
 
@@ -131,8 +129,6 @@ GET  /health
 Integration routes:
 
 ```text
-GET  /webhooks/whatsapp   WhatsApp verification challenge
-POST /webhooks/whatsapp   Signature-verified inbound WhatsApp messages
 GET  /api/user/profile    Firebase ID-token protected example route
 ```
 
@@ -145,7 +141,6 @@ The backend has a hermetic Node test suite using fake Firestore and mocked exter
 ```bash
 cd backend
 npm test
-npm run smoke:whatsapp
 ```
 
 An optional live assistant check uses the real OpenAI service but keeps Firestore in memory. It requires credentials already configured in the local environment and must never be run with secrets printed to logs:

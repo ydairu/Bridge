@@ -1,4 +1,4 @@
-// Live end-to-end check: runs a scripted multi-turn WhatsApp conversation through
+// Live end-to-end check: runs a scripted multi-turn Telegram conversation through
 // the real orchestrator + real OpenAI model, using an in-memory Firestore so
 // nothing touches production data. Validates that the model actually drives the
 // Bridge tools (profile, search, detail, apply, scam check) end-to-end.
@@ -70,9 +70,9 @@ console.log(`\n=== Live agent check (model: ${openAIConfig.model}, exa: ${exaApi
 for (const text of script) {
   turn += 1;
   const inboundMessage = {
-    id: `wamid.live.${turn}`,
+    id: `tg:live.${turn}`,
+    channel: "telegram",
     from,
-    phoneNumberId: "TEST",
     type: "text",
     text,
     displayName: "Rahim",

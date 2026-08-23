@@ -514,7 +514,13 @@ export default {
       if (room) {
         room.lastMessage = message.text
         room.lastMessageSender = message.clientId
-        room.lastMessageAt = new Date(message.timestamp)
+        room.lastMessageAt = normalizeRoomDate(message.timestamp)
+
+        state.chatRooms = [...state.chatRooms].sort((firstRoom, secondRoom) => {
+          const firstTime = normalizeRoomDate(firstRoom.lastMessageAt).getTime()
+          const secondTime = normalizeRoomDate(secondRoom.lastMessageAt).getTime()
+          return secondTime - firstTime
+        })
       }
       
       // Update unread count based on actual unread messages

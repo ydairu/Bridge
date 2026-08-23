@@ -21,7 +21,7 @@
       @cancel="showDeleteMessageConfirm = false"
       @update:show="showDeleteMessageConfirm = $event"
     />
-    <div class="chat-container">
+    <div class="chat-container" :class="{ 'has-active-room': activeRoom }">
       <!-- Chat Sidebar -->
       <div class="chat-sidebar">
         <div class="sidebar-header">
@@ -113,6 +113,16 @@
         <div v-else class="chat-content">
           <!-- Chat Header -->
           <div class="chat-header">
+            <button
+              type="button"
+              class="back-to-chats-btn"
+              aria-label="Back to conversations"
+              @click="backToChatList"
+            >
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
             <div class="chat-header-info">
               <div class="chat-avatar">
                 <img 
@@ -730,6 +740,18 @@ export default {
         console.error('Error selecting room:', error)
       }
     }
+
+    const backToChatList = async () => {
+      if (!activeRoom.value) return
+
+      try {
+        await store.dispatch('chatAbly/leaveRoom', {
+          roomName: activeRoom.value
+        })
+      } catch (error) {
+        console.error('Error returning to chat list:', error)
+      }
+    }
     
     const sendMessage = async () => {
       if (!newMessage.value.trim() || !activeRoom.value || !isConnected.value) return
@@ -1176,7 +1198,11 @@ export default {
     // Watch for new messages to scroll to bottom
     watch(() => store.getters['chatAbly/getMessages'](activeRoom.value), (newMessages, oldMessages) => {
       nextTick(() => {
-        scrollToBottom()
+        if (newMessages && newMessages.length > (oldMessages?.length || 0)) {
+          forceScrollToBottom()
+        } else {
+          scrollToBottom()
+        }
       })
       
       // Persist lastViewedAt when messages arrive in active room
@@ -1263,6 +1289,7 @@ export default {
       getCurrentRoom,
       filteredMessages,
       selectRoom,
+      backToChatList,
       sendMessage,
       deleteMessage,
       deleteChatRoom,
@@ -1308,8 +1335,10 @@ export default {
 <style scoped>
 /* Chat page specific styles */
 .chat-page {
-  height: calc(100vh - 70px);
-  max-height: calc(100vh - 70px);
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
   background: var(--bg-dark);
   overflow: hidden;
   width: 100%;
@@ -1318,6 +1347,8 @@ export default {
 
 .chat-container {
   height: 100%;
+  min-height: 0;
+  flex: 1;
   display: flex;
   max-width: 1400px;
   margin: 0 auto;
@@ -1336,6 +1367,7 @@ export default {
   flex-direction: column;
   backdrop-filter: blur(10px);
   position: relative;
+  min-height: 0;
 }
 
 .sidebar-header {
@@ -1488,6 +1520,7 @@ export default {
 }
 
 .chat-room-item {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   gap: 18px;
@@ -1499,12 +1532,12 @@ export default {
   margin: 0 15px;
   border-radius: 15px;
   margin-bottom: 8px;
+  border-left: 3px solid transparent;
   overflow: hidden;
 }
 
 .chat-room-item:hover {
   background: linear-gradient(135deg, var(--bg-light) 0%, rgba(79, 70, 229, 0.05) 100%);
-  transform: translateX(5px);
   box-shadow: var(--shadow-sm);
 }
 
@@ -1517,13 +1550,17 @@ export default {
 
 
 .chat-room-item.active .room-info h3 {
-  color: var(--text);
-  font-weight: 700;
+  color: #0d2b52;
 }
 
 .chat-room-item.active .last-message,
-.chat-room-item.active .room-time {
-  color: var(--text-muted);
+.chat-room-item.active .room-time,
+.chat-room-item.active .typing-indicator {
+  color: #0d2b52;
+}
+
+.chat-room-item.active .room-avatar {
+  color: #0d2b52;
 }
 
 .room-avatar {
@@ -1643,12 +1680,15 @@ export default {
 .room-info {
   flex: 1;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .room-info h3 {
   font-size: 1.05rem;
   color: var(--text);
-  margin-bottom: 6px;
+  margin: 0;
   font-weight: 600;
   transition: color 0.3s ease;
 }
@@ -1656,6 +1696,7 @@ export default {
 .last-message {
   font-size: 0.9rem;
   color: var(--text-muted);
+  margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1760,6 +1801,7 @@ export default {
   flex-direction: column;
   background: linear-gradient(180deg, var(--bg-light) 0%, var(--bg) 100%);
   height: 100%;
+  min-height: 0;
   overflow: hidden;
   position: relative;
 }
@@ -1944,11 +1986,14 @@ export default {
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 140px);
-  max-height: calc(100vh - 140px);
+  min-height: 0;
   overflow: hidden;
   position: relative;
   z-index: 1;
+}
+
+.back-to-chats-btn {
+  display: none;
 }
 
 .chat-header {
@@ -2028,10 +2073,9 @@ export default {
 /* Messages */
 .messages-container {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: 25px;
-  max-height: calc(100vh - 350px);
-  min-height: 200px;
   scroll-behavior: smooth;
   position: relative;
   z-index: 1;
@@ -2111,6 +2155,7 @@ export default {
   max-width: 100%;
   border: 1px solid rgba(74, 158, 245, 0.15);
   color: var(--text);
+  text-align: center;
 }
 
 .message-bubble:hover {
@@ -2139,7 +2184,7 @@ export default {
 
 .message-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-top: 8px;
 }
@@ -2296,6 +2341,7 @@ export default {
 
 /* Message Input */
 .message-input-container {
+  flex-shrink: 0;
   padding: 20px 30px;
   border-top: 1px solid rgba(74, 158, 245, 0.1);
   background: rgba(8, 16, 32, 0.9);
@@ -2303,6 +2349,7 @@ export default {
 }
 
 .input-wrapper {
+  width: 100%;
   display: flex;
   gap: 12px;
   align-items: center;
@@ -2939,8 +2986,8 @@ export default {
 /* Mobile & Small Tablet (max-width: 768px) */
 @media (max-width: 768px) {
   .chat-page {
-    height: 100vh;
-    max-height: 100vh;
+    height: 100%;
+    min-height: 0;
     overflow: hidden;
   }
   
@@ -2949,6 +2996,7 @@ export default {
     max-width: 100%;
     overflow: hidden;
     height: 100%;
+    min-height: 0;
   }
   
   .chat-sidebar {
@@ -2960,9 +3008,14 @@ export default {
     border-bottom: 2px solid var(--border);
     position: relative;
     height: auto;
-    max-height: 35vh;
+    height: 100%;
+    max-height: none;
     overflow-y: auto;
     z-index: 10;
+  }
+
+  .chat-container.has-active-room .chat-sidebar {
+    display: none;
   }
   
   .chat-window {
@@ -2971,6 +3024,11 @@ export default {
     min-height: 0;
     height: auto;
     overflow: hidden;
+    display: none;
+  }
+
+  .chat-container.has-active-room .chat-window {
+    display: flex;
   }
   
   .sidebar-header {
@@ -3018,7 +3076,9 @@ export default {
   }
   
   .chat-rooms-list {
-    max-height: calc(35vh - 100px);
+    flex: 1;
+    min-height: 0;
+    max-height: none;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
@@ -3068,6 +3128,28 @@ export default {
     padding: 12px 16px;
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
+    justify-content: flex-start;
+    gap: 10px;
+  }
+
+  .back-to-chats-btn {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 0;
+    border: 1px solid rgba(74, 158, 245, 0.25);
+    border-radius: 10px;
+    background: rgba(13, 27, 53, 0.7);
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .back-to-chats-btn svg {
+    width: 22px;
+    height: 22px;
   }
   
   .chat-avatar {
@@ -3241,16 +3323,12 @@ export default {
 
 @media (max-width: 480px) {
   .chat-page {
-    height: 100vh;
-    max-height: 100vh;
+    min-height: 100%;
   }
   
   .chat-sidebar {
-    max-height: 30vh;
-  }
-  
-  .chat-rooms-list {
-    max-height: calc(30vh - 90px);
+    height: 100%;
+    max-height: none;
   }
   
   .sidebar-header {

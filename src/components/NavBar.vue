@@ -530,12 +530,17 @@ export default {
 .nav-toggle.active span:nth-child(2) { opacity: 0; }
 .nav-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
+.nav-toggle.active {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .menu-close { display: none; }
 .control-label { display: none; }
 .mobile-user-section { display: none; }
 
 /* ─── Mobile sidebar ────────────────────────────────────────── */
-@media (max-width: 768px) {
+@media (max-width: 960px) {
   .navbar { padding: 10px 16px; }
 
   .nav-toggle { display: flex; }
@@ -680,7 +685,7 @@ export default {
   .user-menu { display: none; }
 }
 
-@media (min-width: 769px) {
+@media (min-width: 961px) {
   .mobile-user-section { display: none !important; }
   .control-label        { display: none !important; }
   .menu-close           { display: none !important; }

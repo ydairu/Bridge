@@ -1,10 +1,4 @@
 const REQUIRED_BY_FEATURE = {
-  whatsapp: [
-    "WHATSAPP_TOKEN",
-    "WHATSAPP_PHONE_NUMBER_ID",
-    "WHATSAPP_VERIFY_TOKEN",
-    "WHATSAPP_APP_SECRET",
-  ],
   openai: ["OPENAI_API_KEY"],
   exa: ["EXA_API_KEY"],
   telegram: ["TELEGRAM_BOT_TOKEN"],
@@ -31,7 +25,6 @@ export function assertFeatureEnv(feature) {
 
 export function getPublicFeatureStatus() {
   return {
-    whatsapp: hasFeatureEnv("whatsapp"),
     telegram: hasFeatureEnv("telegram"),
     openai: hasFeatureEnv("openai"),
     exa: hasFeatureEnv("exa"),

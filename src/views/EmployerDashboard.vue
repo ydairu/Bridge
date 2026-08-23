@@ -398,7 +398,6 @@ export default {
 
 <style scoped>
 .dashboard {
-  min-height: 100vh;
   background: var(--bg-dark);
   padding: 32px 0;
 }

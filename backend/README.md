@@ -114,16 +114,15 @@ curl -X POST http://localhost:3000/api/quizzes/generate \
   -d '{"skill": "Construction", "difficulty": "beginner", "numberOfQuestions": 5}'
 ```
 
-## WhatsApp AI Assistant (Bridge orchestrator)
+## Telegram AI Assistant (Bridge orchestrator)
 
-The backend also hosts the WhatsApp job assistant for migrant workers. It layers
+The backend also hosts the Telegram job assistant for migrant workers. It layers
 OpenAI (worker-facing reasoning/orchestration) and Exa (employer/offer trust
 verification) on top of the existing Firestore job platform — see
 `bridge-whatsapp-implementation-plan.md` at the repo root.
 
 ### Module layout (`backend/src/`)
-- `whatsapp/` — `webhook.js` (routes), `client.js` (send + parse + interactive
-  messages), `signature.js` (HMAC `X-Hub-Signature-256` check), `templates.js`.
+- `telegram/` — long-polling client and update handler.
 - `bridge-agent/` — `orchestrator.js`, `schemas.js` (tool definitions),
   `systemPrompt.js`, `tools.js` (tool executor).
 - `services/` — `firestoreBridge.js` (data layer), `openai.js`, `exa.js`,
@@ -145,22 +144,9 @@ The orchestrator exposes the platform's jobseeker features as OpenAI tools:
   listed job's `verificationStatus`), `scam_check` (pasted external offers)
 - **Support** — `request_support`
 
-Real-time employer↔worker chat (Ably) is intentionally out of scope for the
-WhatsApp bridge MVP — the worker already converses through WhatsApp.
-
-### Endpoints
-```
-GET  /webhooks/whatsapp   # Meta verification challenge (uses WHATSAPP_VERIFY_TOKEN)
-POST /webhooks/whatsapp   # Inbound messages (signature-verified, deduped, async)
-GET  /health              # now also reports feature config status
-```
-
 ### Environment
-See `.env.example` at the repo root. WhatsApp needs `WHATSAPP_TOKEN`,
-`WHATSAPP_PHONE_NUMBER_ID`, `WHATSAPP_VERIFY_TOKEN`, `WHATSAPP_APP_SECRET`;
-the orchestrator needs `OPENAI_API_KEY` (+ optional `OPENAI_MODEL`); trust
-verification needs `EXA_API_KEY`. Missing groups are logged at boot and the
-webhook rejects requests rather than crashing the existing OpenAI quiz endpoints.
+The orchestrator needs `OPENAI_API_KEY` (+ optional `OPENAI_MODEL`), trust
+verification needs `EXA_API_KEY`, and Telegram needs `TELEGRAM_BOT_TOKEN`.
 
 ### Telegram bot (fallback channel)
 The same orchestrator also runs on Telegram via `src/telegram/` — the agent logic
@@ -179,7 +165,6 @@ as inline keyboards. Channel is selected by `inboundMessage.channel`.
 ### Tests
 ```bash
 npm test               # full hermetic suite (node:test) — 57 cases, no network
-npm run smoke:whatsapp # quick dep-free signature/parse/payload checks
 node scripts/live-agent-check.js   # optional: scripted convo vs the real OpenAI
                                    # model (in-memory Firestore; needs OPENAI_API_KEY)
 ```
