@@ -104,44 +104,33 @@ export default {
 <style scoped>
 .stats-section {
   width: 100%;
-  padding: 80px 0;
+  padding: 0;
+  background: transparent;
 }
 
 .stats-container {
-  max-width: 1280px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 1rem;
-}
-
-@media (min-width: 640px) {
-  .stats-container {
-    padding: 0 1.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .stats-container {
-    padding: 0 2rem;
-  }
+  padding: 0 24px;
 }
 
 .section-header {
   text-align: center;
-  margin-bottom: 64px;
+  margin-bottom: 32px;
 }
 
 .section-title {
-  font-size: clamp(1.875rem, 4vw, 2.25rem);
-  font-weight: 700;
+  font-size: var(--font-size-h2);
+  font-weight: 600;
   color: var(--text);
-  margin-bottom: 16px;
+  margin: 0 0 12px;
   line-height: 1.2;
 }
 
 .section-description {
-  font-size: clamp(1rem, 2vw, 1.125rem);
+  font-size: var(--font-size-page-subtitle);
   color: var(--text-muted);
-  max-width: 42rem;
+  max-width: 36rem;
   margin: 0 auto;
   line-height: 1.6;
 }
@@ -164,13 +153,4 @@ export default {
   }
 }
 
-@media (max-width: 767px) {
-  .stats-section {
-    padding: 48px 0;
-  }
-  
-  .section-header {
-    margin-bottom: 40px;
-  }
-}
 </style>

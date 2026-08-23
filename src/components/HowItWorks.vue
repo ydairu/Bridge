@@ -84,14 +84,14 @@ export default {
 
 <style scoped>
 .how-it-works {
-  background: var(--bg);
-  padding: 80px 0;
+  background: transparent;
+  padding: 0;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 24px;
 }
 
 .text-center {
@@ -99,21 +99,21 @@ export default {
 }
 
 .mb-12 {
-  margin-bottom: 48px;
+  margin-bottom: 32px;
 }
 
 .section-title {
-  font-size: 2.5rem;
-  font-weight: 700;
+  font-size: var(--font-size-h2);
+  font-weight: 600;
   color: var(--text);
-  margin-bottom: 16px;
+  margin: 0 0 12px;
   line-height: 1.2;
 }
 
 .section-description {
-  font-size: 1.1rem;
+  font-size: var(--font-size-page-subtitle);
   color: var(--text-muted);
-  max-width: 600px;
+  max-width: 36rem;
   margin: 0 auto;
   line-height: 1.6;
 }
@@ -240,31 +240,13 @@ export default {
 }
 
 @media (max-width: 768px) {
-  .how-it-works {
-    padding: 60px 0;
-  }
-  
-  .section-title {
-    font-size: 2rem;
-  }
-  
   .steps-grid {
     grid-template-columns: 1fr;
     gap: 24px;
   }
-  
+
   .step-description {
     max-width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .section-title {
-    font-size: 1.75rem;
-  }
-  
-  .section-description {
-    font-size: 1rem;
   }
 }
 </style>

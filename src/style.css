@@ -5,6 +5,7 @@
 /* ─── Design Tokens ─────────────────────────────────────────── */
 :root {
   --bg:            #0A1628;
+  --bg-alt:        #0F172A;
   --bg-card:       #0D1B35;
   --bg-light:      #0F1F3D;
   --text:          #F0F6FF;
@@ -41,6 +42,7 @@
    The design is always dark now, so this is a no-op alias. */
 .dark-mode {
   --bg:            #0A1628;
+  --bg-alt:        #0F172A;
   --bg-card:       #0D1B35;
   --bg-light:      #0F1F3D;
   --text:          #F0F6FF;

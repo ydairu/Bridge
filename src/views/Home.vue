@@ -85,19 +85,19 @@
               {{ $t('home.exploreDescription') }}
             </p>
           </div>
-          <CategoryChips @category-selected="onCategorySelected" />
+          <CategoryChips hide-header @category-selected="onCategorySelected" />
         </div>
       </section>
 
       <!-- CTA -->
-      <section class="cta-section">
+      <section class="content-section alt">
         <div class="section-container">
           <div class="cta-content">
             <div class="cta-icon">
               <img src="../assets/briefcase.svg" alt="Briefcase" class="cta-icon-img" />
             </div>
-            <h2 class="cta-title">{{ $t('home.ctaTitle') }}</h2>
-            <p class="cta-description">
+            <h2 class="section-title">{{ $t('home.ctaTitle') }}</h2>
+            <p class="section-description">
               {{ $t('home.ctaDescription') }}
             </p>
             <router-link to="/browse-jobs" class="btn btn-primary btn-cta">
@@ -610,12 +610,12 @@ export default {
 
 /* ─── Content Sections ──────────────────────────────────────── */
 .content-section {
-  padding: 64px 0;
-  background: #0A1628;
+  padding: 80px 0;
+  background: var(--bg);
 }
 
 .content-section.alt {
-  background: rgba(8, 16, 32, 0.9);
+  background: var(--bg-alt);
 }
 
 .content-section > .section-container > :deep(.category-chips) {
@@ -629,73 +629,55 @@ export default {
 }
 
 .section-header {
-  text-align: center;
+  text-align: left;
   margin-bottom: 32px;
 }
 
 .section-title {
-  font-size: 1.75rem;
+  font-size: var(--font-size-h2);
   font-weight: 600;
-  color: #F0F6FF;
-  margin-bottom: 12px;
-  text-align: left;
+  color: var(--text);
+  margin: 0 0 12px;
+  line-height: 1.2;
 }
 
 .section-desc,
 .section-description {
-  font-size: 0.95rem;
-  color: rgba(200, 220, 255, 0.65);
-  max-width: 520px;
+  font-size: var(--font-size-page-subtitle);
+  color: var(--text-muted);
+  max-width: 36rem;
   margin: 0;
   line-height: 1.6;
-  text-align: left;
 }
 
 /* ─── CTA Section ───────────────────────────────────────────── */
-.cta-section {
-  padding: 80px 0;
-  background: #0A1628;
-}
-
-.cta-glass {
-  background: rgba(13, 27, 53, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(74, 158, 245, 0.2);
-  border-radius: 20px;
-  padding: 60px 40px;
+.cta-content {
   text-align: center;
   max-width: 680px;
   margin: 0 auto;
-  position: relative;
-  overflow: hidden;
 }
 
-.cta-glass::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(180deg, rgba(74,158,245,0.3) 0%, rgba(74,158,245,0) 60%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
+.cta-content .section-title,
+.cta-content .section-description {
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.cta-title {
-  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
-  font-weight: 600;
-  color: #F0F6FF;
-  margin-bottom: 12px;
-}
-
-.cta-desc {
-  font-size: 1rem;
-  color: rgba(200, 220, 255, 0.65);
+.cta-content .section-description {
   margin-bottom: 28px;
-  line-height: 1.6;
+}
+
+.cta-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.cta-icon-img {
+  width: 48px;
+  height: 48px;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
 }
 
 .btn-cta {
@@ -722,7 +704,7 @@ export default {
 /* ─── Authenticated: Dash Hero ──────────────────────────────── */
 .dash-hero {
   padding: 56px 0 48px;
-  background: #080F20;
+  background: #0A1628;
 }
 
 .hero-greeting {
@@ -988,7 +970,6 @@ export default {
   .carousel-arrow-next { right: 12px; }
 
   .content-section { padding: 56px 0; }
-  .cta-glass { padding: 40px 24px; }
 
   .dash-hero { padding: 40px 0 36px; }
   .hero-greeting { flex-direction: column; text-align: center; }

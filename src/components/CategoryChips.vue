@@ -1,7 +1,7 @@
 <template>
-    <div class="category-chips">
+    <div class="category-chips" :class="{ embedded: hideHeader }">
       <div class="container">
-        <div class="text-center mb-8">
+        <div v-if="!hideHeader" class="text-center mb-8">
           <h2>{{ $t('marketplace.browseCategory') }}</h2>
           <h4 class="">
             {{ $t('marketplace.categoryHelp') }}
@@ -45,6 +45,12 @@
   
   export default {
     name: "CategoryChips",
+    props: {
+      hideHeader: {
+        type: Boolean,
+        default: false,
+      },
+    },
     emits: ["category-selected"],
     setup(_, { emit }) {
       const store = useStore()
@@ -144,6 +150,16 @@
 .category-chips {
   background: #0A1628;
   padding: 48px 0;
+}
+
+.category-chips.embedded {
+  background: transparent;
+  padding: 0;
+}
+
+.category-chips.embedded .container {
+  max-width: none;
+  padding: 0;
 }
 
 .container {
