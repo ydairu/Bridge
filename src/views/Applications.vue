@@ -229,11 +229,12 @@ export default {
 <style scoped>
 .applications-page {
   min-height: calc(100vh - 70px);
-  background: var(--bg-dark);
+  background: #0A1628;
   padding: 40px 20px;
 }
 
 .applications-container {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -252,14 +253,12 @@ export default {
 }
 
 .page-header h1 {
-  font-size: 2.5rem;
   font-weight: 700;
   color: var(--text);
   margin: 0 0 8px 0;
 }
 
 .header-subtitle {
-  font-size: 1.1rem;
   color: var(--text-muted);
   margin: 0;
 }
@@ -607,10 +606,6 @@ export default {
 @media (max-width: 768px) {
   .applications-page {
     padding: 24px 16px;
-  }
-
-  .page-header h1 {
-    font-size: 2rem;
   }
 
   .header-content {

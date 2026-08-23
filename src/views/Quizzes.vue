@@ -1,21 +1,10 @@
 <template>
   <div class="quizzes-page">
-    <!-- Animated background -->
-    <div class="animated-background">
-      <div class="bg-blur bg-blur-1"></div>
-      <div class="bg-blur bg-blur-2"></div>
-      <div class="bg-blur bg-blur-3"></div>
-    </div>
-
-    <!-- Grid pattern overlay -->
-    <div class="grid-pattern"></div>
-
     <div class="quizzes-container">
       <!-- Header -->
       <div ref="headerRef" class="page-header">
-        <div class="header-gradient">
-          <h1>Skill Development</h1>
-          <h2>Quiz Hub</h2>
+        <div class="header-content">
+          <h1>Skill Development Quiz Hub</h1>
         </div>
         <p class="header-description">
           Take AI-generated quizzes to test your skills and knowledge. Choose your difficulty level and start learning today.
@@ -25,33 +14,26 @@
       <!-- Level filter -->
       <div ref="filterRef" class="level-filter">
         <button
-          v-for="(level, index) in levels"
-          :key="level.id"
-          @click="setActiveLevel(level.id)"
-          :class="['level-btn', { active: activeLevel === level.id }]"
-          :data-color="level.color"
+          v-for="category in categories"
+          :key="category.id"
+          @click="setActiveCategory(category.id)"
+          :class="['level-btn', { active: activeCategory === category.id }]"
         >
-          {{ level.name }}
+          {{ category.name }}
         </button>
         </div>
 
       <!-- Quiz grid -->
         <div class="quiz-grid">
           <div 
-          v-for="(quiz, index) in filteredQuizzes"
+          v-for="quiz in filteredQuizzes"
           :key="quiz.uniqueId"
-          :ref="el => setQuizCardRef(el, index)"
-          :data-index="index"
           class="quiz-card-wrapper"
           @click="startQuiz(quiz.title, quiz.level)"
         >
           <QuizCard
             :quiz="quiz"
-            :index="index"
             :level="quiz.level"
-            :is-hovered="hoveredCard === quiz.uniqueId"
-            @mouseenter="hoveredCard = quiz.uniqueId"
-            @mouseleave="hoveredCard = null"
           />
         </div>
         </div>
@@ -60,9 +42,8 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import ScrollReveal from 'scrollreveal'
 import QuizCard from '../components/QuizCard.vue'
 
 export default {
@@ -73,18 +54,7 @@ export default {
   setup() {
     const router = useRouter()
 
-    const activeLevel = ref('all')
-    const hoveredCard = ref(null)
-    const headerRef = ref(null)
-    const filterRef = ref(null)
-    const quizCardRefs = ref([])
-    const mounted = ref(false)
-
-    const setQuizCardRef = (el, index) => {
-      if (el) {
-        quizCardRefs.value[index] = el
-      }
-    }
+    const activeCategory = ref('all')
 
     const iconMap = {
       'Spelling Quiz': '/icons/file-text.svg',
@@ -114,37 +84,37 @@ export default {
       ]
     }
 
-    const levels = [
-      { id: 'all', name: 'All Levels', color: 'from-purple-500 to-indigo-500' },
-      { id: 'beginner', name: 'Beginner', color: 'from-emerald-500 to-teal-500' },
-      { id: 'intermediate', name: 'Intermediate', color: 'from-amber-500 to-orange-500' },
-      { id: 'advanced', name: 'Advanced', color: 'from-rose-500 to-pink-500' }
+    const categories = [
+      { id: 'all', name: 'All Quizzes' },
+      { id: 'safety', name: 'Safety' },
+      { id: 'construction', name: 'Construction' },
+      { id: 'spelling', name: 'Spelling' }
     ]
 
     const filteredQuizzes = computed(() => {
-      let allQuizzes = []
-      
-      if (activeLevel.value === 'all') {
-        allQuizzes = [
-          ...quizzes.beginner.map(q => ({ ...q, level: 'beginner', title: q.name, icon: iconMap[q.name] || '/icons/file-text.svg', uniqueId: `beginner-${q.name}` })),
-          ...quizzes.intermediate.map(q => ({ ...q, level: 'intermediate', title: q.name, icon: iconMap[q.name] || '/icons/file-text.svg', uniqueId: `intermediate-${q.name}` })),
-          ...quizzes.advanced.map(q => ({ ...q, level: 'advanced', title: q.name, icon: iconMap[q.name] || '/icons/file-text.svg', uniqueId: `advanced-${q.name}` }))
-        ]
-      } else {
-        allQuizzes = quizzes[activeLevel.value].map(q => ({
-          ...q,
-          level: activeLevel.value,
-          title: q.name,
-          icon: iconMap[q.name] || '/icons/file-text.svg',
-          uniqueId: `${activeLevel.value}-${q.name}`
+      const allQuizzes = Object.entries(quizzes).flatMap(([level, levelQuizzes]) =>
+        levelQuizzes.map(quiz => ({
+          ...quiz,
+          level,
+          title: quiz.name,
+          category: quiz.name.includes('Spelling')
+            ? 'spelling'
+            : quiz.name.includes('Construction')
+              || quiz.name.includes('Communication')
+              ? 'construction'
+              : 'safety',
+          icon: iconMap[quiz.name] || '/icons/file-text.svg',
+          uniqueId: `${level}-${quiz.name}`
         }))
-      }
-      
-      return allQuizzes
+      )
+
+      return activeCategory.value === 'all'
+        ? allQuizzes
+        : allQuizzes.filter(quiz => quiz.category === activeCategory.value)
     })
 
-    const setActiveLevel = (level) => {
-      activeLevel.value = level
+    const setActiveCategory = (category) => {
+      activeCategory.value = category
     }
 
     const startQuiz = async (category, difficulty) => {
@@ -164,73 +134,12 @@ export default {
       router.push(`/quiz-take/${quizId}`)
     }
 
-    onMounted(async () => {
-      mounted.value = true
-      
-      // Wait for next tick to ensure DOM is ready
-      await nextTick()
-      
-      // Initialize ScrollReveal
-      if (typeof window !== 'undefined' && ScrollReveal) {
-        const sr = ScrollReveal({
-          origin: 'bottom',
-          distance: '50px',
-          duration: 1000,
-          easing: 'ease-out',
-          reset: false
-        })
-
-        // Animate header
-        if (headerRef.value) {
-          sr.reveal(headerRef.value, {
-            delay: 0,
-            opacity: 0
-          })
-        }
-
-        // Animate filter buttons
-        if (filterRef.value) {
-          const buttons = filterRef.value.querySelectorAll('.level-btn')
-          buttons.forEach((btn, index) => {
-            sr.reveal(btn, {
-              delay: 300 + (index * 100),
-              opacity: 0
-            })
-          })
-        }
-
-        // Animate quiz cards with stagger - wait longer for refs to populate
-        setTimeout(() => {
-          if (quizCardRefs.value && quizCardRefs.value.length > 0) {
-            quizCardRefs.value.forEach((card, index) => {
-              if (card) {
-                sr.reveal(card, {
-                  delay: 500 + (index * 100),
-                  opacity: 0
-                })
-              }
-            })
-          }
-        }, 300)
-      }
-    })
-
-    onUnmounted(() => {
-      // Clean up if needed
-    })
-
     return {
-      activeLevel,
-      levels,
+      activeCategory,
+      categories,
       filteredQuizzes,
-      setActiveLevel,
-      startQuiz,
-      hoveredCard,
-      headerRef,
-      filterRef,
-      quizCardRefs,
-      mounted,
-      setQuizCardRef
+      setActiveCategory,
+      startQuiz
     }
   }
 }
@@ -241,8 +150,7 @@ export default {
   min-height: calc(100vh - 70px);
   background: #0A1628;
   color: #F0F6FF;
-  padding: 32px 20px;
-  overflow: hidden;
+  padding: 32px 24px 56px;
   position: relative;
 }
 
@@ -259,6 +167,7 @@ export default {
 .quizzes-container {
   position: relative;
   z-index: 10;
+  width: 100%;
   max-width: 1280px;
   margin: 0 auto;
 }
@@ -266,7 +175,7 @@ export default {
 /* Header */
 .page-header {
   text-align: center;
-  margin-bottom: 64px;
+  margin-bottom: 40px;
 }
 
 .header-gradient {
@@ -287,20 +196,17 @@ export default {
 }
 
 .header-gradient h1 {
-  font-size: 60px;
   font-weight: 900;
   margin-bottom: 16px;
   line-height: 1.2;
 }
 
 .header-gradient h2 {
-  font-size: 40px;
   font-weight: 700;
 }
 
 .header-description {
   color: var(--text-muted);
-  font-size: 18px;
   max-width: 672px;
   margin: 0 auto;
   line-height: 1.6;
@@ -309,19 +215,22 @@ export default {
 /* Level filter */
 .level-filter {
   display: flex;
-  justify-content: center;
-  gap: 16px;
-  margin-bottom: 48px;
-  flex-wrap: wrap;
+  gap: 0;
+  margin-bottom: 38px;
+  padding: 4px;
+  border: none;
+  border-radius: 10px;
+  background: #0D1B35;
 }
 
 .level-btn {
-  padding: 12px 24px;
-  border-radius: 12px;
+  flex: 1;
+  min-height: 52px;
+  padding: 12px 18px;
+  border-radius: 7px;
   font-weight: 600;
-  transition: all 0.3s;
   cursor: pointer;
-  border: 1px solid rgba(74, 158, 245, 0.15);
+  border: none;
   font-size: 16px;
   color: rgba(200, 220, 255, 0.65);
   background: rgba(13, 27, 53, 0.6);
@@ -334,36 +243,15 @@ export default {
 
 .level-btn.active {
   color: white;
-  transform: scale(1.05);
   background: #1A6FD4;
   border-color: #1A6FD4;
 }
 
-.level-btn.active[data-color*="purple"] {
-  background: linear-gradient(to right, #a855f7, #6366f1);
-  box-shadow: 0 10px 20px rgba(168, 85, 247, 0.3);
-}
-
-.level-btn.active[data-color*="emerald"] {
-  background: linear-gradient(to right, #10b981, #14b8a6);
-  box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
-}
-
-.level-btn.active[data-color*="amber"] {
-  background: linear-gradient(to right, #f59e0b, #f97316);
-  box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
-}
-
-.level-btn.active[data-color*="rose"] {
-  background: linear-gradient(to right, #ef4444, #ec4899);
-  box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3);
-}
-
 /* Quiz grid */
 .quiz-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .quiz-card-wrapper {
@@ -372,30 +260,18 @@ export default {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .header-gradient h1 {
-    font-size: 40px;
-  }
-
-  .header-gradient h2 {
-    font-size: 28px;
-  }
-
-  .header-description {
-    font-size: 16px;
-  }
-
   .quiz-grid {
-    grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 12px;
   }
 
   .level-filter {
-    gap: 12px;
+    overflow-x: auto;
   }
 
   .level-btn {
     padding: 10px 20px;
     font-size: 14px;
+    min-width: 120px;
   }
 }
 </style>

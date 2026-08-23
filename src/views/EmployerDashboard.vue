@@ -1,12 +1,22 @@
 <template>
   <div class="dashboard">
     <div class="dashboard-container">
-      <!-- Header -->
-      <div class="dashboard-header">
-        <h1>Welcome back, {{ employerName }}!</h1>
-        <p class="header-subtitle">
-          Manage your job postings and connect with skilled migrant workers
-        </p>
+      <div class="dashboard-hero">
+        <div class="hero-greeting">
+          <div class="greeting-avatar">
+            <img v-if="userProfile?.photoURL" :src="userProfile.photoURL" :alt="employerName" class="avatar-img" />
+            <span v-else>{{ employerName.charAt(0).toUpperCase() }}</span>
+          </div>
+
+          <div class="greeting-text">
+            <h1 class="greeting-title">
+              {{ timeBasedGreeting }}, <span class="greeting-name">{{ employerName }}!</span>
+            </h1>
+            <p class="greeting-subtitle">
+              Manage your job postings and connect with skilled migrant workers
+            </p>
+          </div>
+        </div>
       </div>
 
       <!-- Stats Grid -->
@@ -217,6 +227,13 @@ export default {
     const employerName = computed(() => {
       return userProfile.value?.name || 'Employer'
     })
+
+    const timeBasedGreeting = computed(() => {
+      const hour = new Date().getHours()
+      if (hour < 12) return 'Good Morning'
+      if (hour < 18) return 'Good Afternoon'
+      return 'Good Evening'
+    })
     
     // Stats calculations
     const totalApplications = computed(() => allApplications.value.length)
@@ -370,6 +387,7 @@ export default {
     return {
       userProfile,
       employerName,
+      timeBasedGreeting,
       employerJobs,
       recentApplications,
       allApplications,
@@ -398,7 +416,7 @@ export default {
 
 <style scoped>
 .dashboard {
-  background: var(--bg-dark);
+  background: #0A1628;
   padding: 32px 0;
 }
 
@@ -408,21 +426,61 @@ export default {
   padding: 0 16px;
 }
 
-/* Header */
-.dashboard-header {
+.dashboard-hero {
   margin-bottom: 32px;
+  padding: 16px 0 12px;
 }
 
-.dashboard-header h1 {
+.hero-greeting {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.greeting-avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: rgba(26, 111, 212, 0.25);
+  border: 2px solid rgba(74, 158, 245, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  color: #4A9EF5;
   font-size: 2rem;
   font-weight: 700;
-  color: var(--text);
-  margin-bottom: 8px;
 }
 
-.header-subtitle {
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.greeting-text {
+  min-width: 0;
+}
+
+.greeting-title {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: #F0F6FF;
+  margin: 0 0 8px;
+  white-space: normal;
+}
+
+.greeting-name {
+  color: #4A9EF5;
+}
+
+.greeting-subtitle {
   font-size: 1rem;
-  color: var(--text-muted);
+  line-height: 1.5;
+  color: rgba(200, 220, 255, 0.7);
   margin: 0;
 }
 
@@ -623,8 +681,23 @@ export default {
     padding: 0 16px;
   }
   
-  .dashboard-header h1 {
-    font-size: 1.5rem;
+  .greeting-title {
+    font-size: clamp(1.6rem, 6vw, 2.2rem);
+  }
+
+  .hero-greeting {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .greeting-avatar {
+    width: 72px;
+    height: 72px;
+  }
+
+  .greeting-subtitle {
+    font-size: 0.95rem;
   }
   
   .section-header {

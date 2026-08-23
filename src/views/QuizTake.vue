@@ -662,7 +662,7 @@ export default {
 <style scoped>
 .quiz-take-page {
   min-height: calc(100vh - 70px);
-  background: var(--bg-light);
+  background: #0A1628;
   padding: 40px 20px;
 }
 

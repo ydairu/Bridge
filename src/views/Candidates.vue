@@ -265,13 +265,15 @@ export default {
 <style scoped>
 .candidates-page {
   min-height: calc(100vh - 72px);
-  background: var(--bg);
-  padding: 56px 48px 80px;
+  background: #0A1628;
+  padding: 56px 8px 80px;
 }
 
 .candidates-container {
-  max-width: 1280px;
+  max-width: 980px;
   margin: 0 auto;
+  padding-left: 8px;
+  padding-right: 8px;
   animation: fadeIn 0.6s ease-out;
 }
 
@@ -292,7 +294,6 @@ export default {
 }
 
 .page-header h1 {
-  font-size: clamp(2.25rem, 4vw, 3rem);
   font-weight: 800;
   margin-bottom: 12px;
   letter-spacing: -0.02em;
@@ -303,7 +304,6 @@ export default {
 }
 
 .page-header p {
-  font-size: 1.15rem;
   color: var(--text-muted);
   max-width: 600px;
   margin: 0 auto;
@@ -722,14 +722,6 @@ export default {
 @media (max-width: 768px) {
   .candidates-page {
     padding: 32px 20px 48px;
-  }
-
-  .page-header h1 {
-    font-size: 2rem;
-  }
-
-  .page-header p {
-    font-size: 1rem;
   }
 
   .filters-section {

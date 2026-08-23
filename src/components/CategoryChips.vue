@@ -152,19 +152,20 @@
   padding: 0 20px;
 }
 
-.text-center { text-align: center; }
+.text-center { text-align: left; }
 .mb-8       { margin-bottom: 32px; }
 
 .text-center h2 {
   font-size: 1.8rem;
   color: #F0F6FF;
-  margin-bottom: 8px;
+  margin: 0 0 8px;
 }
 
 .text-center h4 {
   color: rgba(180, 210, 255, 0.55);
   font-size: 1rem;
   font-weight: 400;
+  margin: 0;
 }
 
 .categories-grid {

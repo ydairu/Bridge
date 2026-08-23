@@ -1339,7 +1339,7 @@ export default {
   min-height: 0;
   display: flex;
   flex-direction: column;
-  background: var(--bg-dark);
+  background: #0A1628;
   overflow: hidden;
   width: 100%;
   position: relative;
@@ -1350,7 +1350,7 @@ export default {
   min-height: 0;
   flex: 1;
   display: flex;
-  max-width: 1400px;
+  max-width: 1280px;
   margin: 0 auto;
   box-shadow: var(--shadow-lg);
   border-radius: 0;

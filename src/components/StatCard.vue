@@ -1,6 +1,6 @@
 <template>
   <div class="stat-card">
-    <div class="stat-icon" :class="iconBg">
+    <div class="stat-icon" :class="iconBg" style="margin-top: auto; margin-bottom: auto;">
       <slot name="icon"></slot>
     </div>
     <div class="stat-content">
@@ -79,7 +79,7 @@ export default {
   border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.08);
   display: flex;
-  align-items: flex-start;
+  align-items: flex-end;
   gap: 16px;
   transition: all 0.3s ease;
   box-shadow: var(--shadow-sm);
@@ -100,8 +100,8 @@ export default {
 }
 
 .stat-icon {
-  width: 48px;
-  height: 48px;
+  width: 56px;
+  height: 56px;
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -109,48 +109,48 @@ export default {
   flex-shrink: 0;
 }
 
-.stat-icon svg {
-  width: 20px;
-  height: 20px;
+.stat-icon :deep(svg) {
+  width: 28px;
+  height: 28px;
   transition: color 0.3s ease, stroke 0.3s ease;
 }
 
-.stat-icon.bg-blue-50 svg {
+.stat-icon.bg-blue-50 :deep(svg) {
   color: #3b82f6;
   stroke: #3b82f6;
 }
 
-.dark-mode .stat-icon.bg-blue-50 svg {
+.dark-mode .stat-icon.bg-blue-50 :deep(svg) {
   color: #60a5fa;
   stroke: #60a5fa;
 }
 
-.stat-icon.bg-green-50 svg {
+.stat-icon.bg-green-50 :deep(svg) {
   color: #10b981;
   stroke: #10b981;
 }
 
-.dark-mode .stat-icon.bg-green-50 svg {
+.dark-mode .stat-icon.bg-green-50 :deep(svg) {
   color: #34d399;
   stroke: #34d399;
 }
 
-.stat-icon.bg-purple-50 svg {
+.stat-icon.bg-purple-50 :deep(svg) {
   color: #8b5cf6;
   stroke: #8b5cf6;
 }
 
-.dark-mode .stat-icon.bg-purple-50 svg {
+.dark-mode .stat-icon.bg-purple-50 :deep(svg) {
   color: #a78bfa;
   stroke: #a78bfa;
 }
 
-.stat-icon.bg-orange-50 svg {
+.stat-icon.bg-orange-50 :deep(svg) {
   color: #f97316;
   stroke: #f97316;
 }
 
-.dark-mode .stat-icon.bg-orange-50 svg {
+.dark-mode .stat-icon.bg-orange-50 :deep(svg) {
   color: #fb923c;
   stroke: #fb923c;
 }
@@ -235,8 +235,13 @@ export default {
   }
   
   .stat-icon {
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
+  }
+
+  .stat-icon :deep(svg) {
+    width: 24px;
+    height: 24px;
   }
 }
 </style>

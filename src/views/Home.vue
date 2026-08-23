@@ -130,7 +130,7 @@
           </div>
 
           <!-- Quick stats -->
-          <div class="stats-grid">
+          <div class="stats-grid" style="margin-top: 20px;">
             <div class="stat-card" @click="$router.push('/applications')">
               <div class="stat-icon stat-blue">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -610,12 +610,16 @@ export default {
 
 /* ─── Content Sections ──────────────────────────────────────── */
 .content-section {
-  padding: 80px 0;
+  padding: 64px 0;
   background: #0A1628;
 }
 
 .content-section.alt {
   background: rgba(8, 16, 32, 0.9);
+}
+
+.content-section > .section-container > :deep(.category-chips) {
+  padding: 0;
 }
 
 .section-container {
@@ -626,22 +630,25 @@ export default {
 
 .section-header {
   text-align: center;
-  margin-bottom: 48px;
+  margin-bottom: 32px;
 }
 
 .section-title {
-  font-size: clamp(1.75rem, 4vw, 2.4rem);
+  font-size: 1.75rem;
   font-weight: 600;
   color: #F0F6FF;
   margin-bottom: 12px;
+  text-align: left;
 }
 
-.section-desc {
-  font-size: 1rem;
+.section-desc,
+.section-description {
+  font-size: 0.95rem;
   color: rgba(200, 220, 255, 0.65);
   max-width: 520px;
-  margin: 0 auto;
+  margin: 0;
   line-height: 1.6;
+  text-align: left;
 }
 
 /* ─── CTA Section ───────────────────────────────────────────── */
@@ -715,15 +722,13 @@ export default {
 /* ─── Authenticated: Dash Hero ──────────────────────────────── */
 .dash-hero {
   padding: 56px 0 48px;
-  background: linear-gradient(180deg, rgba(15,30,60,0.8) 0%, #0A1628 100%);
-  border-bottom: 1px solid rgba(74, 158, 245, 0.08);
+  background: #080F20;
 }
 
 .hero-greeting {
   display: flex;
   align-items: center;
   gap: 24px;
-  margin-bottom: 40px;
 }
 
 .greeting-avatar {
@@ -769,7 +774,7 @@ export default {
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
+  gap: 20px;
 }
 
 .stat-card {
@@ -778,7 +783,7 @@ export default {
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(74, 158, 245, 0.15);
   border-radius: 14px;
-  padding: 22px;
+  padding: 20px;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -826,7 +831,7 @@ export default {
   justify-content: space-between;
   align-items: flex-start;
   gap: 20px;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .view-all {
@@ -847,7 +852,7 @@ export default {
 .app-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
+  gap: 20px;
 }
 
 .app-card {
@@ -875,14 +880,14 @@ export default {
 }
 
 .app-title {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 600;
   color: #F0F6FF;
   margin: 0 0 4px;
 }
 
 .app-company {
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   color: rgba(180, 210, 255, 0.6);
   margin: 0;
 }
@@ -924,8 +929,8 @@ export default {
 .actions-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  margin-top: 24px;
+  gap: 20px;
+  margin-top: 0;
 }
 
 .action-card {
@@ -934,8 +939,8 @@ export default {
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(74, 158, 245, 0.15);
   border-radius: 16px;
-  padding: 28px 20px;
-  text-align: center;
+  padding: 20px;
+  text-align: left;
   text-decoration: none;
   transition: border-color 0.2s, transform 0.2s;
   display: block;
@@ -953,7 +958,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 16px;
+  margin: 0 0 16px;
 }
 
 .icon-blue   { background: rgba(74, 158, 245, 0.12); color: #4A9EF5; }
@@ -962,14 +967,14 @@ export default {
 .icon-green  { background: rgba(16, 185, 129, 0.12);  color: #34D399; }
 
 .action-card h3 {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 600;
   color: #F0F6FF;
   margin: 0 0 6px;
 }
 
 .action-card p {
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   color: rgba(180, 210, 255, 0.55);
   margin: 0;
 }

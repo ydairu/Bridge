@@ -410,14 +410,15 @@ export default {
 <style scoped>
 .post-job-page {
   min-height: calc(100vh - 70px);
-  background: var(--bg-dark);
+  background: #0A1628;
   padding: 2rem 1rem;
 }
 
-
 .post-job-container {
-  max-width: 56rem;
+  max-width: 1440px;
   margin: 0 auto;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 /* Header Section */

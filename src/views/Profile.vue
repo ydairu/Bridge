@@ -1042,11 +1042,12 @@ export default {
 <style scoped>
 .profile-page {
   min-height: calc(100vh - 70px);
-  background: var(--bg-dark);
+  background: #0A1628;
   padding: 24px 20px;
 }
 
 .profile-container {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
 }

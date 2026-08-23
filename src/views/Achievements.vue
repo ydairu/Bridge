@@ -264,13 +264,12 @@ export default {
 <style scoped>
 .achievements-page {
   min-height: calc(100vh - 70px);
-  background: var(--bg);
+  background: #0A1628;
 }
 
 /* Header Section */
 .achievements-header {
-  background: rgba(13, 27, 53, 0.7);
-  border-bottom: 1px solid rgba(74, 158, 245, 0.1);
+  background: #0A1628;
   padding: 2rem 1rem;
 }
 
@@ -376,6 +375,7 @@ export default {
 
 /* Main Container */
 .achievements-container {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1rem;

@@ -4,7 +4,7 @@
     <section class="reviews-header-section">
       <div class="container">
         <div class="header-content">
-          <h2>Company Reviews</h2>
+          <h1 style="margin-bottom: 10px;">Company Reviews</h1>
           <p class="reviews-description">Read honest reviews from workers and employers in Singapore</p>
         </div>
       </div>
