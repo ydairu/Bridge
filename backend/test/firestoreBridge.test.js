@@ -110,6 +110,28 @@ test("logMessage dedupes by waMessageId", async () => {
   assert.equal(second.duplicate, true);
 });
 
+test("logMessage atomically accepts only one concurrent delivery", async () => {
+  const { svc, db } = makeService();
+  const [first, second] = await Promise.all([
+    svc.logMessage({ userId: "u1", direction: "in", waMessageId: "tg:99", body: "hi" }),
+    svc.logMessage({ userId: "u1", direction: "in", waMessageId: "tg:99", body: "hi" }),
+  ]);
+  assert.equal([first, second].filter((result) => !result.duplicate).length, 1);
+  assert.equal([first, second].filter((result) => result.duplicate).length, 1);
+  assert.equal(db._dump("waMessages").filter((message) => message.id === "tg:99").length, 1);
+});
+
+test("Telegram quota is durable and does not charge retries twice", async () => {
+  const { svc } = makeService();
+  const args = { externalId: "42", perMinute: 2, perDay: 3, now: 0 };
+  assert.equal(await svc.consumeTelegramQuota({ ...args, updateId: "tg:1" }), true);
+  assert.equal(await svc.consumeTelegramQuota({ ...args, updateId: "tg:1" }), true);
+  assert.equal(await svc.consumeTelegramQuota({ ...args, updateId: "tg:2" }), true);
+  assert.equal(await svc.consumeTelegramQuota({ ...args, updateId: "tg:3" }), false);
+  assert.equal(await svc.consumeTelegramQuota({ ...args, updateId: "tg:3", now: 60_000 }), true);
+  assert.equal(await svc.consumeTelegramQuota({ ...args, updateId: "tg:4", now: 120_000 }), false);
+});
+
 test("logMessage without id always creates; isDuplicateMessage reflects state", async () => {
   const { svc } = makeService();
   const r1 = await svc.logMessage({ userId: "u1", direction: "out", body: "reply" });

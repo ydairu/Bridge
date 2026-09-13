@@ -5,6 +5,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import admin from "firebase-admin";
+import { initializeFirestore } from "firebase-admin/firestore";
 import OpenAI from "openai";
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
@@ -12,7 +13,8 @@ import { dirname, join } from "path";
 
 import { BridgeFirestoreService } from "./src/services/firestoreBridge.js";
 import { startTelegramPoller } from "./src/telegram/poller.js";
-import { getPublicFeatureStatus, hasFeatureEnv, getEnv } from "./src/config/env.js";
+import { registerTelegramWebhookRoutes } from "./src/telegram/webhook.js";
+import { getPublicFeatureStatus, hasFeatureEnv, getEnv, getTelegramMode } from "./src/config/env.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -48,8 +50,6 @@ app.use(
 
 // Explicitly handle all preflight OPTIONS requests
 app.options('*', cors());
-
-app.use(express.json());
 
 // Initialize Firebase Admin SDK
 // Prefer credentials from environment variables to avoid committing service account files
@@ -92,18 +92,35 @@ if (!serviceAccount) {
   }
 }
 
-admin.initializeApp({
+const firebaseApp = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   projectId: serviceAccount.project_id,
 });
 
-const db = admin.firestore();
+// REST avoids a long-lived gRPC channel that can keep Railway Serverless awake.
+const db = initializeFirestore(firebaseApp, { preferRest: true });
 
 // Bridge AI assistant: Firestore data layer shared by the orchestrator tools.
 const bridgeService = new BridgeFirestoreService(db);
 
 const ai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const AI_MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
+const TELEGRAM_MODE = getTelegramMode();
+
+if (TELEGRAM_MODE === "webhook") {
+  registerTelegramWebhookRoutes({
+    app,
+    bridgeService,
+    token: getEnv("TELEGRAM_BOT_TOKEN"),
+    secret: getEnv("TELEGRAM_WEBHOOK_SECRET"),
+    openAIConfig: { apiKey: getEnv("OPENAI_API_KEY"), model: AI_MODEL },
+    exaApiKey: getEnv("EXA_API_KEY"),
+  });
+}
+
+// The webhook installs its own authenticated, size-limited parser before this
+// general parser so unauthenticated webhook bodies are never parsed.
+app.use(express.json({ limit: "100kb" }));
 
 async function generateJsonFromPrompt(prompt) {
   const completion = await ai.chat.completions.create({
@@ -514,7 +531,12 @@ app.get("/api/user/profile", verifyToken, async (req, res) => {
 // Surface assistant/OpenAI/Exa configuration status at boot.
 function reportBridgeFeatureStatus() {
   const features = {
-    "Telegram bot": hasFeatureEnv("telegram"),
+    [`Telegram bot (${TELEGRAM_MODE})`]:
+      TELEGRAM_MODE === "disabled"
+        ? false
+        : TELEGRAM_MODE === "webhook"
+          ? hasFeatureEnv("telegramWebhook")
+          : hasFeatureEnv("telegram"),
     "OpenAI orchestrator": hasFeatureEnv("openai"),
     "Exa verification": hasFeatureEnv("exa"),
   };
@@ -536,7 +558,11 @@ app.listen(PORT, () => {
 // Start the Telegram bot (long-polling, no public URL needed) when a token is set.
 // Reuses the same orchestrator + Firestore service as the web application.
 function maybeStartTelegramBot() {
-  if (!hasFeatureEnv("telegram")) return;
+  if (TELEGRAM_MODE !== "polling") return;
+  if (!hasFeatureEnv("telegram")) {
+    console.error("Telegram polling mode requires TELEGRAM_BOT_TOKEN");
+    return;
+  }
   startTelegramPoller({
     bridgeService,
     token: getEnv("TELEGRAM_BOT_TOKEN"),

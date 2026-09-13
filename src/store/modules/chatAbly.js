@@ -152,10 +152,17 @@ const autoSubscribeToAllRooms = async ({ commit, state, dispatch }, userId) => {
 }
 
 const subscribeToNewRoom = async ({ commit, state, dispatch }, { roomData, roomId, userId, skipHistory = false }) => {
+  const roomName = roomData.roomName || roomId
+
+  if (state.rooms.has(roomName) || state.subscribingRooms.has(roomName)) {
+    return
+  }
+
+  state.subscribingRooms.add(roomName)
+
   try {
     const { chatClient } = getAblyClients()
-    const roomName = roomData.roomName || roomId
-    
+
     const deletedFor = Array.isArray(roomData.deletedFor) ? roomData.deletedFor : []
     const wasInReactivatedRooms = state.reactivatedRooms && 
                                    (state.reactivatedRooms.has(roomName) || state.reactivatedRooms.has(roomId))
@@ -166,6 +173,25 @@ const subscribeToNewRoom = async ({ commit, state, dispatch }, { roomData, roomI
     await ablyRoom.attach()
 
     state.rooms.set(roomName, ablyRoom)
+
+    // Subscribe before loading history. Otherwise a message published between
+    // attach() and history() completing can be missed by a brand-new mailbox.
+    ablyRoom.messages.subscribe((messageEvent) => {
+      const msg = messageEvent.message
+
+      dispatch('ensureRoomExistsFromMessage', { roomName, message: msg }).then(() => {
+        commit('ADD_MESSAGE', {
+          roomName,
+          message: msg
+        })
+      }).catch(err => {
+        console.error('Error ensuring room exists:', err)
+        commit('ADD_MESSAGE', {
+          roomName,
+          message: msg
+        })
+      })
+    })
     
     if (skipHistory || isReactivated) {
 
@@ -237,26 +263,10 @@ const subscribeToNewRoom = async ({ commit, state, dispatch }, { roomData, roomI
       }
     }
 
-    ablyRoom.messages.subscribe((messageEvent) => {
-      const msg = messageEvent.message
-      
-      dispatch('ensureRoomExistsFromMessage', { roomName, message: msg }).then(() => {
-        commit('ADD_MESSAGE', {
-          roomName,
-          message: msg
-        })
-        console.log('[消息检查] 消息已添加:', roomName, msg.text?.substring(0, 30))
-      }).catch(err => {
-        console.error('[消息检查] 确保房间存在时出错:', err)
-        commit('ADD_MESSAGE', {
-          roomName,
-          message: msg
-        })
-        console.log('[消息检查] 消息已添加(错误后):', roomName, msg.text?.substring(0, 30))
-      })
-    })
   } catch (error) {
     console.error('❌ Error auto-subscribing to new room:', error)
+  } finally {
+    state.subscribingRooms.delete(roomName)
   }
 }
 
@@ -365,6 +375,7 @@ export default {
     clientId: null,
     
     rooms: new Map(), 
+    subscribingRooms: new Set(),
     messages: new Map(), 
     activeRoom: null,
 
@@ -641,6 +652,36 @@ export default {
           state.unreadCounts = new Map(state.unreadCounts)
         }
       }
+    },
+
+    SYNC_UNREAD_FROM_ROOM_METADATA(state, { rooms, userId }) {
+      const activeRoomId = rooms.find(
+        room => state.activeRoom === (room.roomName || room.id)
+      )?.id
+
+      for (const room of rooms) {
+        if (!room.id || !room.lastMessage || room.lastMessageSender === userId) continue
+
+        if (room.id === activeRoomId) {
+          state.unreadCounts.set(room.id, 0)
+          continue
+        }
+
+        const lastViewed = state.lastViewedAt.get(room.id) || 0
+        const lastMessageAt = room.lastMessageAt
+          ? normalizeRoomDate(room.lastMessageAt).getTime()
+          : 0
+
+        // Firestore metadata is available even if the first Ably event raced
+        // with subscription setup. It cannot provide an exact count, but it
+        // can safely establish that at least one unread message exists.
+        if (lastMessageAt > lastViewed) {
+          const currentCount = state.unreadCounts.get(room.id) || 0
+          state.unreadCounts.set(room.id, Math.max(currentCount, 1))
+        }
+      }
+
+      state.unreadCounts = new Map(state.unreadCounts)
     },
     
     REMOVE_CHAT_ROOM(state, roomId) {
@@ -1025,6 +1066,7 @@ export default {
           })
           
           commit('SET_CHAT_ROOMS', rooms)
+          commit('SYNC_UNREAD_FROM_ROOM_METADATA', { rooms, userId })
         })
         
         // Store unsubscribe function in state
@@ -1274,9 +1316,9 @@ export default {
         const room = await chatClient.rooms.get(ablyRoomName)
         await room.attach()
         
-        // Store room reference in state
-        state.rooms.set(ablyRoomName, room)
-        
+        // joinRoom owns the subscription and stores the room reference. Do not
+        // mark it subscribed here or joinRoom will skip installing listeners.
+
         return roomId
         
       } catch (error) {
@@ -1435,12 +1477,9 @@ export default {
     // Leave a room
     async leaveRoom({ commit, state }, { roomName }) {
       try {
-        const room = state.rooms.get(roomName)
-        if (room) {
-          await room.detach()
-          state.rooms.delete(roomName)
-        }
-        
+        // Rooms are subscribed globally so unread notifications work on every
+        // page. Leaving the chat UI should only clear its active selection;
+        // subscriptions are detached on logout or explicit room deletion.
         if (state.activeRoom === roomName) {
           commit('SET_ACTIVE_ROOM', null)
         }
@@ -1847,6 +1886,14 @@ export default {
           state.chatRoomListenerUnsubscribe()
           state.chatRoomListenerUnsubscribe = null
         }
+
+        state.rooms.clear()
+        state.subscribingRooms.clear()
+        state.messages.clear()
+        state.chatRooms = []
+        state.unreadCounts = new Map()
+        state.lastViewedAt = new Map()
+        state.activeRoom = null
         
         closeAblyConnection()
         commit('SET_CONNECTION_STATUS', {

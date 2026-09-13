@@ -18,14 +18,18 @@ services:
         value: production
       - key: OPENAI_MODEL
         value: gpt-4o-mini
+      - key: TELEGRAM_MODE
+        value: webhook
       # --- Secrets: set these in the Render dashboard (not committed) ---
       - key: OPENAI_API_KEY
         sync: false
       - key: TELEGRAM_BOT_TOKEN
         sync: false
-      - key: EXA_API_KEY
+      - key: TELEGRAM_WEBHOOK_SECRET
         sync: false
-      - key: TELEGRAM_BOT_TOKEN
+      - key: TELEGRAM_WEBHOOK_URL
+        sync: false
+      - key: EXA_API_KEY
         sync: false
       - key: FIREBASE_PROJECT_ID
         sync: false

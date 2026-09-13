@@ -14,6 +14,7 @@ export async function openAIChat({ apiKey, model, messages, tools = [], toolChoi
       tool_choice: toolChoice,
       temperature: 0.2,
     }),
+    signal: AbortSignal.timeout(90_000),
   });
 
   const data = await response.json().catch(() => ({}));
@@ -43,6 +44,7 @@ export async function openAIJson({ apiKey, model, instructions, input }) {
         { role: "user", content: JSON.stringify(input) },
       ],
     }),
+    signal: AbortSignal.timeout(90_000),
   });
 
   const data = await response.json().catch(() => ({}));

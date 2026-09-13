@@ -407,7 +407,6 @@ export default {
     const editingMessageSerial = ref(null)
     const editTextarea = ref(null)
     const typingTimeout = ref(null)
-    const chatRoomUnsubscribe = ref(null)
     const contextMenu = ref({
       show: false,
       x: 0,
@@ -967,10 +966,15 @@ export default {
     
     const forceScrollToBottom = () => {
       if (messagesContainer.value) {
-        // Always scroll to bottom, regardless of current position
+        // Wait for Vue and the browser layout pass so the new message is
+        // included in scrollHeight before moving the viewport.
         requestAnimationFrame(() => {
-          const container = messagesContainer.value
-          container.scrollTop = container.scrollHeight
+          requestAnimationFrame(() => {
+            const container = messagesContainer.value
+            if (container) {
+              container.scrollTo({ top: container.scrollHeight, behavior: 'auto' })
+            }
+          })
         })
       }
     }
@@ -1134,7 +1138,7 @@ export default {
           })
           
           // Set up real-time listener for chat room updates
-          chatRoomUnsubscribe.value = await store.dispatch('chatAbly/listenToChatRoomUpdates', {
+          await store.dispatch('chatAbly/listenToChatRoomUpdates', {
             userId: currentUser.value.uid
           })
         } catch (error) {
@@ -1180,11 +1184,9 @@ export default {
         clearTimeout(typingTimeout.value)
       }
       
-      // Cleanup chat room listener
-      if (chatRoomUnsubscribe.value) {
-        chatRoomUnsubscribe.value()
-      }
-      
+      // The app-level chat listener intentionally stays active off this page so
+      // the navigation badge can continue receiving unread notifications.
+
       if (activeRoom.value) {
         store.dispatch('chatAbly/leaveRoom', {
           roomName: activeRoom.value
@@ -1195,18 +1197,34 @@ export default {
       document.removeEventListener('click', handleClickOutside)
     })
     
-    // Watch for new messages to scroll to bottom
-    watch(() => store.getters['chatAbly/getMessages'](activeRoom.value), (newMessages, oldMessages) => {
-      nextTick(() => {
-        if (newMessages && newMessages.length > (oldMessages?.length || 0)) {
-          forceScrollToBottom()
-        } else {
-          scrollToBottom()
-        }
+    const filteredMessages = computed(() => {
+      const roomName = activeRoom.value
+
+      if (!roomName) {
+        return []
+      }
+
+      const messages = getMessages(roomName)
+
+      if (!messages || messages.length === 0) {
+        return []
+      }
+
+      return messages.filter(msg => {
+        return msg && msg.text && typeof msg.text === 'string' && msg.text.trim().length > 0
       })
+    })
+
+    // Watch the rendered message count rather than the mutable backing array.
+    // Running after Vue's DOM update ensures the new bubble contributes to the
+    // container height before scrolling.
+    watch(() => filteredMessages.value.length, (newCount, oldCount) => {
+      if (newCount > oldCount) {
+        forceScrollToBottom()
+      }
       
       // Persist lastViewedAt when messages arrive in active room
-      if (newMessages && newMessages.length > 0 && activeRoom.value) {
+      if (newCount > 0 && activeRoom.value) {
         const currentRoom = getCurrentRoom()
         if (currentRoom && currentRoom.id) {
           // Debounce the persist call to avoid too many Firebase writes
@@ -1218,7 +1236,7 @@ export default {
           }, 1000) // Wait 1 second after last message before persisting
         }
       }
-    }, { deep: true }) // 深度监听消息数组变化
+    }, { flush: 'post' })
     
     // Watch connection status changes
     watch(() => store.getters['chatAbly/isConnected'], () => {
@@ -1235,26 +1253,6 @@ export default {
           }, 300)
         })
       }
-    })
-    
-    // Computed property to filter out empty messages with memoization
-    const filteredMessages = computed(() => {
-      const roomName = activeRoom.value
-      
-      if (!roomName) {
-        return []
-      }
-      
-      const messages = getMessages(roomName)
-      
-      if (!messages || messages.length === 0) {
-        return []
-      }
-      
-      // Use a more efficient filter
-      return messages.filter(msg => {
-        return msg && msg.text && typeof msg.text === 'string' && msg.text.trim().length > 0
-      })
     })
     
     return {

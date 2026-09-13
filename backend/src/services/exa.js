@@ -19,6 +19,7 @@ export async function searchExa({ apiKey, query, numResults = 5 }) {
         highlights: true,
       },
     }),
+    signal: AbortSignal.timeout(30_000),
   });
 
   const data = await response.json().catch(() => ({}));

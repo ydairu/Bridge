@@ -6,7 +6,11 @@ import {
   inlineKeyboardFromInteractive,
   truncateForTelegram,
 } from "../src/telegram/client.js";
-import { handleTelegramUpdate } from "../src/telegram/poller.js";
+import { handleTelegramUpdate } from "../src/telegram/handler.js";
+import {
+  createTelegramSecretMiddleware,
+  isValidWebhookSecret,
+} from "../src/telegram/webhook.js";
 import { handleBridgeMessage } from "../src/bridge-agent/orchestrator.js";
 import { createFakeFirestore } from "./helpers/fakeFirestore.js";
 import { installFetchMock, openAIText, openAIToolCalls } from "./helpers/fetchMock.js";
@@ -29,7 +33,7 @@ const jobsSeed = {
 test("extractTelegramInbound maps a text message", () => {
   const inbound = extractTelegramInbound({
     update_id: 10,
-    message: { message_id: 5, from: { id: 42, first_name: "Sam", last_name: "Lee" }, chat: { id: 42 }, text: "hi" },
+    message: { message_id: 5, from: { id: 42, first_name: "Sam", last_name: "Lee" }, chat: { id: 42, type: "private" }, text: "hi" },
   });
   assert.equal(inbound.channel, "telegram");
   assert.equal(inbound.from, "42");
@@ -42,7 +46,7 @@ test("extractTelegramInbound maps a text message", () => {
 test("extractTelegramInbound maps a callback query and rewrites job: ids", () => {
   const inbound = extractTelegramInbound({
     update_id: 11,
-    callback_query: { id: "cb1", from: { id: 42, username: "sam" }, message: { chat: { id: 42 } }, data: "job:jobV" },
+    callback_query: { id: "cb1", from: { id: 42, username: "sam" }, message: { chat: { id: 42, type: "private" } }, data: "job:jobV" },
   });
   assert.equal(inbound.type, "interactive");
   assert.equal(inbound.callbackData, "job:jobV");
@@ -54,6 +58,48 @@ test("extractTelegramInbound ignores unsupported updates", () => {
   assert.equal(extractTelegramInbound({ update_id: 1 }), null);
   assert.equal(extractTelegramInbound(null), null);
   assert.equal(extractTelegramInbound({ update_id: 2, message: { from: { id: 1 }, chat: { id: 1 } } }), null);
+});
+
+test("extractTelegramInbound ignores group messages and bot senders", () => {
+  assert.equal(extractTelegramInbound({
+    update_id: 3,
+    message: { from: { id: 1 }, chat: { id: -1, type: "group" }, text: "hi" },
+  }), null);
+  assert.equal(extractTelegramInbound({
+    update_id: 4,
+    message: { from: { id: 1, is_bot: true }, chat: { id: 1, type: "private" }, text: "hi" },
+  }), null);
+});
+
+test("webhook secret middleware rejects invalid secrets using a generic response", () => {
+  const secret = "a_secure_webhook_secret_123456789";
+  assert.equal(isValidWebhookSecret(secret), true);
+  assert.equal(isValidWebhookSecret("short"), false);
+
+  const middleware = createTelegramSecretMiddleware(secret);
+  let status;
+  let body;
+  let nextCalled = false;
+  middleware(
+    { get: () => "wrong" },
+    { status(code) { status = code; return this; }, json(value) { body = value; return this; } },
+    () => { nextCalled = true; }
+  );
+  assert.equal(status, 401);
+  assert.deepEqual(body, { error: "Unauthorized" });
+  assert.equal(nextCalled, false);
+});
+
+test("webhook secret middleware accepts the configured Telegram secret", () => {
+  const secret = "a_secure_webhook_secret_123456789";
+  const middleware = createTelegramSecretMiddleware(secret);
+  let nextCalled = false;
+  middleware(
+    { get: () => secret },
+    { status() { return this; }, json() { return this; } },
+    () => { nextCalled = true; }
+  );
+  assert.equal(nextCalled, true);
 });
 
 test("inlineKeyboardFromInteractive builds one button per row, capped", () => {
@@ -117,7 +163,7 @@ test("handleTelegramUpdate runs the agent and sends a reply with inline keyboard
     await handleTelegramUpdate({
       update: {
         update_id: 99,
-        message: { message_id: 1, from: { id: 555, first_name: "Rin" }, chat: { id: 555 }, text: "find welding jobs" },
+        message: { message_id: 1, from: { id: 555, first_name: "Rin" }, chat: { id: 555, type: "private" }, text: "find welding jobs" },
       },
       bridgeService: svc,
       openAIConfig,

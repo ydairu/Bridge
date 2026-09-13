@@ -148,23 +148,34 @@ The orchestrator exposes the platform's jobseeker features as OpenAI tools:
 The orchestrator needs `OPENAI_API_KEY` (+ optional `OPENAI_MODEL`), trust
 verification needs `EXA_API_KEY`, and Telegram needs `TELEGRAM_BOT_TOKEN`.
 
-### Telegram bot (fallback channel)
+### Telegram bot
 The same orchestrator also runs on Telegram via `src/telegram/` — the agent logic
-is channel-agnostic, so Telegram users get the full capability set. **No public
-URL is required**: it uses long-polling, which makes it a robust fallback when the
-WhatsApp Cloud API setup (tunnels, number verification, recipient OTP) is flaky.
+is channel-agnostic, so Telegram users get the full capability set. Production
+uses an authenticated webhook so Railway can sleep between messages. Only direct
+private-chat text messages and callbacks are accepted.
 
 Setup:
 1. Message **@BotFather** on Telegram → `/newbot` → copy the bot token.
-2. Put it in `.env` as `TELEGRAM_BOT_TOKEN=...` and restart the backend.
-3. The server logs `🤝 Telegram bot: polling for messages`. DM your bot — done.
+2. Configure `TELEGRAM_MODE=webhook`, `TELEGRAM_BOT_TOKEN`, a random
+   `TELEGRAM_WEBHOOK_SECRET` of at least 32 allowed characters, and the full HTTPS
+   `TELEGRAM_WEBHOOK_URL` ending in `/api/telegram/webhook`.
+3. Deploy, then run `npm run telegram:webhook:set` from this directory.
+4. Verify delivery with `npm run telegram:webhook:status`, then DM the bot.
+
+Generate the webhook secret with `openssl rand -hex 32`. Enable a Firestore TTL
+policy on `telegramRateLimitEvents.expiresAt`; these small retry-deduplication
+records are otherwise retained indefinitely.
+
+For local polling, explicitly set `TELEGRAM_MODE=polling`. Webhook and polling
+are mutually exclusive. `npm run telegram:webhook:delete` preserves pending
+updates when removing the webhook.
 
 Telegram users are keyed `tg_<id>` (WhatsApp stays `wa_<phone>`); job lists render
 as inline keyboards. Channel is selected by `inboundMessage.channel`.
 
 ### Tests
 ```bash
-npm test               # full hermetic suite (node:test) — 57 cases, no network
+npm test               # full hermetic suite (node:test) — 59 cases, no network
 node scripts/live-agent-check.js   # optional: scripted convo vs the real OpenAI
                                    # model (in-memory Firestore; needs OPENAI_API_KEY)
 ```
@@ -179,4 +190,3 @@ verification, message parsing, and trust verification — including edge cases.
 The frontend is already configured to call these endpoints through `src/services/api.js`.
 
 Make sure the backend is running before using quiz generation features in the frontend!
-

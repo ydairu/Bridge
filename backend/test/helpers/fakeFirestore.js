@@ -41,6 +41,15 @@ class DocRef {
     }
     return { id: this.id };
   }
+  async create(data) {
+    if (this._map.has(this.id)) {
+      const error = new Error("Document already exists: " + this.id);
+      error.code = "already-exists";
+      throw error;
+    }
+    this._map.set(this.id, { data: clone(data), __seq: this._counter.next() });
+    return { id: this.id };
+  }
   async update(data) {
     const existing = this._map.get(this.id);
     if (!existing) throw new Error("No document to update: " + this.id);
@@ -133,6 +142,7 @@ class CollectionRef {
 export function createFakeFirestore(seed = {}) {
   const collections = new Map();
   const counter = { _n: 0, next() { return ++this._n; } };
+  let transactionTail = Promise.resolve();
 
   function collectionMap(name) {
     if (!collections.has(name)) collections.set(name, new Map());
@@ -155,6 +165,22 @@ export function createFakeFirestore(seed = {}) {
       const map = collections.get(name);
       if (!map) return [];
       return [...map.entries()].map(([id, entry]) => ({ id, ...entry.data }));
+    },
+    async runTransaction(updateFunction) {
+      const previous = transactionTail;
+      let release;
+      transactionTail = new Promise((resolve) => { release = resolve; });
+      await previous;
+      try {
+        return await updateFunction({
+          get: (ref) => ref.get(),
+          set: (ref, data, options) => ref.set(data, options),
+          create: (ref, data) => ref.create(data),
+          update: (ref, data) => ref.update(data),
+        });
+      } finally {
+        release();
+      }
     },
   };
 }

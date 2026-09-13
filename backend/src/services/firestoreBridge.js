@@ -7,6 +7,10 @@ function nowIso() {
   return new Date().toISOString();
 }
 
+function isAlreadyExistsError(error) {
+  return error?.code === 6 || error?.code === "already-exists" || error?.code === "ALREADY_EXISTS";
+}
+
 function normalizePhone(phone) {
   return String(phone || "").replace(/[^\d]/g, "");
 }
@@ -210,20 +214,62 @@ export class BridgeFirestoreService {
     return this.getConversationState({ userId });
   }
 
+  async consumeTelegramQuota({ externalId, updateId, perMinute, perDay, now = Date.now() }) {
+    const instant = new Date(now).toISOString();
+    const minuteKey = instant.slice(0, 16);
+    const dayKey = instant.slice(0, 10);
+    const cleanId = String(externalId || "").replace(/[^\w]/g, "");
+    const ref = this.db.collection("telegramRateLimits").doc(`tg_${cleanId}`);
+    const eventRef = this.db.collection("telegramRateLimitEvents").doc(String(updateId));
+
+    return this.db.runTransaction(async (transaction) => {
+      const [snapshot, eventSnapshot] = await Promise.all([
+        transaction.get(ref),
+        transaction.get(eventRef),
+      ]);
+      // Telegram retries must not consume the user's allowance more than once.
+      if (eventSnapshot.exists) return true;
+      const existing = snapshot.exists ? snapshot.data() : {};
+      const minuteCount = existing.minuteKey === minuteKey ? Number(existing.minuteCount || 0) : 0;
+      const dayCount = existing.dayKey === dayKey ? Number(existing.dayCount || 0) : 0;
+      if (minuteCount >= perMinute || dayCount >= perDay) return false;
+
+      transaction.set(ref, {
+        minuteKey,
+        minuteCount: minuteCount + 1,
+        dayKey,
+        dayCount: dayCount + 1,
+        updatedAt: SERVER_TIMESTAMP(),
+      });
+      transaction.create(eventRef, {
+        externalId: cleanId,
+        createdAt: SERVER_TIMESTAMP(),
+        expiresAt: admin.firestore.Timestamp.fromMillis(now + 2 * 86_400_000),
+      });
+      return true;
+    });
+  }
+
   async logMessage({ userId, direction, waMessageId, body, raw = {}, kind = "text" }) {
     if (waMessageId) {
-      const duplicate = await this.db.collection("waMessages").doc(waMessageId).get();
-      if (duplicate.exists) return { duplicate: true, id: waMessageId };
-      await this.db.collection("waMessages").doc(waMessageId).set({
-        userId,
-        direction,
-        waMessageId,
-        body,
-        raw,
-        kind,
-        createdAt: SERVER_TIMESTAMP(),
-      });
-      return { duplicate: false, id: waMessageId };
+      const ref = this.db.collection("waMessages").doc(waMessageId);
+      try {
+        // create() is atomic. A read followed by set() allowed concurrent webhook
+        // deliveries to process and charge for the same Telegram update twice.
+        await ref.create({
+          userId,
+          direction,
+          waMessageId,
+          body,
+          raw,
+          kind,
+          createdAt: SERVER_TIMESTAMP(),
+        });
+        return { duplicate: false, id: waMessageId };
+      } catch (error) {
+        if (isAlreadyExistsError(error)) return { duplicate: true, id: waMessageId };
+        throw error;
+      }
     }
 
     const ref = await this.db.collection("waMessages").add({

@@ -1,37 +1,10 @@
 // Telegram long-polling worker. Reuses the Bridge orchestrator end-to-end, so the
 // Telegram bot has the same capabilities as WhatsApp. No public URL is required.
 
-import { handleBridgeMessage } from "../bridge-agent/orchestrator.js";
-import {
-  getUpdates,
-  sendTelegramMessage,
-  answerCallbackQuery,
-  deleteWebhook,
-  extractTelegramInbound,
-  inlineKeyboardFromInteractive,
-} from "./client.js";
+import { getUpdates, deleteWebhook } from "./client.js";
+import { handleTelegramUpdate } from "./handler.js";
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-export async function handleTelegramUpdate({ update, bridgeService, openAIConfig, exaApiKey, token, logger = console }) {
-  const inboundMessage = extractTelegramInbound(update);
-  if (!inboundMessage) return;
-
-  if (inboundMessage.callbackQueryId) {
-    await answerCallbackQuery({ token, callbackQueryId: inboundMessage.callbackQueryId });
-  }
-
-  const result = await handleBridgeMessage({ bridgeService, openAIConfig, exaApiKey, inboundMessage });
-  if (result.duplicate || !result.reply) return;
-
-  const replyMarkup = inlineKeyboardFromInteractive(result.interactive);
-  try {
-    await sendTelegramMessage({ token, chatId: inboundMessage.chatId, text: result.reply, replyMarkup });
-  } catch (error) {
-    logger.warn?.("[telegram] send with keyboard failed, retrying as plain text:", error.message);
-    await sendTelegramMessage({ token, chatId: inboundMessage.chatId, text: result.reply });
-  }
-}
 
 // Starts the polling loop. Returns { stop } to halt it. Resolves once polling has
 // begun (after clearing any existing webhook so getUpdates is allowed).

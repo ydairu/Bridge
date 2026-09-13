@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { auth } from '../firebase/config'
+import { auth, db } from '../firebase/config'
+import { doc, getDoc } from 'firebase/firestore'
 
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
@@ -133,6 +134,20 @@ const router = createRouter({
   routes
 })
 
+async function getUserRole(user) {
+  try {
+    const userProfile = await getDoc(doc(db, 'users', user.uid))
+    const profileRole = userProfile.data()?.role
+    if (profileRole) return profileRole
+  } catch (error) {
+    console.error('Error getting user profile role:', error)
+  }
+
+  // Keep custom claims as a fallback for accounts that do not have a profile.
+  const tokenResult = await user.getIdTokenResult()
+  return tokenResult.claims.role
+}
+
 router.beforeEach(async (to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
 
@@ -144,16 +159,13 @@ router.beforeEach(async (to, from, next) => {
         next('/login')
         resolve()
       } else if (to.path === '/' && user) {
-       
         try {
-          const userDoc = await user.getIdTokenResult()
-          const role = userDoc.claims.role
+          const role = await getUserRole(user)
           
           if (role === 'employer') {
             next('/employer/dashboard')
-          } else if (role === 'jobseeker') {
-            next('/')
           } else {
+            // The root Home component is the jobseeker dashboard when signed in.
             next()
           }
         } catch (error) {
@@ -170,4 +182,3 @@ router.beforeEach(async (to, from, next) => {
 })
 
 export default router
-
